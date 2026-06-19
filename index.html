@@ -295,6 +295,8 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transform-style: preserve-3d;
+            perspective: 800px;
         }
 
         .feature-card::before {
@@ -314,7 +316,6 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-16px) scale(1.02);
             border-color: rgba(59, 130, 246, 0.5);
             box-shadow: 0 24px 70px rgba(59, 130, 246, 0.20);
             background: rgba(30, 41, 59, 0.75);
@@ -355,10 +356,11 @@
             height: 100%;
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 800px;
         }
 
         .help-card:hover {
-            transform: translateY(-10px);
             border-color: rgba(59, 130, 246, 0.4);
             box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
             background: rgba(30, 41, 59, 0.7);
@@ -415,6 +417,8 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 12px 80px rgba(59, 130, 246, 0.12);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         .create-agent-section::before {
@@ -613,6 +617,17 @@
         .section-title i {
             color: #3b82f6;
         }
+
+        /* ---------- GLOBAL CURSOR 3D TILT ---------- */
+        .tilt-3d {
+            transition: transform 0.08s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .tilt-3d * {
+            transform-style: preserve-3d;
+        }
     </style>
 </head>
 
@@ -655,13 +670,13 @@
 <!-- ========== HERO ========== -->
 <section class="hero">
     <div class="container">
-        <div class="badge-hero mb-4">
+        <div class="badge-hero mb-4 tilt-3d">
             <i class="bi bi-stars me-2"></i> AI Agent Development Platform
         </div>
 
-        <h1 class="logo-text">OpenMind</h1>
+        <h1 class="logo-text tilt-3d">OpenMind</h1>
 
-        <p class="hero-subtitle mt-4">
+        <p class="hero-subtitle mt-4 tilt-3d">
             Create, deploy and manage powerful AI Agents<br />
             with an intuitive platform.
         </p>
@@ -677,27 +692,27 @@
 <!-- ========== AGENDA ========== -->
 <section id="agenda" class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5 section-title">
+        <h2 class="text-center mb-5 section-title tilt-3d">
             <i class="bi bi-grid-3x3-gap-fill me-2"></i> Platform Agenda
         </h2>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="feature-card">
+                <div class="feature-card tilt-3d">
                     <i class="bi bi-robot"></i>
                     <h4>AI Agents</h4>
                     <p>Create intelligent AI assistants for business and personal use.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card">
+                <div class="feature-card tilt-3d">
                     <i class="bi bi-lightning-charge-fill"></i>
                     <h4>Automation</h4>
                     <p>Automate workflows, tasks, and business processes at scale.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card">
+                <div class="feature-card tilt-3d">
                     <i class="bi bi-cloud-fill"></i>
                     <h4>Deployment</h4>
                     <p>Deploy AI agents securely to enterprise cloud infrastructure.</p>
@@ -710,10 +725,10 @@
 <!-- ========== WHAT WE HELP WITH ========== -->
 <section id="help" class="py-5">
     <div class="container">
-        <h2 class="text-center mb-4 section-title">
+        <h2 class="text-center mb-4 section-title tilt-3d">
             <i class="bi bi-heart-fill me-2"></i> What We Help With
         </h2>
-        <p class="text-center text-muted mb-5" style="font-family: 'Inter', Arial, sans-serif; color: #94a3b8; max-width: 700px; margin-left: auto; margin-right: auto;">
+        <p class="text-center text-muted mb-5 tilt-3d" style="font-family: 'Inter', Arial, sans-serif; color: #94a3b8; max-width: 700px; margin-left: auto; margin-right: auto;">
             OpenMind AI Agents empower individuals, companies, and startups to solve real-world problems with intelligent automation.
         </p>
 
@@ -721,7 +736,7 @@
 
             <!-- For Companies -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.25);">
                         <i class="bi bi-building" style="color: #60a5fa;"></i>
                     </div>
@@ -739,7 +754,7 @@
 
             <!-- For Startups -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.25);">
                         <i class="bi bi-rocket-takeoff" style="color: #a855f7;"></i>
                     </div>
@@ -757,7 +772,7 @@
 
             <!-- For Employees -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.25);">
                         <i class="bi bi-person-badge" style="color: #ec4899;"></i>
                     </div>
@@ -775,7 +790,7 @@
 
             <!-- For Individuals -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.25);">
                         <i class="bi bi-person" style="color: #10b981;"></i>
                     </div>
@@ -793,7 +808,7 @@
 
             <!-- For Developers -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.25);">
                         <i class="bi bi-code-square" style="color: #fbbf24;"></i>
                     </div>
@@ -811,7 +826,7 @@
 
             <!-- For Non-Tech Users -->
             <div class="col-lg-4 col-md-6">
-                <div class="help-card">
+                <div class="help-card tilt-3d">
                     <div class="icon-wrap" style="background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.2);">
                         <i class="bi bi-hand-thumbs-up" style="color: #f472b6;"></i>
                     </div>
@@ -834,7 +849,7 @@
 <!-- ========== CREATE AGENTS ========== -->
 <section id="create" class="py-5">
     <div class="container">
-        <div class="create-agent-section">
+        <div class="create-agent-section tilt-3d">
             <i class="bi bi-plus-circle-fill icon-large"></i>
             <h2 class="mb-3">Ready to Build Your AI Agent?</h2>
             <p style="color: #b9c7da; font-family: 'Inter', Arial, sans-serif; font-size: 1.1rem;" class="mb-4">
@@ -898,39 +913,35 @@
             });
         });
 
-        // ---------- 3D CARD TILT (feature cards) ----------
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('mousemove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 22;
-                const rotateY = (centerX - x) / 22;
-                this.style.transform =
-                    `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-16px) scale(1.02)`;
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'perspective(1200px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-            });
-        });
+        // ---------- GLOBAL CURSOR 3D TILT ----------
+        // This makes any element with class "tilt-3d" follow the cursor with 3D tilt
+        const tiltElements = document.querySelectorAll('.tilt-3d');
 
-        // ---------- HELP CARDS 3D TILT ----------
-        document.querySelectorAll('.help-card').forEach(card => {
-            card.addEventListener('mousemove', function(e) {
+        tiltElements.forEach(el => {
+            el.addEventListener('mousemove', function(e) {
                 const rect = this.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 25;
-                const rotateY = (centerX - x) / 25;
+                const rotateY = ((x - centerX) / centerX) * 15; // Left/right tilt
+                const rotateX = ((centerY - y) / centerY) * 15; // Up/down tilt
                 this.style.transform =
-                    `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+                    `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
             });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+
+            el.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+                // Add a smooth transition back
+                this.style.transition = 'transform 0.4s ease-out';
+                setTimeout(() => {
+                    this.style.transition = '';
+                }, 400);
+            });
+
+            // Reset transition on mouse enter for smooth movement
+            el.addEventListener('mouseenter', function() {
+                this.style.transition = 'transform 0.08s ease-out';
             });
         });
 
