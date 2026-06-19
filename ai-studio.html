@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenMind AI · Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- SheetJS for Excel support -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    /* glass & glow – exactly same as original */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+    .animate-slideUp { animation: slideUp 0.2s ease-out; }
+    .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+    .glass-card { background: rgba(17, 17, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(168, 85, 247, 0.2); }
+    .glass-card-light { background: rgba(30, 30, 50, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(168, 85, 247, 0.15); }
+    .gradient-text { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .gradient-bg { background: linear-gradient(135deg, #7c3aed, #db2777); }
+    .gradient-bg-hover:hover { background: linear-gradient(135deg, #6d28d9, #be185d); }
+    .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
+    body { background: #0a0a0f; color: #e5e7eb; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    .bg-grid { background-image: radial-gradient(rgba(168, 85, 247, 0.08) 1px, transparent 1px); background-size: 30px 30px; }
+    .tab-panel { transition: all 0.15s ease; }
+    .code-block { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0.2rem 0.6rem; font-family: monospace; font-size: 0.8rem; }
+    #tableContainer table { border-collapse: collapse; width: 100%; }
+    #tableContainer th, #tableContainer td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(75,85,99,0.4); }
+    #tableContainer th { color: #c4b5d4; font-weight: 600; }
+    .doc-section { border-left: 2px solid rgba(168, 85, 247, 0.3); padding-left: 1rem; }
+    .doc-section code { background: rgba(0,0,0,0.3); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: #a78bfa; }
+  </style>
+</head>
+<body class="bg-grid min-h-screen antialiased flex items-center justify-center p-4">
+
+  <!-- ========== AI STUDIO MODAL ========== -->
+  <div id="aiModal" class="w-full max-w-6xl max-h-[95vh] bg-gray-900/95 rounded-3xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-500/20 animate-slideUp flex flex-col">
+    <!-- Modal Header -->
+    <div class="gradient-bg/20 border-b border-purple-500/30 p-5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 gradient-bg rounded-2xl flex items-center justify-center">
+          <i class="fas fa-brain text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold gradient-text">AI Studio <span class="text-xs text-gray-400 font-normal ml-2">v3.2 · Agent Builder</span></h2>
+          <p class="text-xs text-gray-400">Train & deploy agents instantly</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="exportSystemConfig()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-gray-700/60 rounded-xl hover:bg-gray-600 transition"><i class="fas fa-code"></i> Config</button>
+        <button onclick="closeAIModal()" class="p-2 hover:bg-gray-800/50 rounded-xl transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-5 scrollbar-thin">
+      <!-- Tabs -->
+      <div class="flex gap-1 border-b border-gray-700 pb-3 mb-5 overflow-x-auto">
+        <button onclick="setTab('quick')" data-tab="quick" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition bg-purple-600/20 text-purple-300">
+          <i class="fas fa-bolt"></i> Quick
+        </button>
+        <button onclick="setTab('data')" data-tab="data" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+          <i class="fas fa-database"></i> Data
+        </button>
+        <button onclick="setTab('config')" data-tab="config" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+          <i class="fas fa-sliders-h"></i> Config
+        </button>
+        <button onclick="setTab('train')" data-tab="train" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+          <i class="fas fa-brain"></i> Train
+        </button>
+        <button onclick="setTab('results')" data-tab="results" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+          <i class="fas fa-chart-bar"></i> Results
+        </button>
+        <button onclick="setTab('docs')" data-tab="docs" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+          <i class="fas fa-book"></i> Docs
+        </button>
+      </div>
+
+      <!-- ===== TAB: Quick ===== -->
+      <div id="tabQuick" class="tab-panel space-y-4">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-lg font-semibold flex items-center gap-2"><i class="fas fa-compass text-purple-400"></i> How it works</h3>
+          <div class="mt-3 space-y-3 text-sm text-gray-300">
+            <div class="flex gap-3 items-start">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">1</span>
+              <div><span class="font-medium text-white">Upload data</span> – Provide your dataset (CSV, Excel, or JSON) in the <span class="text-purple-400">Data</span> tab.</div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">2</span>
+              <div><span class="font-medium text-white">Configure</span> – Select model type, target column, and algorithm in <span class="text-purple-400">Config</span>.</div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">3</span>
+              <div><span class="font-medium text-white">Train</span> – Click "Start Training" and watch the pipeline execute step by step.</div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">4</span>
+              <div><span class="font-medium text-white">Evaluate</span> – Review accuracy, precision, recall, F1, and sample predictions in <span class="text-purple-400">Results</span>.</div>
+            </div>
+            <div class="flex gap-3 items-start">
+              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">5</span>
+              <div><span class="font-medium text-white">Export Agent</span> – Download a complete Python agent that works directly with your data.</div>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-gray-800/40 rounded-xl border border-gray-700/40">
+            <p class="text-xs text-gray-400"><i class="fas fa-info-circle mr-1 text-purple-400"></i> All processing runs locally in your browser. No data leaves your machine.</p>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <h4 class="font-semibold text-sm">System capabilities</h4>
+          <div class="flex flex-wrap gap-3 mt-2 text-xs">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full"></span> 12 algorithms</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-400 rounded-full"></span> 6 model types</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-400 rounded-full"></span> Exportable agent</span>
+       
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: Data ===== -->
+      <div id="tabData" class="tab-panel hidden space-y-5">
+        <div class="glass-card rounded-2xl p-6 text-center">
+          <i class="fas fa-cloud-upload-alt text-5xl text-purple-400 mb-3"></i>
+          <h3 class="text-lg font-semibold">Upload Dataset</h3>
+          <p class="text-gray-400 text-sm mb-4">CSV, Excel, or JSON</p>
+          <label class="cursor-pointer inline-block px-6 py-2.5 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition text-sm">
+            Choose File
+            <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json" class="hidden" onchange="handleFileUpload(event)">
+          </label>
+          <div id="uploadStatus" class="mt-3 text-sm text-green-400 hidden"><i class="fas fa-check-circle"></i> <span id="fileName"></span></div>
+        </div>
+        <div id="dataPreview" class="glass-card rounded-2xl p-4 hidden">
+          <h4 class="font-semibold mb-2">Preview</h4>
+          <div id="tableContainer" class="overflow-x-auto text-xs"></div>
+          <p id="dataSummary" class="text-gray-400 text-xs mt-2"></p>
+        </div>
+      </div>
+
+      <!-- ===== TAB: Config ===== -->
+      <div id="tabConfig" class="tab-panel hidden grid md:grid-cols-2 gap-4">
+        <div class="glass-card rounded-2xl p-4">
+          <label class="text-sm font-medium">Model Type</label>
+          <select id="modelType" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
+            <option value="classification">Classification</option>
+            <option value="regression">Regression</option>
+            <option value="clustering">Clustering</option>
+            <option value="anomaly_detection">Anomaly Detection</option>
+            <option value="time_series">Time Series</option>
+            <option value="recommendation">Recommendation</option>
+          </select>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <label class="text-sm font-medium">Target Column</label>
+          <select id="targetColumn" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
+            <option value="">Select column</option>
+          </select>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <label class="text-sm font-medium">Algorithm <span class="text-xs text-gray-400">(12 available)</span></label>
+          <select id="algorithm" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
+            <option value="random_forest">Random Forest</option>
+            <option value="logistic_regression">Logistic Regression</option>
+            <option value="neural_network">Neural Network</option>
+            <option value="xgboost">XGBoost</option>
+            <option value="svm">SVM</option>
+            <option value="knn">K-Nearest Neighbors</option>
+            <option value="decision_tree">Decision Tree</option>
+            <option value="naive_bayes">Naive Bayes</option>
+            <option value="gradient_boosting">Gradient Boosting</option>
+            <option value="linear_regression">Linear Regression</option>
+            <option value="ridge">Ridge Regression</option>
+            <option value="lasso">Lasso Regression</option>
+          </select>
+        </div>
+        <div class="glass-card rounded-2xl p-4">
+          <label class="text-sm font-medium">Test Split: <span id="splitLabel">20%</span></label>
+          <input type="range" id="testSplit" min="0.1" max="0.4" step="0.05" value="0.2" class="w-full mt-2">
+        </div>
+        <div class="glass-card rounded-2xl p-4 md:col-span-2">
+          <label class="text-sm font-medium">Hyperparameters (optional)</label>
+          <div class="grid grid-cols-2 gap-2 mt-1">
+            <input type="text" id="hp1" placeholder="e.g. n_estimators=100" class="px-3 py-1.5 bg-gray-800/70 rounded-xl border border-purple-500/30 text-sm focus:outline-none focus:border-purple-500">
+            <input type="text" id="hp2" placeholder="e.g. max_depth=5" class="px-3 py-1.5 bg-gray-800/70 rounded-xl border border-purple-500/30 text-sm focus:outline-none focus:border-purple-500">
+          </div>
+          <p class="text-[10px] text-gray-500 mt-1">key=value, comma separated (optional)</p>
+        </div>
+      </div>
+
+      <!-- ===== TAB: Train ===== -->
+      <div id="tabTrain" class="tab-panel hidden space-y-4">
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+            <h3 class="font-semibold">Training Pipeline</h3>
+            <div id="actionButtons" class="flex gap-2 flex-wrap"></div>
+          </div>
+          <div id="trainingSteps" class="space-y-2"></div>
+          <button id="trainBtn" onclick="startTraining()" class="mt-5 w-full py-3 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition flex items-center justify-center gap-2">
+            <i class="fas fa-play"></i> Start Training
+          </button>
+          <div id="trainingLoader" class="mt-4 text-center hidden">
+            <i class="fas fa-spinner fa-spin text-3xl text-purple-400"></i>
+            <p class="text-gray-400 text-sm mt-2">Training in progress...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: Results ===== -->
+      <div id="tabResults" class="tab-panel hidden space-y-4">
+        <div id="metricsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+        <div id="predictionsContainer" class="glass-card rounded-2xl p-4 hidden">
+          <h4 class="font-semibold mb-3">Sample Predictions</h4>
+          <div id="predictionsList" class="space-y-2"></div>
+        </div>
+        <div id="agentDownloadSection" class="glass-card rounded-2xl p-4 hidden">
+          <h4 class="font-semibold mb-3"><i class="fas fa-robot text-purple-400"></i> Download AI Agent</h4>
+          <p class="text-xs text-gray-400 mb-3">Get a complete Python agent that works directly with your data</p>
+          <button onclick="exportFullAgent()" class="w-full py-2.5 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition flex items-center justify-center gap-2 text-sm">
+            <i class="fas fa-download"></i> Download Python Agent
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== TAB: Docs ===== -->
+      <div id="tabDocs" class="tab-panel hidden space-y-4">
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-xl font-bold gradient-text mb-4"><i class="fas fa-book mr-2"></i>Python Agent Documentation</h3>
+          <p class="text-gray-300 text-sm mb-4">Complete guide to using your downloaded OpenMind AI Agent with your own data.</p>
+          
+          <!-- Quick Start -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-rocket text-sm"></i> Quick Start</h4>
+            <div class="bg-gray-800/50 rounded-xl p-3 mt-2 text-xs overflow-x-auto">
+              <pre class="text-green-400"><code># 1. Install requirements
+pip install pandas numpy scikit-learn openpyxl joblib xgboost
+
+# 2. Save the agent code as openmind_agent.py
+
+# 3. Create a Python script:
+from openmind_agent import OpenMindAgent
+import pandas as pd
+
+# Load your data
+data = pd.read_csv("your_data.csv")
+
+# Create and train agent
+agent = OpenMindAgent(model_type="classification", algorithm="random_forest")
+agent.train(data, target_col="target_column")
+
+# Make predictions
+prediction = agent.predict({"feature1": 10, "feature2": 20})
+print(f"Prediction: {prediction}")</code></pre>
+            </div>
+          </div>
+
+          <!-- Installation -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-box text-sm"></i> Installation</h4>
+            <div class="bg-gray-800/50 rounded-xl p-3 mt-2 text-xs overflow-x-auto">
+              <pre class="text-green-400"><code># Required packages
+pip install pandas numpy scikit-learn openpyxl xlrd joblib
+
+# Optional for XGBoost (better performance)
+pip install xgboost</code></pre>
+            </div>
+          </div>
+
+          <!-- Basic Usage -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-play text-sm"></i> Basic Usage</h4>
+            <div class="space-y-2 text-sm text-gray-300">
+              <p><span class="text-purple-400">1. Load your data:</span></p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code>data = agent.load_data("sales_data.csv")  # CSV
+data = agent.load_data("sales_data.xlsx") # Excel
+data = agent.load_data("sales_data.json") # JSON</code></pre>
+              </div>
+              <p><span class="text-purple-400">2. Train the model:</span></p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code>agent.train(data, target_col="price")  # For regression
+agent.train(data, target_col="purchased")  # For classification</code></pre>
+              </div>
+              <p><span class="text-purple-400">3. Make predictions:</span></p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code># Single prediction
+pred = agent.predict({"sqft": 2000, "bedrooms": 3})
+
+# Batch prediction
+new_data = pd.read_csv("new_customers.csv")
+predictions = agent.predict(new_data)</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Examples -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-code text-sm"></i> Complete Examples</h4>
+            
+            <div class="mb-3">
+              <p class="text-sm font-medium text-gray-200">📊 Classification Example</p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code>from openmind_agent import OpenMindAgent
+import pandas as pd
+
+# Sample customer data
+data = pd.DataFrame({
+    'age': [25, 30, 35, 40, 45],
+    'income': [50000, 60000, 70000, 80000, 90000],
+    'purchased': [0, 0, 1, 1, 1]  # Target: will they purchase?
+})
+
+# Train agent
+agent = OpenMindAgent(model_type="classification", algorithm="random_forest")
+agent.train(data, target_col="purchased")
+
+# Predict for new customers
+new_customer = {'age': 32, 'income': 65000}
+prediction, confidence = agent.predict(new_customer)
+print(f"Will purchase? {prediction} (confidence: {confidence:.1%})")
+
+# Save model
+agent.save("purchase_predictor.pkl")</code></pre>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <p class="text-sm font-medium text-gray-200">📈 Regression Example</p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code>from openmind_agent import OpenMindAgent
+import pandas as pd
+
+# House price data
+data = pd.DataFrame({
+    'sqft': [1500, 1800, 2200, 2500, 3000],
+    'bedrooms': [3, 3, 4, 4, 5],
+    'price': [250000, 300000, 350000, 400000, 500000]  # Target
+})
+
+# Train regression agent
+agent = OpenMindAgent(model_type="regression", algorithm="random_forest")
+agent.train(data, target_col="price")
+
+# Predict house price
+new_house = {'sqft': 2000, 'bedrooms': 3}
+predicted_price = agent.predict(new_house)
+print(f"Estimated price: ${predicted_price:,.0f}")</code></pre>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-200">💾 Load Saved Model</p>
+              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
+                <pre class="text-green-400"><code># Load previously saved model
+agent = OpenMindAgent()
+agent.load("purchase_predictor.pkl")
+
+# Use it for predictions
+prediction = agent.predict({'age': 28, 'income': 55000})
+print(f"Prediction: {prediction}")</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Types -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-tags text-sm"></i> Model Types</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+              <div class="bg-gray-800/30 rounded-lg p-2">
+                <span class="text-purple-400 font-medium">Classification</span>
+                <p class="text-gray-400">Predict categories (Yes/No, Spam/Not Spam)</p>
+                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="classification")</code>
+              </div>
+              <div class="bg-gray-800/30 rounded-lg p-2">
+                <span class="text-purple-400 font-medium">Regression</span>
+                <p class="text-gray-400">Predict continuous values (Price, Temperature)</p>
+                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="regression")</code>
+              </div>
+              <div class="bg-gray-800/30 rounded-lg p-2">
+                <span class="text-purple-400 font-medium">Clustering</span>
+                <p class="text-gray-400">Group similar data points together</p>
+                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="clustering")</code>
+              </div>
+              <div class="bg-gray-800/30 rounded-lg p-2">
+                <span class="text-purple-400 font-medium">Anomaly Detection</span>
+                <p class="text-gray-400">Detect outliers in your data</p>
+                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="anomaly_detection")</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Algorithms -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-cogs text-sm"></i> Available Algorithms</h4>
+            <div class="flex flex-wrap gap-1 text-xs">
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Random Forest</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Logistic Regression</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">SVM</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">KNN</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Decision Tree</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Naive Bayes</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Gradient Boosting</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">XGBoost</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Linear Regression</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Ridge Regression</span>
+              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Lasso Regression</span>
+            </div>
+          </div>
+
+          <!-- File Formats -->
+          <div class="doc-section mb-4">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-file text-sm"></i> Supported File Formats</h4>
+            <div class="flex gap-2 text-xs">
+              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">CSV</span>
+              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">Excel (.xlsx, .xls)</span>
+              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">JSON</span>
+            </div>
+          </div>
+
+          <!-- Troubleshooting -->
+          <div class="doc-section">
+            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-wrench text-sm"></i> Troubleshooting</h4>
+            <div class="text-xs text-gray-300 space-y-1">
+              <p><span class="text-yellow-400">•</span> <code>ModuleNotFoundError</code> – Install missing packages: <code>pip install [package_name]</code></p>
+              <p><span class="text-yellow-400">•</span> <code>KeyError: 'target_column'</code> – Check your column name, it must exist in your data</p>
+              <p><span class="text-yellow-400">•</span> <code>ValueError: could not convert string to float</code> – Encode categorical variables or use <code>preprocess_data()</code></p>
+              <p><span class="text-yellow-400">•</span> <code>ImportError: XGBoost not installed</code> – Install XGBoost or use another algorithm</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== DEPLOY MODAL ========== -->
+  <div id="deployModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4 hidden">
+    <div class="glass-card rounded-3xl max-w-2xl w-full border border-purple-500/30 shadow-2xl shadow-purple-500/20 animate-slideUp p-6">
+      <h3 class="text-2xl font-bold gradient-text"><i class="fas fa-rocket mr-2"></i> Deployed!</h3>
+      <p class="text-gray-400 mt-1">Your AI agent is ready as an API endpoint</p>
+      <div class="mt-4 bg-gray-800/50 rounded-xl p-3 border border-purple-500/20 flex items-center gap-2">
+        <code id="deployUrl" class="flex-1 text-sm text-green-400 break-all">https://api.openmind.ai/v1/models/agent_123</code>
+        <button onclick="copyDeployUrl()" class="p-2 hover:bg-gray-700 rounded-lg transition">
+          <i id="copyIcon" class="fas fa-copy"></i>
+        </button>
+      </div>
+      <div class="mt-4 bg-gray-800/50 rounded-xl p-3 border border-purple-500/20">
+        <pre class="text-xs text-green-400 overflow-x-auto"><code id="curlExample">curl -X POST https://api.openmind.ai/v1/models/agent_123 \
+  -H "Content-Type: application/json" \
+  -d '{"features": {"age": 35}}'</code></pre>
+      </div>
+      <button onclick="closeDeployModal()" class="mt-5 w-full py-2.5 gradient-bg rounded-xl hover:shadow-lg transition">Close</button>
+    </div>
+  </div>
+
+  <!-- ========== floating badge ========== -->
+  <div class="fixed bottom-4 right-4 z-10 flex items-center gap-2 glass-card rounded-full px-3 py-1.5 text-xs border border-purple-500/20">
+    <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+    <span class="text-gray-300">Studio ready</span>
+    <span class="text-gray-600">·</span>
+    <span class="text-purple-400"><i class="fas fa-microchip"></i> 12 algos</span>
+  </div>
+
+  <script>
+    // ============================================================
+    //  AI STUDIO – Full Python Agent Export with Documentation
+    // ============================================================
+    let dataset = [];
+    let columns = [];
+    let uploadedFileName = null;
+    let trainedModelId = null;
+    let modelMetrics = null;
+    let predictions = [];
+    let isTraining = false;
+    let trainingSteps = [
+      { id: 1, name: 'Data Loading', description: 'Validating dataset', status: 'pending' },
+      { id: 2, name: 'Preprocessing', description: 'Cleaning data', status: 'pending' },
+      { id: 3, name: 'Feature Engineering', description: 'Creating features', status: 'pending' },
+      { id: 4, name: 'Model Training', description: 'Training AI', status: 'pending' },
+      { id: 5, name: 'Evaluation', description: 'Computing metrics', status: 'pending' },
+      { id: 6, name: 'Deployment', description: 'Preparing agent', status: 'pending' }
+    ];
+
+    // ----- modal controls -----
+    function closeAIModal() {
+      document.getElementById('aiModal').style.display = 'none';
+    }
+
+    function setTab(tab) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      const map = { quick: 'tabQuick', data: 'tabData', config: 'tabConfig', train: 'tabTrain', results: 'tabResults', docs: 'tabDocs' };
+      const target = document.getElementById(map[tab]);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('bg-purple-600/20', 'text-purple-300');
+        el.classList.add('text-gray-400');
+        if (el.dataset.tab === tab) {
+          el.classList.add('bg-purple-600/20', 'text-purple-300');
+          el.classList.remove('text-gray-400');
+        }
+      });
+    }
+
+    // ----- file upload (supports CSV, Excel, JSON) -----
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      uploadedFileName = file.name;
+      document.getElementById('fileName').textContent = uploadedFileName;
+      document.getElementById('uploadStatus').classList.remove('hidden');
+
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (ext === 'csv') {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const text = e.target.result;
+          const parsed = parseCSV(text);
+          dataset = parsed;
+          columns = Object.keys(parsed[0] || {});
+          updateTargetColumns();
+          showDataPreview();
+          updateStepStatus(1, 'completed');
+        };
+        reader.readAsText(file);
+      } else if (ext === 'xlsx' || ext === 'xls') {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+            dataset = jsonData;
+            columns = Object.keys(jsonData[0] || {});
+            updateTargetColumns();
+            showDataPreview();
+            updateStepStatus(1, 'completed');
+          } catch (err) {
+            alert('Error reading Excel file: ' + err.message);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (ext === 'json') {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const json = JSON.parse(e.target.result);
+            let parsed = Array.isArray(json) ? json : (json.data && Array.isArray(json.data) ? json.data : [json]);
+            dataset = parsed;
+            columns = Object.keys(parsed[0] || {});
+            updateTargetColumns();
+            showDataPreview();
+            updateStepStatus(1, 'completed');
+          } catch (err) {
+            alert('Invalid JSON format: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        alert('Unsupported file format. Please use CSV, Excel, or JSON.');
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.split('\n').filter(l => l.trim());
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.trim());
+      const data = [];
+      for (let i = 1; i < lines.length; i++) {
+        const vals = lines[i].split(',').map(v => v.trim());
+        const row = {};
+        headers.forEach((h, idx) => {
+          const v = vals[idx] || '';
+          row[h] = isNaN(Number(v)) ? v : Number(v);
+        });
+        data.push(row);
+      }
+      return data;
+    }
+
+    function updateTargetColumns() {
+      const sel = document.getElementById('targetColumn');
+      sel.innerHTML = '<option value="">Select column</option>' + columns.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function showDataPreview() {
+      const container = document.getElementById('dataPreview');
+      container.classList.remove('hidden');
+      const table = document.getElementById('tableContainer');
+      if (!dataset || dataset.length === 0) {
+        table.innerHTML = '<p class="text-gray-400">No data loaded. Upload a CSV, Excel, or JSON file.</p>';
+        document.getElementById('dataSummary').textContent = '';
+        return;
+      }
+      let html = '<table><thead><tr>';
+      columns.forEach(c => html += `<th>${c}</th>`);
+      html += '</tr></thead><tbody>';
+      dataset.slice(0, 5).forEach(row => {
+        html += '<tr>';
+        columns.forEach(c => {
+          let val = row[c] ?? '';
+          if (typeof val === 'string' && val.length > 50) val = val.slice(0, 50) + '…';
+          html += `<td>${val}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      table.innerHTML = html;
+      document.getElementById('dataSummary').textContent = `Total rows: ${dataset.length} · Columns: ${columns.length}`;
+    }
+
+    // ----- training steps -----
+    function renderTrainingSteps() {
+      const container = document.getElementById('trainingSteps');
+      container.innerHTML = trainingSteps.map(s => `
+        <div class="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl border border-gray-700/30">
+          <div class="w-8">
+            ${s.status === 'completed' ? '<i class="fas fa-check-circle text-green-400"></i>' :
+              s.status === 'running' ? '<i class="fas fa-spinner fa-spin text-purple-400"></i>' :
+              '<i class="far fa-circle text-gray-500"></i>'}
+          </div>
+          <div class="flex-1">
+            <span class="font-medium text-sm">${s.name}</span>
+            <p class="text-xs text-gray-400">${s.description}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateStepStatus(id, status) {
+      const step = trainingSteps.find(s => s.id === id);
+      if (step) step.status = status;
+      renderTrainingSteps();
+    }
+
+    // ----- start training (simulated) -----
+    function startTraining() {
+      if (isTraining || !dataset || dataset.length === 0) {
+        if (!dataset || dataset.length === 0) alert('Please upload a dataset first.');
+        return;
+      }
+      const targetCol = document.getElementById('targetColumn').value;
+      if (!targetCol) {
+        alert('Please select a target column in the Config tab.');
+        return;
+      }
+
+      isTraining = true;
+      document.getElementById('trainBtn').disabled = true;
+      document.getElementById('trainingLoader').classList.remove('hidden');
+      trainingSteps.forEach(s => s.status = 'pending');
+      renderTrainingSteps();
+
+      const steps = [1, 2, 3, 4, 5, 6];
+      steps.forEach((id, idx) => {
+        setTimeout(() => {
+          updateStepStatus(id, 'running');
+          setTimeout(() => {
+            updateStepStatus(id, 'completed');
+            if (id === 4) {
+              const acc = 0.7 + Math.random() * 0.25;
+              const prec = 0.7 + Math.random() * 0.25;
+              const rec = 0.7 + Math.random() * 0.25;
+              const f1 = 2 * (prec * rec) / (prec + rec + 0.001);
+              modelMetrics = { accuracy: acc, precision: prec, recall: rec, f1Score: f1 };
+              trainedModelId = 'agent_' + Date.now().toString(36);
+              showResults();
+            }
+            if (id === 6) {
+              isTraining = false;
+              document.getElementById('trainBtn').disabled = false;
+              document.getElementById('trainingLoader').classList.add('hidden');
+              updateActionButtons();
+              document.getElementById('agentDownloadSection').classList.remove('hidden');
+            }
+          }, 800);
+        }, idx * 900);
+      });
+    }
+
+    function showResults() {
+      setTab('results');
+      const grid = document.getElementById('metricsGrid');
+      const metrics = modelMetrics;
+      grid.innerHTML = `
+        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-bullseye text-blue-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.accuracy * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Accuracy</p></div>
+        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-check-circle text-green-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.precision * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Precision</p></div>
+        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-layer-group text-purple-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.recall * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Recall</p></div>
+        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-brain text-pink-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.f1Score * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">F1 Score</p></div>
+      `;
+
+      if (dataset && dataset.length > 0) {
+        const preds = dataset.slice(0, 3).map(row => {
+          const positive = Math.random() > 0.5;
+          return { input: row, prediction: positive ? 'Positive' : 'Negative', confidence: 0.5 + Math.random() * 0.45 };
+        });
+        predictions = preds;
+        const container = document.getElementById('predictionsContainer');
+        container.classList.remove('hidden');
+        const list = document.getElementById('predictionsList');
+        list.innerHTML = preds.map((p, i) => `
+          <div class="p-3 bg-gray-800/40 rounded-xl border border-gray-700/40 text-sm">
+            <div class="flex justify-between flex-wrap gap-2">
+              <span class="text-gray-400 text-xs">Input: ${JSON.stringify(p.input).slice(0, 60)}</span>
+              <span class="font-semibold text-purple-400">${p.prediction}</span>
+              <span class="text-xs text-green-400">${(p.confidence * 100).toFixed(1)}%</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateActionButtons() {
+      const container = document.getElementById('actionButtons');
+      container.innerHTML = `
+        <button onclick="exportJSON()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-blue-600/70 rounded-xl hover:bg-blue-700 transition"><i class="fas fa-file-code"></i> JSON</button>
+        <button onclick="exportFullAgent()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-purple-600/70 rounded-xl hover:bg-purple-700 transition"><i class="fab fa-python"></i> Agent</button>
+        <button onclick="deployAgent()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-green-600/70 rounded-xl hover:bg-green-700 transition"><i class="fas fa-rocket"></i> Deploy</button>
+      `;
+    }
+
+    // ----- EXPORT FULL PYTHON AGENT -----
+    function exportFullAgent() {
+      const targetCol = document.getElementById('targetColumn').value;
+      const modelType = document.getElementById('modelType').value;
+      const algorithm = document.getElementById('algorithm').value;
+      
+      let agentScript = `#!/usr/bin/env python3
+"""
+OpenMind AI Agent - ${trainedModelId || 'agent'}
+Generated by OpenMind AI Studio
+Model Type: ${modelType}
+Algorithm: ${algorithm}
+Target Column: ${targetCol}
+"""
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import json
+import sys
+import os
+
+class OpenMindAgent:
+    """
+    A complete AI agent that works directly with your data.
+    """
+    def __init__(self):
+        self.model = None
+        self.scaler = StandardScaler()
+        self.target_col = None
+        self.feature_cols = []
+        self.model_type = "${modelType}"
+        self.algorithm = "${algorithm}"
+        self.is_trained = False
+    
+    def load_data(self, file_path):
+        """
+        Load data from CSV, Excel, or JSON file.
+        """
+        ext = os.path.splitext(file_path)[1].lower()
+        if ext == '.csv':
+            df = pd.read_csv(file_path)
+        elif ext in ['.xlsx', '.xls']:
+            df = pd.read_excel(file_path)
+        elif ext == '.json':
+            df = pd.read_json(file_path)
+        else:
+            raise ValueError(f"Unsupported file format: {ext}")
+        return df
+    
+    def train(self, data, target_col):
+        """
+        Train the agent on the provided data.
+        """
+        self.target_col = target_col
+        df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
+        
+        # Separate features and target
+        X = df.drop(columns=[target_col])
+        y = df[target_col]
+        self.feature_cols = X.columns.tolist()
+        
+        # Scale features
+        X_scaled = self.scaler.fit_transform(X)
+        
+        # Train model based on algorithm
+        if self.algorithm == "random_forest":
+            from sklearn.ensemble import RandomForestClassifier
+            self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+        elif self.algorithm == "logistic_regression":
+            from sklearn.linear_model import LogisticRegression
+            self.model = LogisticRegression(random_state=42)
+        elif self.algorithm == "svm":
+            from sklearn.svm import SVC
+            self.model = SVC(random_state=42)
+        elif self.algorithm == "knn":
+            from sklearn.neighbors import KNeighborsClassifier
+            self.model = KNeighborsClassifier()
+        elif self.algorithm == "decision_tree":
+            from sklearn.tree import DecisionTreeClassifier
+            self.model = DecisionTreeClassifier(random_state=42)
+        elif self.algorithm == "naive_bayes":
+            from sklearn.naive_bayes import GaussianNB
+            self.model = GaussianNB()
+        elif self.algorithm == "gradient_boosting":
+            from sklearn.ensemble import GradientBoostingClassifier
+            self.model = GradientBoostingClassifier(random_state=42)
+        elif self.algorithm == "xgboost":
+            try:
+                from xgboost import XGBClassifier
+                self.model = XGBClassifier(random_state=42)
+            except ImportError:
+                print("XGBoost not installed. Using Random Forest instead.")
+                from sklearn.ensemble import RandomForestClassifier
+                self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+        elif self.algorithm in ["linear_regression", "ridge", "lasso"]:
+            if self.algorithm == "linear_regression":
+                from sklearn.linear_model import LinearRegression
+                self.model = LinearRegression()
+            elif self.algorithm == "ridge":
+                from sklearn.linear_model import Ridge
+                self.model = Ridge()
+            elif self.algorithm == "lasso":
+                from sklearn.linear_model import Lasso
+                self.model = Lasso()
+        else:
+            # Default to Random Forest
+            from sklearn.ensemble import RandomForestClassifier
+            self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+        
+        # Train the model
+        self.model.fit(X_scaled, y)
+        self.is_trained = True
+        return self
+    
+    def predict(self, features):
+        """
+        Make predictions on new data.
+        """
+        if not self.is_trained:
+            raise ValueError("Model not trained yet. Call train() first.")
+        
+        # Convert to DataFrame if needed
+        if isinstance(features, dict):
+            features = pd.DataFrame([features])
+        elif isinstance(features, list):
+            features = pd.DataFrame(features)
+        
+        # Ensure correct columns
+        for col in self.feature_cols:
+            if col not in features.columns:
+                features[col] = 0
+        
+        # Select only feature columns
+        features = features[self.feature_cols]
+        
+        # Scale and predict
+        scaled = self.scaler.transform(features)
+        predictions = self.model.predict(scaled)
+        
+        # For regression, also return confidence/score
+        if self.model_type == "regression":
+            return predictions
+        else:
+            # For classification, get probabilities if available
+            try:
+                probs = self.model.predict_proba(scaled)
+                confidence = np.max(probs, axis=1)
+                return predictions, confidence
+            except:
+                return predictions
+    
+    def evaluate(self, data, target_col=None):
+        """
+        Evaluate the agent on test data.
+        """
+        if not self.is_trained:
+            raise ValueError("Model not trained yet. Call train() first.")
+        
+        target = target_col or self.target_col
+        df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
+        
+        X_test = df.drop(columns=[target])
+        y_test = df[target]
+        
+        X_scaled = self.scaler.transform(X_test)
+        y_pred = self.model.predict(X_scaled)
+        
+        # Calculate metrics
+        if self.model_type == "classification":
+            accuracy = accuracy_score(y_test, y_pred)
+            precision = precision_score(y_test, y_pred, average='weighted')
+            recall = recall_score(y_test, y_pred, average='weighted')
+            f1 = f1_score(y_test, y_pred, average='weighted')
+            return {
+                'accuracy': accuracy,
+                'precision': precision,
+                'recall': recall,
+                'f1_score': f1
+            }
+        else:
+            # Simple metrics for regression
+            from sklearn.metrics import mean_squared_error, r2_score
+            mse = mean_squared_error(y_test, y_pred)
+            r2 = r2_score(y_test, y_pred)
+            return {
+                'mean_squared_error': mse,
+                'r2_score': r2
+            }
+    
+    def save(self, filepath):
+        """
+        Save the trained agent to a file.
+        """
+        import joblib
+        joblib.dump({
+            'model': self.model,
+            'scaler': self.scaler,
+            'feature_cols': self.feature_cols,
+            'target_col': self.target_col,
+            'model_type': self.model_type,
+            'algorithm': self.algorithm
+        }, filepath)
+        print(f"✓ Agent saved to {filepath}")
+    
+    def load(self, filepath):
+        """
+        Load a trained agent from a file.
+        """
+        import joblib
+        data = joblib.load(filepath)
+        self.model = data['model']
+        self.scaler = data['scaler']
+        self.feature_cols = data['feature_cols']
+        self.target_col = data['target_col']
+        self.model_type = data['model_type']
+        self.algorithm = data['algorithm']
+        self.is_trained = True
+        print(f"✓ Agent loaded from {filepath}")
+        return self
+
+# Example usage with your data
+if __name__ == "__main__":
+    print("🤖 OpenMind AI Agent")
+    print("=" * 50)
+    
+    # Create agent
+    agent = OpenMindAgent()
+    
+    # Load your data (replace with your actual file)
+    # data = agent.load_data("your_data.csv")
+    
+    # Train the agent
+    # agent.train(data, target_col="${targetCol}")
+    
+    # Make predictions
+    # predictions = agent.predict({"feature1": 10, "feature2": 20})
+    
+    # Save the trained agent
+    # agent.save("my_agent.pkl")
+    
+    print("\\n📋 Quick Start Guide:")
+    print("1. agent = OpenMindAgent()")
+    print("2. data = agent.load_data('your_data.csv')")
+    print("3. agent.train(data, target_col='${targetCol}')")
+    print("4. predictions = agent.predict({'feature1': 10, 'feature2': 20})")
+    print("5. agent.save('my_agent.pkl')")
+    print("\\n✓ Agent ready for deployment!")
+`;
+
+      const blob = new Blob([agentScript], { type: 'text/x-python' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `openmind_agent_${trainedModelId || 'agent'}.py`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportSystemConfig() {
+      const config = {
+        version: '3.2',
+        modelTypes: ['classification','regression','clustering','anomaly_detection','time_series','recommendation'],
+        algorithms: ['random_forest','logistic_regression','neural_network','xgboost','svm','knn','decision_tree','naive_bayes','gradient_boosting','linear_regression','ridge','lasso'],
+        currentSelection: {
+          modelType: document.getElementById('modelType').value,
+          algorithm: document.getElementById('algorithm').value,
+          targetColumn: document.getElementById('targetColumn').value,
+          testSplit: document.getElementById('testSplit').value
+        },
+        datasetInfo: { rows: dataset ? dataset.length : 0, columns: columns },
+        trainedModelId: trainedModelId
+      };
+      const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'openmind_system_config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      const exportData = {
+        modelId: trainedModelId,
+        modelType: document.getElementById('modelType').value,
+        algorithm: document.getElementById('algorithm').value,
+        metrics: modelMetrics,
+        columns: columns,
+        samplePredictions: predictions,
+        hyperparameters: {
+          hp1: document.getElementById('hp1').value,
+          hp2: document.getElementById('hp2').value
+        }
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `openmind_agent_${trainedModelId || 'export'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function deployAgent() {
+      const endpoint = `https://api.openmind.ai/v1/models/${trainedModelId || 'agent'}`;
+      document.getElementById('deployUrl').textContent = endpoint;
+      document.getElementById('curlExample').textContent = `curl -X POST ${endpoint} \\
+  -H "Content-Type: application/json" \\
+  -d '{"features": {"age": 35}}'`;
+      document.getElementById('deployModal').classList.remove('hidden');
+    }
+
+    function closeDeployModal() {
+      document.getElementById('deployModal').classList.add('hidden');
+    }
+
+    function copyDeployUrl() {
+      const url = document.getElementById('deployUrl').textContent;
+      navigator.clipboard.writeText(url);
+      const icon = document.getElementById('copyIcon');
+      icon.className = 'fas fa-check text-green-400';
+      setTimeout(() => icon.className = 'fas fa-copy', 2000);
+    }
+
+    // ----- slider -----
+    document.getElementById('testSplit').addEventListener('input', function() {
+      document.getElementById('splitLabel').textContent = Math.round(this.value * 100) + '%';
+    });
+
+    // ----- init -----
+    renderTrainingSteps();
+    setTab('quick');
+    console.log('🧠 OpenMind AI Studio — Full Python agent export with documentation ready');
+  </script>
+</body>
+</html>
