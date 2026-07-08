@@ -3,435 +3,1054 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OpenMind - Enterprise AI Agents Platform" />
     <title>OpenMind · AI Agents Platform</title>
 
-    <!-- Bootstrap 5 & Icons -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-    <!-- Font: Orbitron (tech/sci-fi) -->
+    <!-- Fonts: Playfair Display + Cormorant Garamond + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
     <style>
-        /* ---------- RESET / BASE ---------- */
-        * {
+        /* ============================================================
+               ROOT VARIABLES - Elegant Design System
+               ============================================================ */
+        :root {
+            /* ---- Primary Colors ---- */
+            --color-primary: #2D2D2D;
+            --color-primary-light: #4A4A4A;
+            --color-primary-dark: #1A1A1A;
+
+            /* ---- Accent Colors ---- */
+            --color-accent: #8B6B4D;
+            --color-accent-light: #C4A88A;
+            --color-accent-dark: #5C4033;
+
+            /* ---- Background Colors ---- */
+            --color-bg: #F5F0EB;
+            --color-bg-secondary: #EDE8E2;
+            --color-bg-card: rgba(255, 252, 248, 0.85);
+            --color-bg-card-hover: rgba(255, 252, 248, 0.95);
+
+            /* ---- Text Colors ---- */
+            --color-text: #1A1A1A;
+            --color-text-secondary: #4A4A4A;
+            --color-text-muted: #7A7A7A;
+            --color-text-light: #B8B0A8;
+
+            /* ---- Gradients ---- */
+            --gradient-primary: linear-gradient(135deg, #2D2D2D 0%, #5C4033 100%);
+            --gradient-accent: linear-gradient(135deg, #8B6B4D 0%, #C4A88A 100%);
+            --gradient-hero: linear-gradient(135deg, #2D2D2D 0%, #5C4033 40%, #8B6B4D 100%);
+
+            /* ---- Border ---- */
+            --color-border: rgba(44, 44, 44, 0.08);
+            --color-border-hover: rgba(139, 107, 77, 0.25);
+
+            /* ---- Spacing ---- */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 80px;
+
+            /* ---- Typography ---- */
+            --font-heading: 'Playfair Display', 'Georgia', serif;
+            --font-body: 'Cormorant Garamond', 'Georgia', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* ---- Shadows ---- */
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.08);
+            --shadow-glow: 0 0 60px rgba(139, 107, 77, 0.08);
+
+            /* ---- Transitions ---- */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-base: 0.4s var(--ease-out-expo);
+            --transition-slow: 0.6s var(--ease-out-expo);
+
+            /* ---- Border Radius ---- */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+
+            /* ---- Glass Effect ---- */
+            --glass-bg: rgba(255, 252, 248, 0.6);
+            --glass-border: rgba(44, 44, 44, 0.06);
+            --glass-blur: blur(16px);
+        }
+
+        /* ============================================================
+               RESET & BASE
+               ============================================================ */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            background: #0a0a0a;
-            color: #f1f5f9;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
+        html {
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ---------- ANIMATED DARK BG ---------- */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background:
-                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.20) 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 50%, rgba(168, 85, 247, 0.18) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
-                #0a0a0a;
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            font-size: 1.1rem;
         }
 
-        /* ---------- PARTICLE SYSTEM ---------- */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
 
-        .particle {
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ::selection {
+            background: rgba(139, 107, 77, 0.2);
+            color: var(--color-text);
+        }
+
+        /* ============================================================
+               UTILITY CLASSES
+               ============================================================ */
+        .container {
+            max-width: 1200px;
+            padding: 0 var(--space-lg);
+        }
+
+        .section-padding {
+            padding: var(--space-4xl) 0;
+        }
+
+        .section-padding-sm {
+            padding: var(--space-3xl) 0;
+        }
+
+        .gradient-text {
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text-accent {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+        }
+
+        .sr-only {
             position: absolute;
-            border-radius: 50%;
-            background: #3b82f6;
-            box-shadow: 0 0 12px #3b82f6;
-            opacity: 0.5;
-            animation: floatParticle linear infinite;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
 
-        @keyframes floatParticle {
+        /* ============================================================
+               BACKGROUND LAYERS
+               ============================================================ */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-gradient-base {
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 30%, rgba(139, 107, 77, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 70%, rgba(196, 168, 138, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 50% 90%, rgba(92, 64, 51, 0.04) 0%, transparent 50%),
+                var(--color-bg);
+        }
+
+        .bg-texture {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+            animation: orbFloat 24s ease-in-out infinite alternate;
+        }
+
+        .bg-orb--1 {
+            width: 500px;
+            height: 500px;
+            top: -10%;
+            left: -8%;
+            background: rgba(139, 107, 77, 0.12);
+            animation-delay: 0s;
+        }
+
+        .bg-orb--2 {
+            width: 400px;
+            height: 400px;
+            bottom: -10%;
+            right: -8%;
+            background: rgba(196, 168, 138, 0.10);
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
             0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
+                transform: translate(0, 0) scale(1);
             }
-            10% {
-                opacity: 0.6;
+            33% {
+                transform: translate(30px, -20px) scale(1.06);
             }
-            90% {
-                opacity: 0.6;
+            66% {
+                transform: translate(-20px, 15px) scale(0.94);
             }
             100% {
-                transform: translateY(-10vh) rotate(720deg);
-                opacity: 0;
+                transform: translate(15px, -8px) scale(1.02);
             }
         }
 
-        /* ---------- GRID OVERLAY ---------- */
-        .grid-overlay {
+        /* ============================================================
+               NAVBAR - Elegant
+               ============================================================ */
+        .navbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-image:
-                linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
-            background-size: 60px 60px;
-            animation: gridMove 25s linear infinite;
+            right: 0;
+            z-index: 1050;
+            padding: 18px 0;
+            background: rgba(245, 240, 235, 0.85);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border-bottom: 1px solid rgba(44, 44, 44, 0.04);
+            transition: all var(--transition-base);
         }
 
-        @keyframes gridMove {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(60px, 60px);
-            }
+        .navbar.is-scrolled {
+            background: rgba(245, 240, 235, 0.95);
+            border-bottom: 1px solid rgba(44, 44, 44, 0.06);
+            box-shadow: 0 2px 32px rgba(0, 0, 0, 0.04);
+            padding: 12px 0;
         }
 
-        /* ---------- NAVBAR ---------- */
-        .navbar {
-            background: rgba(10, 10, 10, 0.92);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.25);
-            box-shadow: 0 4px 40px rgba(59, 130, 246, 0.08);
-            padding: 14px 0;
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .navbar-brand {
-            font-size: 1.9rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(59, 130, 246, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -0.3px;
+            color: var(--color-text);
+            transition: transform var(--transition-fast);
         }
 
-        .navbar-brand i {
-            -webkit-text-fill-color: initial;
-            color: #60a5fa;
-            margin-right: 8px;
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-primary);
+            color: #F5F0EB;
+            font-size: 1rem;
+            flex-shrink: 0;
+            font-style: normal;
+        }
+
+        .navbar-brand .brand-text {
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-link {
-            color: #b9c7da !important;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2.5px;
-            padding: 8px 12px;
-            transition: 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 500;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            border-radius: var(--radius-full);
+            transition: all var(--transition-fast);
             position: relative;
+            letter-spacing: 0.2px;
         }
 
         .nav-link:hover {
-            color: #93bbfc !important;
-            text-shadow: 0 0 18px rgba(59, 130, 246, 0.4);
+            color: var(--color-text);
+            background: rgba(44, 44, 44, 0.04);
         }
 
-        .nav-link::after {
-            content: '';
+        .nav-link.is-active {
+            color: var(--color-text);
+            background: rgba(44, 44, 44, 0.06);
+        }
+
+        .nav-link .nav-indicator {
             position: absolute;
-            bottom: 0;
+            bottom: 4px;
             left: 50%;
-            width: 0%;
-            height: 2.5px;
-            background: linear-gradient(90deg, #3b82f6, #a855f7);
-            transition: 0.3s ease;
-            transform: translateX(-50%);
-            border-radius: 4px;
+            transform: translateX(-50%) scaleX(0);
+            width: 16px;
+            height: 2px;
+            border-radius: 2px;
+            background: var(--gradient-primary);
+            transition: transform var(--transition-base);
         }
 
-        .nav-link:hover::after {
-            width: 70%;
+        .nav-link.is-active .nav-indicator,
+        .nav-link:hover .nav-indicator {
+            transform: translateX(-50%) scaleX(1);
         }
 
-        /* ---------- HERO ---------- */
+        .nav-link-cta {
+            background: var(--gradient-primary);
+            color: #F5F0EB !important;
+            padding: 8px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-style: normal;
+            box-shadow: 0 4px 20px rgba(44, 44, 44, 0.08);
+            transition: all var(--transition-base);
+        }
+
+        .nav-link-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(44, 44, 44, 0.12);
+            color: #F5F0EB !important;
+            background: var(--gradient-primary);
+        }
+
+        .navbar-toggler {
+            padding: 8px 12px;
+            border: 1px solid rgba(44, 44, 44, 0.08);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--color-text);
+            transition: all var(--transition-fast);
+        }
+
+        .navbar-toggler:hover {
+            border-color: rgba(44, 44, 44, 0.15);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(44, 44, 44, 0.06);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(26, 26, 26, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        /* ============================================================
+               HERO - Elegant
+               ============================================================ */
         .hero {
+            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
-            text-align: center;
-            position: relative;
-            padding: 100px 0 60px;
+            padding: 140px 0 80px;
+            z-index: 1;
+            overflow: hidden;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: 45%;
+            top: 35%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 107, 77, 0.04) 0%, transparent 70%);
             border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
+            pointer-events: none;
         }
 
-        .badge-hero {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.15);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(59, 130, 246, 0.30);
-            padding: 12px 34px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 3.5px;
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 22px 6px 18px;
+            background: rgba(44, 44, 44, 0.04);
+            border: 1px solid rgba(44, 44, 44, 0.06);
+            border-radius: var(--radius-full);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #93bbfc;
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.15);
+            color: var(--color-text-secondary);
+            margin-bottom: 28px;
+            transition: all var(--transition-base);
+            animation: fadeUp 0.8s var(--ease-out-expo) both;
         }
 
-        .logo-text {
-            font-size: 6.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 70px rgba(59, 130, 246, 0.25);
-            animation: glowPulse 4s ease-in-out infinite;
-            letter-spacing: 6px;
-            line-height: 1.1;
+        .hero-badge:hover {
+            background: rgba(44, 44, 44, 0.06);
+            border-color: rgba(44, 44, 44, 0.1);
+            transform: translateY(-2px);
         }
 
-        @keyframes glowPulse {
+        .hero-badge .badge-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
             0%,
             100% {
-                filter: brightness(1);
+                opacity: 1;
+                transform: scale(1);
             }
             50% {
-                filter: brightness(1.25);
+                opacity: 0.3;
+                transform: scale(0.6);
             }
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            font-weight: 800;
+            font-style: italic;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.1s both;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .hero-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 4px;
+            opacity: 0.15;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            font-size: 1.3rem;
-            color: #b9c7da;
+            font-family: var(--font-body);
+            font-size: clamp(1.1rem, 1.4vw, 1.4rem);
             font-weight: 400;
-            letter-spacing: 2px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            max-width: 580px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.2s both;
         }
 
-        .hero-btn {
-            padding: 20px 56px;
-            border-radius: 60px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            border: none;
-            color: #fff;
-            transition: 0.3s;
-            box-shadow: 0 8px 40px rgba(59, 130, 246, 0.35);
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.3s both;
+        }
+
+        .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .hero-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            transform: rotate(45deg);
-            transition: 0.6s;
-        }
-
-        .hero-btn:hover::before {
-            left: 100%;
-        }
-
-        .hero-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 8px 60px rgba(59, 130, 246, 0.55);
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: #fff;
-        }
-
-        .hero-btn:active {
-            transform: scale(0.96);
-        }
-
-        /* ---------- FEATURE CARDS ---------- */
-        .feature-card {
-            background: rgba(30, 41, 59, 0.55);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(59, 130, 246, 0.20);
-            border-radius: 28px;
-            padding: 44px 28px;
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            height: 100%;
+            gap: 10px;
+            padding: 16px 44px;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 600;
+            font-style: italic;
+            color: #F5F0EB;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 30px rgba(44, 44, 44, 0.08);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            transform-style: preserve-3d;
-            perspective: 800px;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-hero);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(44, 44, 44, 0.12);
+            color: #F5F0EB;
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 500;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            background: transparent;
+            border: 1px solid rgba(44, 44, 44, 0.08);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .btn-secondary:hover {
+            color: var(--color-text);
+            border-color: rgba(44, 44, 44, 0.15);
+            background: rgba(44, 44, 44, 0.02);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 56px;
+            animation: fadeUp 0.8s var(--ease-out-expo) 0.4s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: -1px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            line-height: 1.1;
+        }
+
+        .hero-stat .stat-label {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+               SECTION HEADER
+               ============================================================ */
+        .section-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 56px;
+        }
+
+        .section-header .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            background: rgba(44, 44, 44, 0.04);
+            padding: 6px 18px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(44, 44, 44, 0.04);
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            color: var(--color-text);
+        }
+
+        .section-header h2 .highlight {
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header .section-divider {
+            width: 48px;
+            height: 2px;
+            background: var(--gradient-accent);
+            border-radius: 4px;
+            margin: 16px auto 0;
+        }
+
+        .section-header p {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            margin-top: 16px;
+        }
+
+        /* ============================================================
+               FEATURE CARDS
+               ============================================================ */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .feature-card {
+            position: relative;
+            padding: 40px 32px 36px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-base);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
         .feature-card::before {
             content: '';
             position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+            inset: 0;
+            background: var(--gradient-primary);
             opacity: 0;
-            transition: 0.5s;
+            transition: opacity var(--transition-base);
+            border-radius: var(--radius-lg);
         }
 
         .feature-card:hover::before {
-            opacity: 1;
+            opacity: 0.02;
         }
 
         .feature-card:hover {
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 24px 70px rgba(59, 130, 246, 0.20);
-            background: rgba(30, 41, 59, 0.75);
+            border-color: var(--color-border-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            background: var(--color-bg-card-hover);
         }
 
-        .feature-card i {
-            font-size: 3.6rem;
-            background: linear-gradient(145deg, #3b82f6, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        .feature-card h4 {
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-top: 12px;
-            font-size: 1.6rem;
-        }
-
-        .feature-card p {
-            color: #b9c7da;
-            font-family: 'Inter', Arial, sans-serif;
-            font-weight: 300;
-            font-size: 1rem;
-            line-height: 1.7;
-        }
-
-        /* ---------- HELP SECTION CARDS ---------- */
-        .help-card {
-            background: rgba(30, 41, 59, 0.45);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 24px;
-            padding: 32px 24px;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 800px;
-        }
-
-        .help-card:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
-            background: rgba(30, 41, 59, 0.7);
-        }
-
-        .help-card .icon-wrap {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
+        .feature-card .card-icon {
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 16px;
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-md);
+            background: rgba(44, 44, 44, 0.04);
+            border: 1px solid rgba(44, 44, 44, 0.04);
+            font-size: 1.4rem;
+            color: var(--color-accent);
+            margin-bottom: 18px;
+            transition: all var(--transition-base);
         }
 
-        .help-card h5 {
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            font-size: 1.2rem;
+        .feature-card:hover .card-icon {
+            background: rgba(44, 44, 44, 0.06);
+            transform: scale(1.05);
         }
 
-        .help-card ul {
-            list-style: none;
-            padding: 0;
-            margin: 12px 0 0;
-        }
-
-        .help-card ul li {
-            color: #b9c7da;
-            font-family: 'Inter', Arial, sans-serif;
+        .feature-card .card-number {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-family: var(--font-body);
             font-size: 0.9rem;
-            padding: 4px 0;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-text-muted);
+            opacity: 0.15;
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .feature-card p {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .feature-card .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 18px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--color-accent);
+            transition: all var(--transition-base);
+        }
+
+        .feature-card .card-link:hover {
+            gap: 12px;
+            color: var(--color-accent-dark);
+        }
+
+        /* ============================================================
+               SOLUTIONS / HELP CARDS
+               ============================================================ */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .solution-card {
+            padding: 28px 24px 32px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .solution-card:hover {
+            border-color: var(--color-border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: var(--color-bg-card-hover);
+        }
+
+        .solution-card .card-icon-wrap {
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+            background: rgba(44, 44, 44, 0.04);
+            border: 1px solid rgba(44, 44, 44, 0.04);
+            transition: all var(--transition-base);
+            color: var(--color-accent);
         }
 
-        .help-card ul li i {
-            color: #60a5fa;
+        .solution-card:hover .card-icon-wrap {
+            transform: scale(1.05);
+            background: rgba(44, 44, 44, 0.06);
+        }
+
+        .solution-card h4 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+
+        .solution-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .solution-card ul li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .solution-card ul li:hover {
+            color: var(--color-text);
+            padding-left: 4px;
+        }
+
+        .solution-card ul li .li-icon {
             font-size: 0.6rem;
+            color: var(--color-accent);
+            flex-shrink: 0;
         }
 
-        /* ---------- CREATE AGENT SECTION ---------- */
-        .create-agent-section {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.80), rgba(15, 23, 42, 0.90));
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(59, 130, 246, 0.30);
-            border-radius: 40px;
-            padding: 80px 40px;
-            text-align: center;
-            position: relative;
+        /* ============================================================
+               BLOG CARDS
+               ============================================================ */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .blog-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 12px 80px rgba(59, 130, 246, 0.12);
-            transform-style: preserve-3d;
-            perspective: 1000px;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-sm);
         }
 
-        .create-agent-section::before {
+        .blog-card:hover {
+            border-color: var(--color-border-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .blog-card .blog-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: var(--color-bg-secondary);
+        }
+
+        .blog-card .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.04);
+        }
+
+        .blog-card .blog-image .blog-tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 4px 14px;
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #F5F0EB;
+            background: rgba(44, 44, 44, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .blog-card .blog-body {
+            padding: 22px 24px 26px;
+        }
+
+        .blog-card .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--color-text-muted);
+        }
+
+        .blog-card .blog-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .blog-card .blog-body h5 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-style: italic;
+            margin: 12px 0 10px;
+            line-height: 1.4;
+            letter-spacing: -0.2px;
+        }
+
+        .blog-card .blog-body p {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .blog-card .blog-body .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--color-accent);
+            transition: all var(--transition-base);
+        }
+
+        .blog-card .blog-body .read-more:hover {
+            gap: 12px;
+            color: var(--color-accent-dark);
+        }
+
+        /* ============================================================
+               CTA SECTION
+               ============================================================ */
+        .cta-section {
+            position: relative;
+            padding: var(--space-3xl) var(--space-2xl);
+            background: linear-gradient(145deg, rgba(44, 44, 44, 0.02), rgba(139, 107, 77, 0.02));
+            border: 1px solid rgba(44, 44, 44, 0.04);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cta-section::before {
             content: '';
             position: absolute;
             inset: -50%;
             background:
-                radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.12), transparent 60%),
-                radial-gradient(circle at 70% 50%, rgba(168, 85, 247, 0.10), transparent 60%);
-            animation: rotateBg 30s linear infinite;
+                radial-gradient(circle at 20% 50%, rgba(139, 107, 77, 0.03), transparent 60%),
+                radial-gradient(circle at 80% 50%, rgba(196, 168, 138, 0.02), transparent 60%);
+            animation: ctaOrbSpin 30s linear infinite;
         }
 
-        @keyframes rotateBg {
+        @keyframes ctaOrbSpin {
             0% {
                 transform: rotate(0deg);
             }
@@ -440,549 +1059,1181 @@
             }
         }
 
-        .create-agent-section>* {
+        .cta-section>* {
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
-        .create-agent-section .icon-large {
-            font-size: 4.2rem;
-            background: linear-gradient(135deg, #3b82f6, #a855f7);
+        .cta-section .cta-icon {
+            font-size: 3.2rem;
+            background: var(--gradient-hero);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 12px;
         }
 
-        .create-agent-section h2 {
+        .cta-section h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
             font-weight: 700;
-            letter-spacing: 2px;
-            font-size: 2.4rem;
+            font-style: italic;
+            letter-spacing: -1px;
         }
 
-        .create-agent-btn {
-            padding: 22px 64px;
-            border-radius: 60px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777);
-            border: none;
-            color: white;
-            transition: 0.3s;
-            box-shadow: 0 8px 50px rgba(59, 130, 246, 0.30);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
+        .cta-section p {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            max-width: 520px;
+            margin: 12px auto 32px;
+            line-height: 1.7;
+        }
+
+        .btn-cta {
             display: inline-flex;
             align-items: center;
-            gap: 14px;
-            text-decoration: none;
+            gap: 12px;
+            padding: 18px 52px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-style: italic;
+            color: #F5F0EB;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 32px rgba(44, 44, 44, 0.08);
+            position: relative;
+            overflow: hidden;
         }
 
-        .create-agent-btn::after {
+        .btn-cta::after {
             content: '';
             position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, #3b82f6, #a855f7, #ec4899, #3b82f6);
-            background-size: 300% 300%;
-            border-radius: 60px;
+            inset: -2px;
+            background: var(--gradient-hero);
+            border-radius: var(--radius-full);
             z-index: -1;
-            animation: borderGlow 4s ease-in-out infinite;
+            filter: blur(12px);
+            opacity: 0;
+            transition: opacity var(--transition-base);
         }
 
-        @keyframes borderGlow {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
+        .btn-cta:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 44px rgba(44, 44, 44, 0.12);
+            color: #F5F0EB;
         }
 
-        .create-agent-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 8px 70px rgba(59, 130, 246, 0.50);
-            color: #fff;
+        .btn-cta:hover::after {
+            opacity: 1;
         }
 
-        .create-agent-btn:active {
-            transform: scale(0.94);
+        /* ============================================================
+               FOOTER
+               ============================================================ */
+        .footer {
+            border-top: 1px solid var(--color-border);
+            background: rgba(245, 240, 235, 0.8);
+            backdrop-filter: blur(16px);
+            padding: var(--space-3xl) 0 var(--space-lg);
+            margin-top: var(--space-2xl);
         }
 
-        /* ---------- FOOTER ---------- */
-        footer {
-            border-top: 1px solid rgba(59, 130, 246, 0.15);
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(8px);
-            padding: 28px 0;
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: var(--space-2xl);
+            padding-bottom: var(--space-2xl);
+            border-bottom: 1px solid var(--color-border);
         }
 
-        footer p {
-            color: #64748b;
-            font-family: 'Inter', Arial, sans-serif;
-            letter-spacing: 2.5px;
-            font-size: 0.85rem;
+        .footer-brand {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .footer-brand .brand-icon {
+            -webkit-text-fill-color: initial;
+            color: var(--color-accent);
+            margin-right: 6px;
+        }
+
+        .footer-desc {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            max-width: 300px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .footer-social a:hover {
+            border-color: var(--color-accent);
+            color: var(--color-text);
+            background: rgba(44, 44, 44, 0.04);
+            transform: translateY(-3px);
+        }
+
+        .footer h5 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-style: italic;
+            color: var(--color-text);
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .footer ul {
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
 
-        /* ---------- SCROLLBAR ---------- */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #3b82f6, #a855f7);
-            border-radius: 12px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #60a5fa, #c084fc);
+        .footer ul li {
+            padding: 3px 0;
         }
 
-        /* ---------- RESPONSIVE ---------- */
+        .footer ul li a {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .footer ul li a:hover {
+            color: var(--color-text);
+            padding-left: 4px;
+        }
+
+        .footer-bottom {
+            padding-top: var(--space-lg);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--color-text-muted);
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .footer-bottom p a {
+            color: var(--color-accent);
+            transition: color var(--transition-fast);
+        }
+
+        .footer-bottom p a:hover {
+            color: var(--color-accent-dark);
+        }
+
+        /* ============================================================
+               BACK TO TOP
+               ============================================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #F5F0EB;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 28px rgba(44, 44, 44, 0.08);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 8px 36px rgba(44, 44, 44, 0.12);
+        }
+
+        /* ============================================================
+               SCROLLBAR
+               ============================================================ */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-accent);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-primary);
+        }
+
+        /* ============================================================
+               RESPONSIVE BREAKPOINTS
+               ============================================================ */
+        @media (max-width: 1200px) {
+            .feature-grid,
+            .solutions-grid,
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: var(--space-xl);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: clamp(3rem, 8vw, 4.5rem);
+            }
+            .hero-stats {
+                gap: 36px;
+            }
+            .hero-stat .stat-number {
+                font-size: 2.2rem;
+            }
+            .section-header h2 {
+                font-size: clamp(2rem, 3.5vw, 2.6rem);
+            }
+        }
+
         @media (max-width: 768px) {
-            .logo-text {
-                font-size: 3.8rem;
-                letter-spacing: 3px;
+            .navbar {
+                padding: 12px 0;
+            }
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            .navbar-brand .brand-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85rem;
+            }
+            .nav-link {
+                padding: 6px 14px;
+                font-size: 0.9rem;
+            }
+            .nav-link-cta {
+                padding: 6px 18px;
+            }
+
+            .hero {
+                padding: 120px 0 60px;
+                min-height: auto;
+            }
+            .hero-title {
+                font-size: clamp(2.5rem, 8vw, 3.5rem);
+                letter-spacing: -1px;
             }
             .hero-subtitle {
                 font-size: 1rem;
-                padding: 0 12px;
             }
-            .hero-btn {
-                padding: 16px 32px;
-                font-size: 0.95rem;
-                gap: 8px;
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
             }
-            .create-agent-section {
-                padding: 44px 20px;
-                border-radius: 28px;
+            .hero-actions .btn-primary,
+            .hero-actions .btn-secondary {
+                width: 100%;
+                max-width: 320px;
+                justify-content: center;
             }
-            .create-agent-section h2 {
+            .hero-stats {
+                gap: 24px;
+                flex-wrap: wrap;
+            }
+            .hero-stat .stat-number {
                 font-size: 1.8rem;
             }
-            .create-agent-btn {
-                padding: 16px 32px;
+            .hero-stat .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .section-padding {
+                padding: var(--space-3xl) 0;
+            }
+            .section-padding-sm {
+                padding: var(--space-2xl) 0;
+            }
+            .section-header .section-tag {
+                font-size: 0.65rem;
+            }
+            .section-header h2 {
+                font-size: clamp(1.6rem, 4vw, 2.2rem);
+            }
+            .section-header p {
                 font-size: 1rem;
-                gap: 10px;
             }
+
+            .feature-grid,
+            .solutions-grid,
+            .blog-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-md);
+            }
+
             .feature-card {
-                padding: 30px 20px;
+                padding: 28px 20px 24px;
             }
-            .navbar-brand {
-                font-size: 1.5rem;
+            .feature-card .card-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
             }
-            .help-card {
-                padding: 24px 18px;
+            .feature-card h3 {
+                font-size: 1.2rem;
+            }
+            .feature-card p {
+                font-size: 0.95rem;
+            }
+
+            .solution-card {
+                padding: 20px 16px 24px;
+            }
+            .solution-card h4 {
+                font-size: 1.05rem;
+            }
+            .solution-card ul li {
+                font-size: 0.9rem;
+            }
+
+            .blog-card .blog-image {
+                height: 160px;
+            }
+            .blog-card .blog-body {
+                padding: 16px 18px 20px;
+            }
+            .blog-card .blog-body h5 {
+                font-size: 1.05rem;
+            }
+            .blog-card .blog-body p {
+                font-size: 0.9rem;
+            }
+
+            .cta-section {
+                padding: var(--space-2xl) var(--space-lg);
+                border-radius: var(--radius-lg);
+            }
+            .cta-section .cta-icon {
+                font-size: 2.4rem;
+            }
+            .cta-section h2 {
+                font-size: clamp(1.6rem, 3vw, 2rem);
+            }
+            .cta-section p {
+                font-size: 1rem;
+            }
+            .btn-cta {
+                padding: 14px 36px;
+                font-size: 1rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-lg);
+            }
+            .footer-desc {
+                max-width: 100%;
+            }
+
+            .back-to-top {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+                bottom: 20px;
+                right: 20px;
             }
         }
 
         @media (max-width: 480px) {
-            .logo-text {
-                font-size: 2.8rem;
+            .feature-grid,
+            .solutions-grid,
+            .blog-grid {
+                grid-template-columns: 1fr;
             }
-            .badge-hero {
-                font-size: 0.7rem;
-                padding: 8px 20px;
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-badge {
+                font-size: 0.65rem;
+                padding: 6px 16px;
+            }
+            .hero-stats {
+                gap: 16px;
+            }
+            .hero-stat .stat-number {
+                font-size: 1.6rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
             }
         }
 
-        /* spinner animation */
-        .spinner {
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
+        /* ============================================================
+               ACCESSIBILITY - Reduced Motion
+               ============================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* link reset */
-        a {
-            text-decoration: none;
-        }
-
-        /* section title */
-        .section-title {
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: #e2e8f0;
-        }
-
-        .section-title i {
-            color: #3b82f6;
-        }
-
-        /* ---------- GLOBAL CURSOR 3D TILT ---------- */
-        .tilt-3d {
-            transition: transform 0.08s ease-out;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-
-        .tilt-3d * {
-            transform-style: preserve-3d;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Background layers -->
-    <div class="bg-animation"></div>
-    <div class="grid-overlay"></div>
-    <div class="particles" id="particles"></div>
+    <!-- ============================================================
+    BACKGROUND LAYERS
+    ============================================================ -->
+    <div class="bg-layer bg-gradient-base"></div>
+    <div class="bg-layer bg-texture"></div>
+    <div class="bg-layer bg-orb bg-orb--1"></div>
+    <div class="bg-layer bg-orb bg-orb--2"></div>
 
-    <!-- ========== NAVBAR ========== -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <!-- ============================================================
+    NAVBAR
+    ============================================================ -->
+    <header class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-cpu-fill"></i> OpenMind
+            <a class="navbar-brand" href="#hero" aria-label="OpenMind Home">
+                <span class="brand-icon" aria-hidden="true">
+                    <i class="bi bi-cpu-fill"></i>
+                </span>
+                <span class="brand-text">OpenMind</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
-            aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="menu">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#agenda">Agenda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#help">What We Help With</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#create">Create Agents</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ai-studio.html" target="_blank">AI Studio</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<!-- ========== HERO ========== -->
-<section class="hero">
-    <div class="container">
-        <div class="badge-hero mb-4 tilt-3d">
-            <i class="bi bi-stars me-2"></i> AI Agent Development Platform
-        </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <h1 class="logo-text tilt-3d">OpenMind</h1>
-
-        <p class="hero-subtitle mt-4 tilt-3d">
-            Create, deploy and manage powerful AI Agents<br />
-            with an intuitive platform.
-        </p>
-
-        <div class="my-5">
-            <a href="ai-studio.html" class="hero-btn" id="enterBtn">
-                <i class="bi bi-rocket-takeoff-fill"></i> Enter OpenMind
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ========== AGENDA ========== -->
-<section id="agenda" class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5 section-title tilt-3d">
-            <i class="bi bi-grid-3x3-gap-fill me-2"></i> Platform Agenda
-        </h2>
-
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card tilt-3d">
-                    <i class="bi bi-robot"></i>
-                    <h4>AI Agents</h4>
-                    <p>Create intelligent AI assistants for business and personal use.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card tilt-3d">
-                    <i class="bi bi-lightning-charge-fill"></i>
-                    <h4>Automation</h4>
-                    <p>Automate workflows, tasks, and business processes at scale.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card tilt-3d">
-                    <i class="bi bi-cloud-fill"></i>
-                    <h4>Deployment</h4>
-                    <p>Deploy AI agents securely to enterprise cloud infrastructure.</p>
-                </div>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link is-active" href="#hero">
+                            Home
+                            <span class="nav-indicator" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">
+                            Features
+                            <span class="nav-indicator" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#solutions">
+                            Solutions
+                            <span class="nav-indicator" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#blog">
+                            Blog
+                            <span class="nav-indicator" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-cta" href="ai-studio.html" target="_blank">
+                            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                            AI Studio
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
-</section>
+    </header>
 
-<!-- ========== WHAT WE HELP WITH ========== -->
-<section id="help" class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-4 section-title tilt-3d">
-            <i class="bi bi-heart-fill me-2"></i> What We Help With
-        </h2>
-        <p class="text-center text-muted mb-5 tilt-3d" style="font-family: 'Inter', Arial, sans-serif; color: #94a3b8; max-width: 700px; margin-left: auto; margin-right: auto;">
-            OpenMind AI Agents empower individuals, companies, and startups to solve real-world problems with intelligent automation.
-        </p>
+    <!-- ============================================================
+    HERO
+    ============================================================ -->
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot" aria-hidden="true"></span>
+                    AI Agent Development Platform
+                </div>
 
-        <div class="row g-4">
+                <h1 class="hero-title" id="hero-title">
+                    Build the Future<br />
+                    with <span class="highlight">AI Agents</span>
+                </h1>
 
-            <!-- For Companies -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.25);">
-                        <i class="bi bi-building" style="color: #60a5fa;"></i>
+                <p class="hero-subtitle">
+                    Create, deploy and manage powerful AI Agents with an enterprise-grade platform
+                    designed for scale, security, and intelligent automation.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="ai-studio.html" class="btn-primary" id="heroCta">
+                        <i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i>
+                        Get Started Free
+                    </a>
+                    <a href="#features" class="btn-secondary">
+                        <i class="bi bi-play-circle" aria-hidden="true"></i>
+                        Explore Features
+                    </a>
+                </div>
+
+                <div class="hero-stats" role="list">
+                    <div class="hero-stat" role="listitem">
+                        <span class="stat-number" data-count="12">0</span>
+                        <span class="stat-label">AI Algorithms</span>
                     </div>
-                    <h5 style="color: #60a5fa;">For Companies</h5>
+                    <div class="hero-stat" role="listitem">
+                        <span class="stat-number" data-count="500">0</span>
+                        <span class="stat-label">Active Agents</span>
+                    </div>
+                    <div class="hero-stat" role="listitem">
+                        <span class="stat-number" data-count="99">0</span>
+                        <span class="stat-label">% Uptime SLA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FEATURES
+    ============================================================ -->
+    <section class="section-padding" id="features" aria-labelledby="features-title">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">
+                    <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i>
+                    Platform Capabilities
+                </span>
+                <h2 id="features-title">
+                    Everything You Need to <span class="highlight">Build AI Agents</span>
+                </h2>
+                <div class="section-divider" aria-hidden="true"></div>
+                <p>From development to deployment, OpenMind provides a complete ecosystem for creating intelligent agents at scale.</p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <span class="card-number">01</span>
+                    <div class="card-icon" aria-hidden="true">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h3>AI Agents</h3>
+                    <p>Create intelligent AI assistants for business and personal use with advanced language models and reasoning capabilities.</p>
+                    <a href="#" class="card-link">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+
+                <article class="feature-card">
+                    <span class="card-number">02</span>
+                    <div class="card-icon" aria-hidden="true">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+                    <h3>Automation</h3>
+                    <p>Automate workflows, tasks, and business processes at scale with intelligent decision making and orchestration.</p>
+                    <a href="#" class="card-link">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+
+                <article class="feature-card">
+                    <span class="card-number">03</span>
+                    <div class="card-icon" aria-hidden="true">
+                        <i class="bi bi-cloud-fill"></i>
+                    </div>
+                    <h3>Deployment</h3>
+                    <p>Deploy AI agents securely to enterprise cloud infrastructure with zero downtime, monitoring, and observability.</p>
+                    <a href="#" class="card-link">
+                        Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    SOLUTIONS
+    ============================================================ -->
+    <section class="section-padding" id="solutions" style="background: rgba(44,44,44,0.01);" aria-labelledby="solutions-title">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">
+                    <i class="bi bi-heart-fill" aria-hidden="true"></i>
+                    Who We Help
+                </span>
+                <h2 id="solutions-title">
+                    Solutions for <span class="highlight">Every Role</span>
+                </h2>
+                <div class="section-divider" aria-hidden="true"></div>
+                <p>OpenMind AI Agents empower organizations and individuals to solve real-world problems with intelligent automation.</p>
+            </div>
+
+            <div class="solutions-grid">
+
+                <!-- Companies -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Companies</h4>
                     <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> Automate repetitive tasks</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Reduce operational costs</li>
-                        <li><i class="bi bi-check-circle-fill"></i> 24/7 customer support</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Data-driven decisions</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Scale without hiring</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Predict market trends</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Automate repetitive tasks</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Reduce operational costs</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> 24/7 customer support</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Data-driven decisions</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Scale without hiring</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Predict market trends</li>
+                    </ul>
+                </article>
+
+                <!-- Startups -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-rocket-takeoff"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Startups</h4>
+                    <ul>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> MVP development acceleration</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Customer acquisition insights</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Product-market fit analysis</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Resource optimization</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Churn prediction & prevention</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Growth hacking automation</li>
+                    </ul>
+                </article>
+
+                <!-- Employees -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Employees</h4>
+                    <ul>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Focus on high-value work</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Automate daily tasks</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Better decision support</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Reduce stress & burnout</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Learn AI without coding</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Career advancement</li>
+                    </ul>
+                </article>
+
+                <!-- Individuals -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Individuals</h4>
+                    <ul>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Personal task automation</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Intelligent personal assistant</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Learn ML without complexity</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Side project acceleration</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Freelance work optimization</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Build custom AI tools</li>
+                    </ul>
+                </article>
+
+                <!-- Developers -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-code-square"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Developers</h4>
+                    <ul>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Complete Python agent export</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> 12 algorithms ready to use</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> API integration ready</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Save/load trained models</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Deploy to cloud instantly</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Custom hyperparameter tuning</li>
+                    </ul>
+                </article>
+
+                <!-- Non-Tech -->
+                <article class="solution-card">
+                    <div class="card-icon-wrap">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                    </div>
+                    <h4 style="color: var(--color-accent-dark);">For Non-Tech Users</h4>
+                    <ul>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> No coding required</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Drag-and-drop simplicity</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Visual training pipeline</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Clear results & metrics</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Step-by-step guidance</li>
+                        <li><span class="li-icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span> Export ready-to-use agents</li>
+                    </ul>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    BLOG
+    ============================================================ -->
+    <section class="section-padding" id="blog" aria-labelledby="blog-title">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">
+                    <i class="bi bi-newspaper" aria-hidden="true"></i>
+                    Latest Insights
+                </span>
+                <h2 id="blog-title">
+                    Stories from the <span class="highlight">AI Frontier</span>
+                </h2>
+                <div class="section-divider" aria-hidden="true"></div>
+                <p>Stay updated with the latest in AI and automation from our team of experts and industry leaders.</p>
+            </div>
+
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop&crop=center&auto=format" alt="Futuristic AI visualization" loading="lazy" />
+                        <span class="blog-tag">AI Trends</span>
+                    </div>
+                    <div class="blog-body">
+                        <div class="blog-meta">
+                            <span><i class="bi bi-calendar3" aria-hidden="true"></i> Jun 15, 2026</span>
+                            <span><i class="bi bi-clock" aria-hidden="true"></i> 5 min read</span>
+                        </div>
+                        <h5>The Future of AI Agents</h5>
+                        <p>Discover how AI agents are transforming the way we work and live...</p>
+                        <a href="#" class="read-more">
+                            Read Article <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=400&fit=crop&crop=center&auto=format" alt="Automation visualization" loading="lazy" />
+                        <span class="blog-tag">Automation</span>
+                    </div>
+                    <div class="blog-body">
+                        <div class="blog-meta">
+                            <span><i class="bi bi-calendar3" aria-hidden="true"></i> Jun 10, 2026</span>
+                            <span><i class="bi bi-clock" aria-hidden="true"></i> 4 min read</span>
+                        </div>
+                        <h5>Automation Best Practices</h5>
+                        <p>Learn the best practices for implementing AI automation in your business...</p>
+                        <a href="#" class="read-more">
+                            Read Article <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1488590528505-98d2b853aba4?w=600&h=400&fit=crop&crop=center&auto=format" alt="Person working with AI" loading="lazy" />
+                        <span class="blog-tag">Tutorial</span>
+                    </div>
+                    <div class="blog-body">
+                        <div class="blog-meta">
+                            <span><i class="bi bi-calendar3" aria-hidden="true"></i> Jun 5, 2026</span>
+                            <span><i class="bi bi-clock" aria-hidden="true"></i> 6 min read</span>
+                        </div>
+                        <h5>Building Your First Agent</h5>
+                        <p>A step-by-step guide to creating your first AI agent with OpenMind...</p>
+                        <a href="#" class="read-more">
+                            Read Article <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CTA
+    ============================================================ -->
+    <section class="section-padding-sm" id="create" aria-labelledby="cta-title">
+        <div class="container">
+            <div class="cta-section">
+                <span class="cta-icon" aria-hidden="true">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </span>
+                <h2 id="cta-title">Ready to Build Your AI Agent?</h2>
+                <p>Start creating intelligent agents in minutes with our powerful platform. No coding required.</p>
+                <a href="ai-studio.html" class="btn-cta" id="createCta">
+                    <i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i>
+                    Create Your Agent
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="#" class="footer-brand">
+                        <span class="brand-icon" aria-hidden="true"><i class="bi bi-cpu-fill"></i></span>
+                        OpenMind
+                    </a>
+                    <p class="footer-desc">
+                        Create, deploy and manage powerful AI Agents with an enterprise-grade platform designed for the future of intelligent automation.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                        <a href="#" aria-label="Discord"><i class="bi bi-discord"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h5>Platform</h5>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#solutions">Solutions</a></li>
+                        <li><a href="ai-studio.html">AI Studio</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Feedback</a></li>
                     </ul>
                 </div>
             </div>
 
-            <!-- For Startups -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.25);">
-                        <i class="bi bi-rocket-takeoff" style="color: #a855f7;"></i>
-                    </div>
-                    <h5 style="color: #a855f7;">For Startups</h5>
-                    <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> MVP development acceleration</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Customer acquisition insights</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Product-market fit analysis</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Resource optimization</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Churn prediction & prevention</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Growth hacking automation</li>
-                    </ul>
-                </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2026 <a href="#">OpenMind</a> &mdash;
+                    Built with <span aria-hidden="true"><i class="bi bi-heart-fill" style="color: #8B6B4D; font-size: 0.7rem;"></i></span>
+                    for the future of AI
+                </p>
             </div>
-
-            <!-- For Employees -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.25);">
-                        <i class="bi bi-person-badge" style="color: #ec4899;"></i>
-                    </div>
-                    <h5 style="color: #ec4899;">For Employees</h5>
-                    <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> Focus on high-value work</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Automate daily tasks</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Better decision support</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Reduce stress & burnout</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Learn AI without coding</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Career advancement</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- For Individuals -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.25);">
-                        <i class="bi bi-person" style="color: #10b981;"></i>
-                    </div>
-                    <h5 style="color: #10b981;">For Individuals</h5>
-                    <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> Personal task automation</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Intelligent personal assistant</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Learn ML without complexity</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Side project acceleration</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Freelance work optimization</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Build custom AI tools</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- For Developers -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(251, 191, 36, 0.15); border-color: rgba(251, 191, 36, 0.25);">
-                        <i class="bi bi-code-square" style="color: #fbbf24;"></i>
-                    </div>
-                    <h5 style="color: #fbbf24;">For Developers</h5>
-                    <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> Complete Python agent export</li>
-                        <li><i class="bi bi-check-circle-fill"></i> 12 algorithms ready to use</li>
-                        <li><i class="bi bi-check-circle-fill"></i> API integration ready</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Save/load trained models</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Deploy to cloud instantly</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Custom hyperparameter tuning</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- For Non-Tech Users -->
-            <div class="col-lg-4 col-md-6">
-                <div class="help-card tilt-3d">
-                    <div class="icon-wrap" style="background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.2);">
-                        <i class="bi bi-hand-thumbs-up" style="color: #f472b6;"></i>
-                    </div>
-                    <h5 style="color: #f472b6;">For Non-Tech Users</h5>
-                    <ul>
-                        <li><i class="bi bi-check-circle-fill"></i> No coding required</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Drag-and-drop simplicity</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Visual training pipeline</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Clear results & metrics</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Step-by-step guidance</li>
-                        <li><i class="bi bi-check-circle-fill"></i> Export ready-to-use agents</li>
-                    </ul>
-                </div>
-            </div>
-
         </div>
-    </div>
-</section>
+    </footer>
 
-<!-- ========== CREATE AGENTS ========== -->
-<section id="create" class="py-5">
-    <div class="container">
-        <div class="create-agent-section tilt-3d">
-            <i class="bi bi-plus-circle-fill icon-large"></i>
-            <h2 class="mb-3">Ready to Build Your AI Agent?</h2>
-            <p style="color: #b9c7da; font-family: 'Inter', Arial, sans-serif; font-size: 1.1rem;" class="mb-4">
-                Start creating intelligent agents in minutes with our powerful platform.
-            </p>
-            <a href="ai-studio.html" class="create-agent-btn" id="createAgentBtn">
-                <i class="bi bi-rocket-takeoff-fill"></i> Create Agent
-            </a>
-        </div>
-    </div>
-</section>
+    <!-- ============================================================
+    BACK TO TOP
+    ============================================================ -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="bi bi-chevron-up" aria-hidden="true"></i>
+    </button>
 
-<!-- ========== FOOTER ========== -->
-<footer class="text-center">
-    <p>© 2026 OpenMind · Build Powerful AI Agents</p>
-</footer>
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
+    <script>
+        (function() {
+            'use strict';
 
-<script>
-    (function() {
-        "use strict";
+            // ============================================================
+            // CONSTANTS
+            // ============================================================
+            const EASE_OUT_EXPO = 'cubic-bezier(0.16, 1, 0.3, 1)';
+            const THROTTLE_DELAY = 10;
 
-        // ---------- PARTICLE SYSTEM ----------
-        function createParticles() {
-            const container = document.getElementById('particles');
-            if (!container) return;
-            const count = 90;
-            const colors = ['#3b82f6', '#a855f7', '#ec4899', '#60a5fa', '#c084fc'];
-
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const size = Math.random() * 4 + 2;
-                p.style.width = size + 'px';
-                p.style.height = size + 'px';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (Math.random() * 22 + 14) + 's';
-                p.style.animationDelay = (Math.random() * 22) + 's';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                p.style.background = color;
-                p.style.boxShadow = `0 0 ${size * 3}px ${color}`;
-                container.appendChild(p);
-            }
-        }
-        createParticles();
-
-        // ---------- SMOOTH SCROLL (nav links) ----------
-        document.querySelectorAll('.nav-link[href^="#"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId && targetId !== '#') {
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // ============================================================
+            // THROTTLE UTILITY
+            // ============================================================
+            function throttle(fn, limit) {
+                let inThrottle = false;
+                return function(...args) {
+                    if (!inThrottle) {
+                        fn.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
                     }
+                };
+            }
+
+            // ============================================================
+            // NAVBAR SCROLL
+            // ============================================================
+            const navbar = document.getElementById('navbar');
+
+            function handleNavbarScroll() {
+                navbar.classList.toggle('is-scrolled', window.scrollY > 40);
+            }
+
+            window.addEventListener('scroll', throttle(handleNavbarScroll, THROTTLE_DELAY), { passive: true });
+            handleNavbarScroll();
+
+            // ============================================================
+            // SMOOTH SCROLL - Navigation Links
+            // ============================================================
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const target = document.querySelector(targetId);
+                    if (!target) return;
+
+                    e.preventDefault();
+
+                    // Close mobile menu
+                    const menu = document.getElementById('navMenu');
+                    const bsCollapse = bootstrap.Collapse.getInstance(menu);
+                    if (bsCollapse) bsCollapse.hide();
+
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(nl => nl.classList.remove('is-active'));
+                    const correspondingNav = document.querySelector(`.nav-link[href="${targetId}"]`);
+                    if (correspondingNav) correspondingNav.classList.add('is-active');
+                });
+            });
+
+            // ============================================================
+            // ACTIVE NAV LINK - Scroll Spy
+            // ============================================================
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link:not(.nav-link-cta)');
+
+            function updateActiveNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const top = section.offsetTop - 200;
+                    if (window.scrollY >= top) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    link.classList.toggle('is-active', href === '#' + current);
+                });
+            }
+
+            window.addEventListener('scroll', throttle(updateActiveNav, THROTTLE_DELAY), { passive: true });
+            updateActiveNav();
+
+            // ============================================================
+            // BACK TO TOP
+            // ============================================================
+            const backToTop = document.getElementById('backToTop');
+
+            function handleBackToTop() {
+                backToTop.classList.toggle('is-visible', window.scrollY > 500);
+            }
+
+            window.addEventListener('scroll', throttle(handleBackToTop, THROTTLE_DELAY), { passive: true });
+            handleBackToTop();
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // ============================================================
+            // COUNTER ANIMATION
+            // ============================================================
+            const counters = document.querySelectorAll('[data-count]');
+            let countersAnimated = false;
+
+            function animateCounters() {
+                if (countersAnimated) return;
+
+                const heroSection = document.querySelector('.hero');
+                if (!heroSection) return;
+
+                const rect = heroSection.getBoundingClientRect();
+                const triggerPoint = window.innerHeight * 0.75;
+
+                if (rect.top < triggerPoint) {
+                    countersAnimated = true;
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-count'), 10);
+                        let current = 0;
+                        const duration = 2000;
+                        const steps = 40;
+                        const increment = Math.ceil(target / steps);
+                        let count = 0;
+
+                        const timer = setInterval(() => {
+                            count += increment;
+                            if (count >= target) {
+                                counter.textContent = target + (target === 99 ? '%' : '+');
+                                clearInterval(timer);
+                            } else {
+                                counter.textContent = count + (target === 99 ? '%' : '+');
+                            }
+                        }, duration / steps);
+                    });
+                }
+            }
+
+            window.addEventListener('scroll', throttle(animateCounters, 100), { passive: true });
+            window.addEventListener('load', () => setTimeout(animateCounters, 400));
+
+            // ============================================================
+            // BUTTON FEEDBACK
+            // ============================================================
+            document.querySelectorAll('.btn-primary, .btn-cta, .btn-secondary').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const originalTransform = this.style.transform;
+                    this.style.transform = 'scale(0.96)';
+                    this.style.transition = 'transform 0.12s ease';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                        setTimeout(() => {
+                            this.style.transition = '';
+                            this.style.transform = originalTransform || '';
+                        }, 120);
+                    }, 120);
+                });
+            });
+
+            // ============================================================
+            // KEYBOARD ACCESSIBILITY - Back to Top
+            // ============================================================
+            backToTop.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
-        });
 
-        // ---------- GLOBAL CURSOR 3D TILT ----------
-        // This makes any element with class "tilt-3d" follow the cursor with 3D tilt
-        const tiltElements = document.querySelectorAll('.tilt-3d');
+            // ============================================================
+            // INTERSECTION OBSERVER - Card Reveal
+            // ============================================================
+            if ('IntersectionObserver' in window) {
+                const revealElements = document.querySelectorAll('.feature-card, .solution-card, .blog-card');
 
-        tiltElements.forEach(el => {
-            el.addEventListener('mousemove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateY = ((x - centerX) / centerX) * 15; // Left/right tilt
-                const rotateX = ((centerY - y) / centerY) * 15; // Up/down tilt
-                this.style.transform =
-                    `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-            });
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            const delay = index * 100;
+                            setTimeout(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }, delay);
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -40px 0px'
+                });
 
-            el.addEventListener('mouseleave', function() {
-                this.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
-                // Add a smooth transition back
-                this.style.transition = 'transform 0.4s ease-out';
-                setTimeout(() => {
-                    this.style.transition = '';
-                }, 400);
-            });
+                revealElements.forEach((el, i) => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(24px)';
+                    el.style.transition =
+                        `opacity 0.6s ${EASE_OUT_EXPO}, transform 0.6s ${EASE_OUT_EXPO}`;
+                    el.style.transitionDelay = `${i * 0.06}s`;
+                    revealObserver.observe(el);
+                });
+            }
 
-            // Reset transition on mouse enter for smooth movement
-            el.addEventListener('mouseenter', function() {
-                this.style.transition = 'transform 0.08s ease-out';
-            });
-        });
+            // ============================================================
+            // PERFORMANCE - Reduce motion preference
+            // ============================================================
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            if (prefersReducedMotion.matches) {
+                document.querySelectorAll('.feature-card, .solution-card, .blog-card').forEach(el => {
+                    el.style.transition = 'none';
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                });
+            }
 
-        // ---------- BUTTON FEEDBACK (Create Agent) ----------
-        const createBtn = document.getElementById('createAgentBtn');
-        if (createBtn) {
-            createBtn.addEventListener('click', function(e) {
-                this.style.transform = 'scale(0.94)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1.04)';
-                }, 120);
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 300);
-            });
-        }
+            console.log('✨ OpenMind · Elegant AI Agents Platform');
+            console.log('📜 Crafted with timeless elegance and precision.');
 
-        // ---------- HERO BUTTON subtle feedback ----------
-        const heroBtn = document.getElementById('enterBtn');
-        if (heroBtn) {
-            heroBtn.addEventListener('click', function() {
-                this.style.transform = 'scale(0.94)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1.04)';
-                }, 100);
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 280);
-            });
-        }
-
-        // ---------- ADD SPINNER STYLE ----------
-        const styleSheet = document.createElement("style");
-        styleSheet.textContent = `
-            .spinner { animation: spin 0.9s linear infinite; }
-            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        `;
-        document.head.appendChild(styleSheet);
-
-    })();
-</script>
+        })();
+    </script>
 
 </body>
 </html>
