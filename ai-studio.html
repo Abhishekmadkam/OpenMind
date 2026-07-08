@@ -3,249 +3,609 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenMind AI · Studio</title>
+  <title>OpenMind AI · Studio Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <!-- SheetJS for Excel support -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    /* glass & glow – exactly same as original */
+    /* ===== BASE ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0f;
+      color: #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6d28d9; }
+
+    /* ===== ANIMATIONS ===== */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
-    @keyframes pulse-slow {
+    @keyframes pulseSlow {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.03); }
     }
-    .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
-    .animate-slideUp { animation: slideUp 0.2s ease-out; }
-    .animate-pulse-slow { animation: pulse-slow 3s infinite; }
-    .glass-card { background: rgba(17, 17, 27, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(168, 85, 247, 0.2); }
-    .glass-card-light { background: rgba(30, 30, 50, 0.6); backdrop-filter: blur(8px); border: 1px solid rgba(168, 85, 247, 0.15); }
-    .gradient-text { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .gradient-bg { background: linear-gradient(135deg, #7c3aed, #db2777); }
-    .gradient-bg-hover:hover { background: linear-gradient(135deg, #6d28d9, #be185d); }
-    .scrollbar-thin::-webkit-scrollbar { width: 4px; }
-    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-    .scrollbar-thin::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 10px; }
-    body { background: #0a0a0f; color: #e5e7eb; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    .bg-grid { background-image: radial-gradient(rgba(168, 85, 247, 0.08) 1px, transparent 1px); background-size: 30px 30px; }
-    .tab-panel { transition: all 0.15s ease; }
-    .code-block { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0.2rem 0.6rem; font-family: monospace; font-size: 0.8rem; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .animate-fadeIn { animation: fadeIn 0.35s ease-out; }
+    .animate-slideUp { animation: slideUp 0.25s ease-out; }
+    .animate-pulse-slow { animation: pulseSlow 3s infinite; }
+    .animate-spin-slow { animation: spin 1s linear infinite; }
+
+    /* ===== GLASS ===== */
+    .glass {
+      background: rgba(17, 17, 27, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(168, 85, 247, 0.15);
+    }
+    .glass-light {
+      background: rgba(30, 30, 50, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(168, 85, 247, 0.08);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      transition: all 0.25s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(168, 85, 247, 0.15);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    /* ===== GRADIENTS ===== */
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #7c3aed, #db2777);
+    }
+    .gradient-bg-hover:hover {
+      background: linear-gradient(135deg, #6d28d9, #be185d);
+    }
+    .gradient-border {
+      border-image: linear-gradient(135deg, #7c3aed, #db2777) 1;
+    }
+
+    /* ===== GRID BG ===== */
+    .bg-grid {
+      background-image: radial-gradient(rgba(168, 85, 247, 0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* ===== TABLES ===== */
     #tableContainer table { border-collapse: collapse; width: 100%; }
-    #tableContainer th, #tableContainer td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid rgba(75,85,99,0.4); }
-    #tableContainer th { color: #c4b5d4; font-weight: 600; }
-    .doc-section { border-left: 2px solid rgba(168, 85, 247, 0.3); padding-left: 1rem; }
-    .doc-section code { background: rgba(0,0,0,0.3); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: #a78bfa; }
+    #tableContainer th, #tableContainer td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+      font-size: 0.8rem;
+    }
+    #tableContainer th { color: #c4b5d4; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    #tableContainer tr:hover td { background: rgba(168, 85, 247, 0.04); }
+
+    /* ===== CODE ===== */
+    .code-block {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 6px;
+      padding: 0.15rem 0.5rem;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      font-size: 0.75rem;
+      color: #a78bfa;
+    }
+    .code-block-dark {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      font-size: 0.75rem;
+      overflow-x: auto;
+      color: #86efac;
+      border: 1px solid rgba(168, 85, 247, 0.08);
+    }
+
+    /* ===== TABS ===== */
+    .tab-btn {
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+    }
+    .tab-btn:hover { color: #e5e7eb; background: rgba(255,255,255,0.04); }
+    .tab-btn.active {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c4b5d4;
+    }
+    .tab-btn i { margin-right: 0.4rem; }
+
+    /* ===== DASHBOARD LAYOUT ===== */
+    .dashboard {
+      display: grid;
+      gap: 1rem;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    /* ===== MOBILE FIRST (default) ===== */
+    .dashboard {
+      grid-template-columns: 1fr;
+      padding: 0.75rem;
+    }
+
+    .sidebar { display: none; }
+    .main-content { grid-column: 1; }
+    .header-mobile { display: flex; }
+    .header-desktop { display: none; }
+
+    /* ===== DESKTOP LAYOUT (min-width: 1024px) ===== */
+    @media (min-width: 1024px) {
+      .dashboard {
+        grid-template-columns: 240px 1fr;
+        gap: 1.25rem;
+        padding: 1.25rem;
+      }
+      .sidebar { display: block; grid-column: 1; }
+      .main-content { grid-column: 2; }
+      .header-mobile { display: none; }
+      .header-desktop { display: flex; }
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar-inner {
+      position: sticky;
+      top: 1.25rem;
+      padding: 1.25rem 0.75rem;
+      border-radius: 16px;
+      max-height: calc(100vh - 2.5rem);
+      overflow-y: auto;
+    }
+    .sidebar-inner .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font-weight: 500;
+    }
+    .sidebar-inner .nav-item:hover { color: #e5e7eb; background: rgba(255,255,255,0.04); }
+    .sidebar-inner .nav-item.active {
+      color: #c4b5d4;
+      background: rgba(168, 85, 247, 0.12);
+    }
+    .sidebar-inner .nav-item i { width: 1.25rem; text-align: center; font-size: 0.9rem; }
+    .sidebar-inner .nav-divider {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      margin: 0.5rem 0.75rem;
+    }
+    .sidebar-inner .nav-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #4b5563;
+      padding: 0.5rem 0.75rem 0.25rem;
+      font-weight: 600;
+    }
+
+    /* ===== MOBILE HEADER ===== */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0.25rem 0.75rem 0.75rem;
+      border-radius: 14px;
+      margin-bottom: 0.5rem;
+    }
+    .mobile-header .brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .mobile-header .brand .gradient-text { -webkit-text-fill-color: transparent; }
+
+    /* ===== MOBILE DRAWER ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .drawer-overlay.open { display: block; }
+    .drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      background: rgba(10, 10, 15, 0.98);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(168, 85, 247, 0.08);
+      padding: 1.25rem 0.75rem;
+      z-index: 1001;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem 1rem 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      margin-bottom: 0.75rem;
+    }
+    .drawer .drawer-header .brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .drawer .drawer-header .close-btn {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+    .drawer .drawer-header .close-btn:hover { background: rgba(255,255,255,0.05); color: #e5e7eb; }
+    .drawer .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      font-weight: 500;
+    }
+    .drawer .nav-item:hover { color: #e5e7eb; background: rgba(255,255,255,0.04); }
+    .drawer .nav-item.active {
+      color: #c4b5d4;
+      background: rgba(168, 85, 247, 0.12);
+    }
+    .drawer .nav-item i { width: 1.25rem; text-align: center; font-size: 0.9rem; }
+
+    /* ===== BADGE ===== */
+    .badge-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: pulseSlow 2s infinite;
+      margin-right: 0.25rem;
+    }
+
+    /* ===== UTILITY ===== */
+    .truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+
+    /* ===== RESPONSIVE FINE-TUNE ===== */
+    @media (max-width: 640px) {
+      .dashboard { padding: 0.5rem; gap: 0.5rem; }
+      .glass-card { padding: 0.75rem !important; }
+      .tab-btn { font-size: 0.7rem; padding: 0.35rem 0.6rem; }
+      .tab-btn i { margin-right: 0.2rem; }
+      #tableContainer th, #tableContainer td { padding: 0.3rem 0.4rem; font-size: 0.7rem; }
+      .code-block-dark { font-size: 0.65rem; padding: 0.5rem; }
+    }
+
+    @media (min-width: 641px) and (max-width: 1023px) {
+      .dashboard { padding: 0.75rem; gap: 0.75rem; }
+    }
   </style>
 </head>
-<body class="bg-grid min-h-screen antialiased flex items-center justify-center p-4">
+<body class="bg-grid">
 
-  <!-- ========== AI STUDIO MODAL ========== -->
-  <div id="aiModal" class="w-full max-w-6xl max-h-[95vh] bg-gray-900/95 rounded-3xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-500/20 animate-slideUp flex flex-col">
-    <!-- Modal Header -->
-    <div class="gradient-bg/20 border-b border-purple-500/30 p-5 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 gradient-bg rounded-2xl flex items-center justify-center">
-          <i class="fas fa-brain text-white"></i>
-        </div>
-        <div>
-          <h2 class="text-xl font-bold gradient-text">AI Studio <span class="text-xs text-gray-400 font-normal ml-2">v3.2 · Agent Builder</span></h2>
-          <p class="text-xs text-gray-400">Train & deploy agents instantly</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="exportSystemConfig()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-gray-700/60 rounded-xl hover:bg-gray-600 transition"><i class="fas fa-code"></i> Config</button>
-        <button onclick="closeAIModal()" class="p-2 hover:bg-gray-800/50 rounded-xl transition">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-    </div>
+  <!-- ============================================================
+  DASHBOARD
+  ============================================================ -->
+  <div class="dashboard">
 
-    <!-- Modal Body -->
-    <div class="flex-1 overflow-y-auto p-5 scrollbar-thin">
-      <!-- Tabs -->
-      <div class="flex gap-1 border-b border-gray-700 pb-3 mb-5 overflow-x-auto">
-        <button onclick="setTab('quick')" data-tab="quick" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition bg-purple-600/20 text-purple-300">
-          <i class="fas fa-bolt"></i> Quick
+    <!-- ===== SIDEBAR (Desktop) ===== -->
+    <aside class="sidebar">
+      <div class="sidebar-inner glass">
+        <div style="padding: 0 0.5rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); margin-bottom: 0.5rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <div class="gradient-bg" style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fas fa-brain" style="color:#fff;font-size:0.9rem;"></i>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:1rem;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">OpenMind</div>
+              <div style="font-size:0.6rem;color:#6b7280;font-weight:500;">AI Studio v3.2</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-label">Main</div>
+        <button class="nav-item active" data-tab="quick" onclick="setTab('quick')">
+          <i class="fas fa-bolt"></i> Quick Start
         </button>
-        <button onclick="setTab('data')" data-tab="data" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+        <button class="nav-item" data-tab="data" onclick="setTab('data')">
           <i class="fas fa-database"></i> Data
         </button>
-        <button onclick="setTab('config')" data-tab="config" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+        <button class="nav-item" data-tab="config" onclick="setTab('config')">
           <i class="fas fa-sliders-h"></i> Config
         </button>
-        <button onclick="setTab('train')" data-tab="train" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+        <button class="nav-item" data-tab="train" onclick="setTab('train')">
           <i class="fas fa-brain"></i> Train
         </button>
-        <button onclick="setTab('results')" data-tab="results" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+
+        <div class="nav-divider"></div>
+        <div class="nav-label">Output</div>
+        <button class="nav-item" data-tab="results" onclick="setTab('results')">
           <i class="fas fa-chart-bar"></i> Results
         </button>
-        <button onclick="setTab('docs')" data-tab="docs" class="tab-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition text-gray-400 hover:text-white">
+        <button class="nav-item" data-tab="docs" onclick="setTab('docs')">
           <i class="fas fa-book"></i> Docs
         </button>
-      </div>
 
-      <!-- ===== TAB: Quick ===== -->
-      <div id="tabQuick" class="tab-panel space-y-4">
-        <div class="glass-card rounded-2xl p-5">
-          <h3 class="text-lg font-semibold flex items-center gap-2"><i class="fas fa-compass text-purple-400"></i> How it works</h3>
-          <div class="mt-3 space-y-3 text-sm text-gray-300">
-            <div class="flex gap-3 items-start">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">1</span>
-              <div><span class="font-medium text-white">Upload data</span> – Provide your dataset (CSV, Excel, or JSON) in the <span class="text-purple-400">Data</span> tab.</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">2</span>
-              <div><span class="font-medium text-white">Configure</span> – Select model type, target column, and algorithm in <span class="text-purple-400">Config</span>.</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">3</span>
-              <div><span class="font-medium text-white">Train</span> – Click "Start Training" and watch the pipeline execute step by step.</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">4</span>
-              <div><span class="font-medium text-white">Evaluate</span> – Review accuracy, precision, recall, F1, and sample predictions in <span class="text-purple-400">Results</span>.</div>
-            </div>
-            <div class="flex gap-3 items-start">
-              <span class="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600/30 flex items-center justify-center text-xs font-bold text-purple-300">5</span>
-              <div><span class="font-medium text-white">Export Agent</span> – Download a complete Python agent that works directly with your data.</div>
-            </div>
-          </div>
-          <div class="mt-4 p-3 bg-gray-800/40 rounded-xl border border-gray-700/40">
-            <p class="text-xs text-gray-400"><i class="fas fa-info-circle mr-1 text-purple-400"></i> All processing runs locally in your browser. No data leaves your machine.</p>
+        <div class="nav-divider"></div>
+        <div style="padding:0.5rem 0.75rem;margin-top:0.25rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.7rem;color:#6b7280;">
+            <span class="badge-dot"></span>
+            <span>System Ready</span>
+            <span style="color:#4b5563;">·</span>
+            <span style="color:#7c3aed;">12 algos</span>
           </div>
         </div>
-        <div class="glass-card rounded-2xl p-5">
-          <h4 class="font-semibold text-sm">System capabilities</h4>
-          <div class="flex flex-wrap gap-3 mt-2 text-xs">
-            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full"></span> 12 algorithms</span>
-            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-400 rounded-full"></span> 6 model types</span>
-            <span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-400 rounded-full"></span> Exportable agent</span>
-       
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+      <!-- ===== MOBILE HEADER ===== -->
+      <div class="mobile-header glass header-mobile">
+        <div class="brand">
+          <span class="gradient-text"><i class="fas fa-brain" style="-webkit-text-fill-color:initial;color:#a855f7;margin-right:0.25rem;"></i>OpenMind</span>
+          <span style="font-size:0.6rem;color:#6b7280;font-weight:400;margin-left:0.25rem;">v3.2</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span style="font-size:0.6rem;color:#6b7280;display:flex;align-items:center;gap:0.25rem;">
+            <span class="badge-dot"></span> Ready
+          </span>
+          <button onclick="toggleDrawer()" style="background:none;border:none;color:#9ca3af;font-size:1.2rem;padding:0.25rem 0.5rem;border-radius:8px;cursor:pointer;">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== DESKTOP HEADER ===== -->
+      <div class="header-desktop" style="display:none;align-items:center;justify-content:space-between;padding:0.5rem 0.75rem 1rem 0.75rem;border-bottom:1px solid rgba(255,255,255,0.04);margin-bottom:0.75rem;">
+        <div>
+          <h1 style="font-size:1.25rem;font-weight:600;">AI Studio <span style="font-size:0.7rem;font-weight:400;color:#6b7280;">· Agent Builder</span></h1>
+          <p style="font-size:0.75rem;color:#6b7280;">Train & deploy intelligent agents instantly</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <button onclick="exportSystemConfig()" style="font-size:0.7rem;padding:0.3rem 0.8rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:#9ca3af;cursor:pointer;transition:0.2s;">
+            <i class="fas fa-code"></i> Config
+          </button>
+          <button onclick="closeAIModal()" style="font-size:0.7rem;padding:0.3rem 0.8rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:#9ca3af;cursor:pointer;transition:0.2s;">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== TABS (Desktop & Mobile) ===== -->
+      <div style="display:flex;gap:0.25rem;border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:0.5rem;margin-bottom:1rem;overflow-x:auto;flex-wrap:nowrap;">
+        <button class="tab-btn active" data-tab="quick" onclick="setTab('quick')"><i class="fas fa-bolt"></i> Quick</button>
+        <button class="tab-btn" data-tab="data" onclick="setTab('data')"><i class="fas fa-database"></i> Data</button>
+        <button class="tab-btn" data-tab="config" onclick="setTab('config')"><i class="fas fa-sliders-h"></i> Config</button>
+        <button class="tab-btn" data-tab="train" onclick="setTab('train')"><i class="fas fa-brain"></i> Train</button>
+        <button class="tab-btn" data-tab="results" onclick="setTab('results')"><i class="fas fa-chart-bar"></i> Results</button>
+        <button class="tab-btn" data-tab="docs" onclick="setTab('docs')"><i class="fas fa-book"></i> Docs</button>
+      </div>
+
+      <!-- ==========================================================
+      TAB PANELS
+      ========================================================== -->
+
+      <!-- ===== TAB: Quick ===== -->
+      <div id="tabQuick" class="tab-panel animate-fadeIn">
+        <div class="glass-card" style="padding:1.25rem;">
+          <h3 style="font-weight:600;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+            <i class="fas fa-compass" style="color:#a855f7;"></i> How it works
+          </h3>
+          <div style="display:grid;gap:0.75rem;font-size:0.85rem;color:#9ca3af;">
+            <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+              <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#a855f7;">1</span>
+              <div><span style="color:#e5e7eb;font-weight:500;">Upload data</span> – CSV, Excel, or JSON in the <span style="color:#a855f7;">Data</span> tab</div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+              <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#a855f7;">2</span>
+              <div><span style="color:#e5e7eb;font-weight:500;">Configure</span> – Model type, target column, algorithm in <span style="color:#a855f7;">Config</span></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+              <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#a855f7;">3</span>
+              <div><span style="color:#e5e7eb;font-weight:500;">Train</span> – Click "Start Training" and watch the pipeline execute</div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+              <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#a855f7;">4</span>
+              <div><span style="color:#e5e7eb;font-weight:500;">Evaluate</span> – Review metrics in <span style="color:#a855f7;">Results</span></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+              <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;color:#a855f7;">5</span>
+              <div><span style="color:#e5e7eb;font-weight:500;">Export Agent</span> – Download a complete Python agent</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding:0.75rem;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid rgba(168,85,247,0.06);">
+            <span style="font-size:0.7rem;color:#6b7280;"><i class="fas fa-info-circle" style="color:#a855f7;"></i> All processing runs locally. No data leaves your machine.</span>
+          </div>
+        </div>
+        <div class="glass-card" style="padding:1rem;margin-top:0.5rem;">
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;font-size:0.75rem;color:#6b7280;">
+            <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;"></span> 12 algorithms</span>
+            <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:6px;height:6px;border-radius:50%;background:#60a5fa;"></span> 6 model types</span>
+            <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:6px;height:6px;border-radius:50%;background:#a855f7;"></span> Exportable agent</span>
           </div>
         </div>
       </div>
 
       <!-- ===== TAB: Data ===== -->
-      <div id="tabData" class="tab-panel hidden space-y-5">
-        <div class="glass-card rounded-2xl p-6 text-center">
-          <i class="fas fa-cloud-upload-alt text-5xl text-purple-400 mb-3"></i>
-          <h3 class="text-lg font-semibold">Upload Dataset</h3>
-          <p class="text-gray-400 text-sm mb-4">CSV, Excel, or JSON</p>
-          <label class="cursor-pointer inline-block px-6 py-2.5 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition text-sm">
+      <div id="tabData" class="tab-panel hidden animate-fadeIn">
+        <div class="glass-card" style="padding:1.5rem;text-align:center;">
+          <i class="fas fa-cloud-upload-alt" style="font-size:3rem;color:#a855f7;margin-bottom:0.5rem;"></i>
+          <h3 style="font-weight:600;margin-bottom:0.25rem;">Upload Dataset</h3>
+          <p style="font-size:0.85rem;color:#6b7280;margin-bottom:0.75rem;">CSV, Excel, or JSON</p>
+          <label style="display:inline-block;padding:0.5rem 1.5rem;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;font-size:0.85rem;cursor:pointer;transition:0.2s;">
             Choose File
             <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json" class="hidden" onchange="handleFileUpload(event)">
           </label>
-          <div id="uploadStatus" class="mt-3 text-sm text-green-400 hidden"><i class="fas fa-check-circle"></i> <span id="fileName"></span></div>
+          <div id="uploadStatus" class="hidden" style="margin-top:0.75rem;font-size:0.85rem;color:#34d399;">
+            <i class="fas fa-check-circle"></i> <span id="fileName"></span>
+          </div>
         </div>
-        <div id="dataPreview" class="glass-card rounded-2xl p-4 hidden">
-          <h4 class="font-semibold mb-2">Preview</h4>
-          <div id="tableContainer" class="overflow-x-auto text-xs"></div>
-          <p id="dataSummary" class="text-gray-400 text-xs mt-2"></p>
+        <div id="dataPreview" class="glass-card hidden" style="padding:1rem;margin-top:0.5rem;">
+          <h4 style="font-weight:600;margin-bottom:0.5rem;font-size:0.95rem;">Preview</h4>
+          <div id="tableContainer" style="overflow-x:auto;"></div>
+          <p id="dataSummary" style="font-size:0.7rem;color:#6b7280;margin-top:0.5rem;"></p>
         </div>
       </div>
 
       <!-- ===== TAB: Config ===== -->
-      <div id="tabConfig" class="tab-panel hidden grid md:grid-cols-2 gap-4">
-        <div class="glass-card rounded-2xl p-4">
-          <label class="text-sm font-medium">Model Type</label>
-          <select id="modelType" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
-            <option value="classification">Classification</option>
-            <option value="regression">Regression</option>
-            <option value="clustering">Clustering</option>
-            <option value="anomaly_detection">Anomaly Detection</option>
-            <option value="time_series">Time Series</option>
-            <option value="recommendation">Recommendation</option>
-          </select>
-        </div>
-        <div class="glass-card rounded-2xl p-4">
-          <label class="text-sm font-medium">Target Column</label>
-          <select id="targetColumn" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
-            <option value="">Select column</option>
-          </select>
-        </div>
-        <div class="glass-card rounded-2xl p-4">
-          <label class="text-sm font-medium">Algorithm <span class="text-xs text-gray-400">(12 available)</span></label>
-          <select id="algorithm" class="w-full mt-1 px-3 py-2 bg-gray-800/70 rounded-xl border border-purple-500/30 focus:outline-none focus:border-purple-500 text-sm">
-            <option value="random_forest">Random Forest</option>
-            <option value="logistic_regression">Logistic Regression</option>
-            <option value="neural_network">Neural Network</option>
-            <option value="xgboost">XGBoost</option>
-            <option value="svm">SVM</option>
-            <option value="knn">K-Nearest Neighbors</option>
-            <option value="decision_tree">Decision Tree</option>
-            <option value="naive_bayes">Naive Bayes</option>
-            <option value="gradient_boosting">Gradient Boosting</option>
-            <option value="linear_regression">Linear Regression</option>
-            <option value="ridge">Ridge Regression</option>
-            <option value="lasso">Lasso Regression</option>
-          </select>
-        </div>
-        <div class="glass-card rounded-2xl p-4">
-          <label class="text-sm font-medium">Test Split: <span id="splitLabel">20%</span></label>
-          <input type="range" id="testSplit" min="0.1" max="0.4" step="0.05" value="0.2" class="w-full mt-2">
-        </div>
-        <div class="glass-card rounded-2xl p-4 md:col-span-2">
-          <label class="text-sm font-medium">Hyperparameters (optional)</label>
-          <div class="grid grid-cols-2 gap-2 mt-1">
-            <input type="text" id="hp1" placeholder="e.g. n_estimators=100" class="px-3 py-1.5 bg-gray-800/70 rounded-xl border border-purple-500/30 text-sm focus:outline-none focus:border-purple-500">
-            <input type="text" id="hp2" placeholder="e.g. max_depth=5" class="px-3 py-1.5 bg-gray-800/70 rounded-xl border border-purple-500/30 text-sm focus:outline-none focus:border-purple-500">
+      <div id="tabConfig" class="tab-panel hidden animate-fadeIn">
+        <div style="display:grid;grid-template-columns:1fr;gap:0.75rem;">
+          <div class="glass-card" style="padding:1rem;">
+            <label style="font-size:0.85rem;font-weight:500;">Model Type</label>
+            <select id="modelType" style="width:100%;margin-top:0.25rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.15);border-radius:10px;color:#e5e7eb;font-size:0.85rem;outline:none;">
+              <option value="classification">Classification</option>
+              <option value="regression">Regression</option>
+              <option value="clustering">Clustering</option>
+              <option value="anomaly_detection">Anomaly Detection</option>
+              <option value="time_series">Time Series</option>
+              <option value="recommendation">Recommendation</option>
+            </select>
           </div>
-          <p class="text-[10px] text-gray-500 mt-1">key=value, comma separated (optional)</p>
+          <div class="glass-card" style="padding:1rem;">
+            <label style="font-size:0.85rem;font-weight:500;">Target Column</label>
+            <select id="targetColumn" style="width:100%;margin-top:0.25rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.15);border-radius:10px;color:#e5e7eb;font-size:0.85rem;outline:none;">
+              <option value="">Select column</option>
+            </select>
+          </div>
+          <div class="glass-card" style="padding:1rem;">
+            <label style="font-size:0.85rem;font-weight:500;">Algorithm <span style="font-size:0.65rem;color:#6b7280;">(12 available)</span></label>
+            <select id="algorithm" style="width:100%;margin-top:0.25rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.15);border-radius:10px;color:#e5e7eb;font-size:0.85rem;outline:none;">
+              <option value="random_forest">Random Forest</option>
+              <option value="logistic_regression">Logistic Regression</option>
+              <option value="neural_network">Neural Network</option>
+              <option value="xgboost">XGBoost</option>
+              <option value="svm">SVM</option>
+              <option value="knn">K-Nearest Neighbors</option>
+              <option value="decision_tree">Decision Tree</option>
+              <option value="naive_bayes">Naive Bayes</option>
+              <option value="gradient_boosting">Gradient Boosting</option>
+              <option value="linear_regression">Linear Regression</option>
+              <option value="ridge">Ridge Regression</option>
+              <option value="lasso">Lasso Regression</option>
+            </select>
+          </div>
+          <div class="glass-card" style="padding:1rem;">
+            <label style="font-size:0.85rem;font-weight:500;">Test Split: <span id="splitLabel">20%</span></label>
+            <input type="range" id="testSplit" min="0.1" max="0.4" step="0.05" value="0.2" style="width:100%;margin-top:0.25rem;accent-color:#7c3aed;">
+          </div>
+          <div class="glass-card" style="padding:1rem;">
+            <label style="font-size:0.85rem;font-weight:500;">Hyperparameters (optional)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.25rem;">
+              <input type="text" id="hp1" placeholder="e.g. n_estimators=100" style="padding:0.4rem 0.6rem;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.1);border-radius:8px;color:#e5e7eb;font-size:0.75rem;outline:none;">
+              <input type="text" id="hp2" placeholder="e.g. max_depth=5" style="padding:0.4rem 0.6rem;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.1);border-radius:8px;color:#e5e7eb;font-size:0.75rem;outline:none;">
+            </div>
+            <p style="font-size:0.6rem;color:#4b5563;margin-top:0.25rem;">key=value, comma separated (optional)</p>
+          </div>
         </div>
       </div>
 
       <!-- ===== TAB: Train ===== -->
-      <div id="tabTrain" class="tab-panel hidden space-y-4">
-        <div class="glass-card rounded-2xl p-5">
-          <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h3 class="font-semibold">Training Pipeline</h3>
-            <div id="actionButtons" class="flex gap-2 flex-wrap"></div>
+      <div id="tabTrain" class="tab-panel hidden animate-fadeIn">
+        <div class="glass-card" style="padding:1.25rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;">
+            <h3 style="font-weight:600;font-size:1rem;">Training Pipeline</h3>
+            <div id="actionButtons" style="display:flex;gap:0.25rem;flex-wrap:wrap;"></div>
           </div>
-          <div id="trainingSteps" class="space-y-2"></div>
-          <button id="trainBtn" onclick="startTraining()" class="mt-5 w-full py-3 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition flex items-center justify-center gap-2">
+          <div id="trainingSteps" style="display:grid;gap:0.5rem;"></div>
+          <button id="trainBtn" onclick="startTraining()" style="width:100%;margin-top:1rem;padding:0.75rem;background:linear-gradient(135deg,#7c3aed,#db2777);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;transition:0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
             <i class="fas fa-play"></i> Start Training
           </button>
-          <div id="trainingLoader" class="mt-4 text-center hidden">
-            <i class="fas fa-spinner fa-spin text-3xl text-purple-400"></i>
-            <p class="text-gray-400 text-sm mt-2">Training in progress...</p>
+          <div id="trainingLoader" class="hidden" style="margin-top:0.75rem;text-align:center;">
+            <i class="fas fa-spinner animate-spin-slow" style="font-size:1.5rem;color:#a855f7;"></i>
+            <p style="font-size:0.85rem;color:#6b7280;margin-top:0.25rem;">Training in progress...</p>
           </div>
         </div>
       </div>
 
       <!-- ===== TAB: Results ===== -->
-      <div id="tabResults" class="tab-panel hidden space-y-4">
-        <div id="metricsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
-        <div id="predictionsContainer" class="glass-card rounded-2xl p-4 hidden">
-          <h4 class="font-semibold mb-3">Sample Predictions</h4>
-          <div id="predictionsList" class="space-y-2"></div>
+      <div id="tabResults" class="tab-panel hidden animate-fadeIn">
+        <div id="metricsGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem;"></div>
+        <div id="predictionsContainer" class="glass-card hidden" style="padding:1rem;margin-top:0.5rem;">
+          <h4 style="font-weight:600;margin-bottom:0.5rem;font-size:0.95rem;">Sample Predictions</h4>
+          <div id="predictionsList" style="display:grid;gap:0.5rem;"></div>
         </div>
-        <div id="agentDownloadSection" class="glass-card rounded-2xl p-4 hidden">
-          <h4 class="font-semibold mb-3"><i class="fas fa-robot text-purple-400"></i> Download AI Agent</h4>
-          <p class="text-xs text-gray-400 mb-3">Get a complete Python agent that works directly with your data</p>
-          <button onclick="exportFullAgent()" class="w-full py-2.5 gradient-bg rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition flex items-center justify-center gap-2 text-sm">
+        <div id="agentDownloadSection" class="glass-card hidden" style="padding:1rem;margin-top:0.5rem;">
+          <h4 style="font-weight:600;margin-bottom:0.25rem;font-size:0.95rem;"><i class="fas fa-robot" style="color:#a855f7;"></i> Download AI Agent</h4>
+          <p style="font-size:0.75rem;color:#6b7280;margin-bottom:0.5rem;">Get a complete Python agent that works directly with your data</p>
+          <button onclick="exportFullAgent()" style="width:100%;padding:0.6rem;background:linear-gradient(135deg,#7c3aed,#db2777);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;transition:0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:0.85rem;">
             <i class="fas fa-download"></i> Download Python Agent
           </button>
         </div>
       </div>
 
       <!-- ===== TAB: Docs ===== -->
-      <div id="tabDocs" class="tab-panel hidden space-y-4">
-        <div class="glass-card rounded-2xl p-5">
-          <h3 class="text-xl font-bold gradient-text mb-4"><i class="fas fa-book mr-2"></i>Python Agent Documentation</h3>
-          <p class="text-gray-300 text-sm mb-4">Complete guide to using your downloaded OpenMind AI Agent with your own data.</p>
-          
+      <div id="tabDocs" class="tab-panel hidden animate-fadeIn">
+        <div class="glass-card" style="padding:1.25rem;">
+          <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;" class="gradient-text"><i class="fas fa-book" style="-webkit-text-fill-color:initial;color:#a855f7;"></i> Python Agent Documentation</h3>
+          <p style="font-size:0.85rem;color:#6b7280;margin-bottom:0.75rem;">Complete guide to using your downloaded OpenMind AI Agent.</p>
+
           <!-- Quick Start -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-rocket text-sm"></i> Quick Start</h4>
-            <div class="bg-gray-800/50 rounded-xl p-3 mt-2 text-xs overflow-x-auto">
-              <pre class="text-green-400"><code># 1. Install requirements
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-rocket"></i> Quick Start</h4>
+            <div class="code-block-dark" style="margin-top:0.25rem;">
+              <pre style="margin:0;white-space:pre-wrap;"># 1. Install requirements
 pip install pandas numpy scikit-learn openpyxl joblib xgboost
 
 # 2. Save the agent code as openmind_agent.py
@@ -254,228 +614,198 @@ pip install pandas numpy scikit-learn openpyxl joblib xgboost
 from openmind_agent import OpenMindAgent
 import pandas as pd
 
-# Load your data
 data = pd.read_csv("your_data.csv")
-
-# Create and train agent
 agent = OpenMindAgent(model_type="classification", algorithm="random_forest")
 agent.train(data, target_col="target_column")
-
-# Make predictions
-prediction = agent.predict({"feature1": 10, "feature2": 20})
-print(f"Prediction: {prediction}")</code></pre>
+prediction = agent.predict({"feature1": 10, "feature2": 20})</pre>
             </div>
           </div>
 
           <!-- Installation -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-box text-sm"></i> Installation</h4>
-            <div class="bg-gray-800/50 rounded-xl p-3 mt-2 text-xs overflow-x-auto">
-              <pre class="text-green-400"><code># Required packages
-pip install pandas numpy scikit-learn openpyxl xlrd joblib
-
-# Optional for XGBoost (better performance)
-pip install xgboost</code></pre>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-box"></i> Installation</h4>
+            <div class="code-block-dark" style="margin-top:0.25rem;">
+              <pre style="margin:0;white-space:pre-wrap;">pip install pandas numpy scikit-learn openpyxl xlrd joblib
+pip install xgboost  # optional, better performance</pre>
             </div>
           </div>
 
           <!-- Basic Usage -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-play text-sm"></i> Basic Usage</h4>
-            <div class="space-y-2 text-sm text-gray-300">
-              <p><span class="text-purple-400">1. Load your data:</span></p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code>data = agent.load_data("sales_data.csv")  # CSV
-data = agent.load_data("sales_data.xlsx") # Excel
-data = agent.load_data("sales_data.json") # JSON</code></pre>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-play"></i> Basic Usage</h4>
+            <div style="font-size:0.85rem;color:#9ca3af;margin-top:0.25rem;">
+              <p><span style="color:#a855f7;">1. Load your data:</span></p>
+              <div class="code-block-dark" style="margin:0.25rem 0;">
+                <pre style="margin:0;white-space:pre-wrap;">data = agent.load_data("sales_data.csv")   # CSV
+data = agent.load_data("sales_data.xlsx")  # Excel
+data = agent.load_data("sales_data.json")  # JSON</pre>
               </div>
-              <p><span class="text-purple-400">2. Train the model:</span></p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code>agent.train(data, target_col="price")  # For regression
-agent.train(data, target_col="purchased")  # For classification</code></pre>
+              <p style="margin-top:0.25rem;"><span style="color:#a855f7;">2. Train the model:</span></p>
+              <div class="code-block-dark" style="margin:0.25rem 0;">
+                <pre style="margin:0;white-space:pre-wrap;">agent.train(data, target_col="price")       # Regression
+agent.train(data, target_col="purchased")  # Classification</pre>
               </div>
-              <p><span class="text-purple-400">3. Make predictions:</span></p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code># Single prediction
+              <p style="margin-top:0.25rem;"><span style="color:#a855f7;">3. Make predictions:</span></p>
+              <div class="code-block-dark" style="margin:0.25rem 0;">
+                <pre style="margin:0;white-space:pre-wrap;"># Single prediction
 pred = agent.predict({"sqft": 2000, "bedrooms": 3})
 
 # Batch prediction
 new_data = pd.read_csv("new_customers.csv")
-predictions = agent.predict(new_data)</code></pre>
-              </div>
-            </div>
-          </div>
-
-          <!-- Examples -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-code text-sm"></i> Complete Examples</h4>
-            
-            <div class="mb-3">
-              <p class="text-sm font-medium text-gray-200">📊 Classification Example</p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code>from openmind_agent import OpenMindAgent
-import pandas as pd
-
-# Sample customer data
-data = pd.DataFrame({
-    'age': [25, 30, 35, 40, 45],
-    'income': [50000, 60000, 70000, 80000, 90000],
-    'purchased': [0, 0, 1, 1, 1]  # Target: will they purchase?
-})
-
-# Train agent
-agent = OpenMindAgent(model_type="classification", algorithm="random_forest")
-agent.train(data, target_col="purchased")
-
-# Predict for new customers
-new_customer = {'age': 32, 'income': 65000}
-prediction, confidence = agent.predict(new_customer)
-print(f"Will purchase? {prediction} (confidence: {confidence:.1%})")
-
-# Save model
-agent.save("purchase_predictor.pkl")</code></pre>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <p class="text-sm font-medium text-gray-200">📈 Regression Example</p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code>from openmind_agent import OpenMindAgent
-import pandas as pd
-
-# House price data
-data = pd.DataFrame({
-    'sqft': [1500, 1800, 2200, 2500, 3000],
-    'bedrooms': [3, 3, 4, 4, 5],
-    'price': [250000, 300000, 350000, 400000, 500000]  # Target
-})
-
-# Train regression agent
-agent = OpenMindAgent(model_type="regression", algorithm="random_forest")
-agent.train(data, target_col="price")
-
-# Predict house price
-new_house = {'sqft': 2000, 'bedrooms': 3}
-predicted_price = agent.predict(new_house)
-print(f"Estimated price: ${predicted_price:,.0f}")</code></pre>
-              </div>
-            </div>
-
-            <div>
-              <p class="text-sm font-medium text-gray-200">💾 Load Saved Model</p>
-              <div class="bg-gray-800/50 rounded-xl p-2 text-xs overflow-x-auto">
-                <pre class="text-green-400"><code># Load previously saved model
-agent = OpenMindAgent()
-agent.load("purchase_predictor.pkl")
-
-# Use it for predictions
-prediction = agent.predict({'age': 28, 'income': 55000})
-print(f"Prediction: {prediction}")</code></pre>
+predictions = agent.predict(new_data)</pre>
               </div>
             </div>
           </div>
 
           <!-- Model Types -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-tags text-sm"></i> Model Types</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-              <div class="bg-gray-800/30 rounded-lg p-2">
-                <span class="text-purple-400 font-medium">Classification</span>
-                <p class="text-gray-400">Predict categories (Yes/No, Spam/Not Spam)</p>
-                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="classification")</code>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-tags"></i> Model Types</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.25rem;font-size:0.75rem;">
+              <div style="padding:0.5rem;background:rgba(0,0,0,0.2);border-radius:8px;">
+                <span style="color:#a855f7;font-weight:500;">Classification</span>
+                <p style="color:#6b7280;">Predict categories</p>
+                <code style="color:#86efac;">agent = OpenMindAgent(model_type="classification")</code>
               </div>
-              <div class="bg-gray-800/30 rounded-lg p-2">
-                <span class="text-purple-400 font-medium">Regression</span>
-                <p class="text-gray-400">Predict continuous values (Price, Temperature)</p>
-                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="regression")</code>
+              <div style="padding:0.5rem;background:rgba(0,0,0,0.2);border-radius:8px;">
+                <span style="color:#a855f7;font-weight:500;">Regression</span>
+                <p style="color:#6b7280;">Predict continuous values</p>
+                <code style="color:#86efac;">agent = OpenMindAgent(model_type="regression")</code>
               </div>
-              <div class="bg-gray-800/30 rounded-lg p-2">
-                <span class="text-purple-400 font-medium">Clustering</span>
-                <p class="text-gray-400">Group similar data points together</p>
-                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="clustering")</code>
+              <div style="padding:0.5rem;background:rgba(0,0,0,0.2);border-radius:8px;">
+                <span style="color:#a855f7;font-weight:500;">Clustering</span>
+                <p style="color:#6b7280;">Group similar data</p>
+                <code style="color:#86efac;">agent = OpenMindAgent(model_type="clustering")</code>
               </div>
-              <div class="bg-gray-800/30 rounded-lg p-2">
-                <span class="text-purple-400 font-medium">Anomaly Detection</span>
-                <p class="text-gray-400">Detect outliers in your data</p>
-                <code class="text-green-400 text-[10px]">agent = OpenMindAgent(model_type="anomaly_detection")</code>
+              <div style="padding:0.5rem;background:rgba(0,0,0,0.2);border-radius:8px;">
+                <span style="color:#a855f7;font-weight:500;">Anomaly Detection</span>
+                <p style="color:#6b7280;">Detect outliers</p>
+                <code style="color:#86efac;">agent = OpenMindAgent(model_type="anomaly_detection")</code>
               </div>
             </div>
           </div>
 
           <!-- Algorithms -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-cogs text-sm"></i> Available Algorithms</h4>
-            <div class="flex flex-wrap gap-1 text-xs">
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Random Forest</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Logistic Regression</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">SVM</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">KNN</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Decision Tree</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Naive Bayes</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Gradient Boosting</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">XGBoost</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Linear Regression</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Ridge Regression</span>
-              <span class="px-2 py-1 bg-gray-800/50 rounded-lg border border-purple-500/20">Lasso Regression</span>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-cogs"></i> Available Algorithms</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;margin-top:0.25rem;font-size:0.7rem;">
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Random Forest</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Logistic Regression</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">SVM</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">KNN</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Decision Tree</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Naive Bayes</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Gradient Boosting</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">XGBoost</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Linear Regression</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Ridge Regression</span>
+              <span style="padding:0.15rem 0.5rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(168,85,247,0.1);">Lasso Regression</span>
             </div>
           </div>
 
           <!-- File Formats -->
-          <div class="doc-section mb-4">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-file text-sm"></i> Supported File Formats</h4>
-            <div class="flex gap-2 text-xs">
-              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">CSV</span>
-              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">Excel (.xlsx, .xls)</span>
-              <span class="px-3 py-1 bg-gray-800/50 rounded-lg border border-green-500/30">JSON</span>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;margin-bottom:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-file"></i> Supported File Formats</h4>
+            <div style="display:flex;gap:0.5rem;margin-top:0.25rem;font-size:0.75rem;">
+              <span style="padding:0.15rem 0.75rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(52,211,153,0.2);color:#34d399;">CSV</span>
+              <span style="padding:0.15rem 0.75rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(52,211,153,0.2);color:#34d399;">Excel (.xlsx, .xls)</span>
+              <span style="padding:0.15rem 0.75rem;background:rgba(0,0,0,0.2);border-radius:6px;border:1px solid rgba(52,211,153,0.2);color:#34d399;">JSON</span>
             </div>
           </div>
 
           <!-- Troubleshooting -->
-          <div class="doc-section">
-            <h4 class="font-semibold text-purple-400 flex items-center gap-2"><i class="fas fa-wrench text-sm"></i> Troubleshooting</h4>
-            <div class="text-xs text-gray-300 space-y-1">
-              <p><span class="text-yellow-400">•</span> <code>ModuleNotFoundError</code> – Install missing packages: <code>pip install [package_name]</code></p>
-              <p><span class="text-yellow-400">•</span> <code>KeyError: 'target_column'</code> – Check your column name, it must exist in your data</p>
-              <p><span class="text-yellow-400">•</span> <code>ValueError: could not convert string to float</code> – Encode categorical variables or use <code>preprocess_data()</code></p>
-              <p><span class="text-yellow-400">•</span> <code>ImportError: XGBoost not installed</code> – Install XGBoost or use another algorithm</p>
+          <div style="border-left:2px solid rgba(168,85,247,0.2);padding-left:0.75rem;">
+            <h4 style="font-weight:600;color:#a855f7;font-size:0.9rem;"><i class="fas fa-wrench"></i> Troubleshooting</h4>
+            <div style="font-size:0.75rem;color:#9ca3af;margin-top:0.25rem;display:grid;gap:0.25rem;">
+              <p><span style="color:#fbbf24;">•</span> <code style="background:rgba(0,0,0,0.3);padding:0.05rem 0.3rem;border-radius:4px;font-size:0.7rem;">ModuleNotFoundError</code> – Install missing packages: <code style="background:rgba(0,0,0,0.3);padding:0.05rem 0.3rem;border-radius:4px;font-size:0.7rem;">pip install [package_name]</code></p>
+              <p><span style="color:#fbbf24;">•</span> <code style="background:rgba(0,0,0,0.3);padding:0.05rem 0.3rem;border-radius:4px;font-size:0.7rem;">KeyError: 'target_column'</code> – Check your column name exists</p>
+              <p><span style="color:#fbbf24;">•</span> <code style="background:rgba(0,0,0,0.3);padding:0.05rem 0.3rem;border-radius:4px;font-size:0.7rem;">ValueError: could not convert string</code> – Encode categorical variables</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+    </main>
   </div>
 
-  <!-- ========== DEPLOY MODAL ========== -->
+  <!-- ============================================================
+  DEPLOY MODAL
+  ============================================================ -->
   <div id="deployModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4 hidden">
-    <div class="glass-card rounded-3xl max-w-2xl w-full border border-purple-500/30 shadow-2xl shadow-purple-500/20 animate-slideUp p-6">
-      <h3 class="text-2xl font-bold gradient-text"><i class="fas fa-rocket mr-2"></i> Deployed!</h3>
-      <p class="text-gray-400 mt-1">Your AI agent is ready as an API endpoint</p>
-      <div class="mt-4 bg-gray-800/50 rounded-xl p-3 border border-purple-500/20 flex items-center gap-2">
-        <code id="deployUrl" class="flex-1 text-sm text-green-400 break-all">https://api.openmind.ai/v1/models/agent_123</code>
-        <button onclick="copyDeployUrl()" class="p-2 hover:bg-gray-700 rounded-lg transition">
+    <div class="glass" style="border-radius:20px;max-width:600px;width:100%;padding:1.5rem;border:1px solid rgba(168,85,247,0.2);animation:slideUp 0.25s ease;">
+      <h3 style="font-size:1.3rem;font-weight:700;" class="gradient-text"><i class="fas fa-rocket" style="-webkit-text-fill-color:initial;color:#a855f7;"></i> Deployed!</h3>
+      <p style="color:#6b7280;font-size:0.85rem;">Your AI agent is ready as an API endpoint</p>
+      <div style="margin-top:0.75rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.3);border-radius:10px;border:1px solid rgba(168,85,247,0.1);display:flex;align-items:center;gap:0.5rem;">
+        <code id="deployUrl" style="flex:1;font-size:0.75rem;color:#34d399;word-break:break-all;">https://api.openmind.ai/v1/models/agent_123</code>
+        <button onclick="copyDeployUrl()" style="background:none;border:none;color:#6b7280;cursor:pointer;padding:0.25rem 0.5rem;border-radius:6px;transition:0.2s;">
           <i id="copyIcon" class="fas fa-copy"></i>
         </button>
       </div>
-      <div class="mt-4 bg-gray-800/50 rounded-xl p-3 border border-purple-500/20">
-        <pre class="text-xs text-green-400 overflow-x-auto"><code id="curlExample">curl -X POST https://api.openmind.ai/v1/models/agent_123 \
+      <div style="margin-top:0.75rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.3);border-radius:10px;border:1px solid rgba(168,85,247,0.1);">
+        <pre id="curlExample" style="font-size:0.7rem;color:#86efac;margin:0;white-space:pre-wrap;overflow-x:auto;">curl -X POST https://api.openmind.ai/v1/models/agent_123 \
   -H "Content-Type: application/json" \
-  -d '{"features": {"age": 35}}'</code></pre>
+  -d '{"features": {"age": 35}}'</pre>
       </div>
-      <button onclick="closeDeployModal()" class="mt-5 w-full py-2.5 gradient-bg rounded-xl hover:shadow-lg transition">Close</button>
+      <button onclick="closeDeployModal()" style="width:100%;margin-top:1rem;padding:0.6rem;background:linear-gradient(135deg,#7c3aed,#db2777);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;transition:0.2s;">Close</button>
     </div>
   </div>
 
-  <!-- ========== floating badge ========== -->
-  <div class="fixed bottom-4 right-4 z-10 flex items-center gap-2 glass-card rounded-full px-3 py-1.5 text-xs border border-purple-500/20">
-    <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
-    <span class="text-gray-300">Studio ready</span>
-    <span class="text-gray-600">·</span>
-    <span class="text-purple-400"><i class="fas fa-microchip"></i> 12 algos</span>
+  <!-- ============================================================
+  MOBILE DRAWER
+  ============================================================ -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="brand">
+        <span class="gradient-text"><i class="fas fa-brain" style="-webkit-text-fill-color:initial;color:#a855f7;"></i> OpenMind</span>
+        <span style="font-size:0.6rem;color:#6b7280;font-weight:400;">v3.2</span>
+      </div>
+      <button class="close-btn" onclick="toggleDrawer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="padding:0 0.5rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);margin-bottom:0.5rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.7rem;color:#6b7280;">
+        <span class="badge-dot"></span> System Ready · 12 algos
+      </div>
+    </div>
+    <button class="nav-item active" data-tab="quick" onclick="setTab('quick');toggleDrawer();">
+      <i class="fas fa-bolt"></i> Quick Start
+    </button>
+    <button class="nav-item" data-tab="data" onclick="setTab('data');toggleDrawer();">
+      <i class="fas fa-database"></i> Data
+    </button>
+    <button class="nav-item" data-tab="config" onclick="setTab('config');toggleDrawer();">
+      <i class="fas fa-sliders-h"></i> Config
+    </button>
+    <button class="nav-item" data-tab="train" onclick="setTab('train');toggleDrawer();">
+      <i class="fas fa-brain"></i> Train
+    </button>
+    <button class="nav-item" data-tab="results" onclick="setTab('results');toggleDrawer();">
+      <i class="fas fa-chart-bar"></i> Results
+    </button>
+    <button class="nav-item" data-tab="docs" onclick="setTab('docs');toggleDrawer();">
+      <i class="fas fa-book"></i> Docs
+    </button>
+    <div style="border-top:1px solid rgba(255,255,255,0.04);margin:0.5rem 0.75rem;"></div>
+    <button onclick="exportSystemConfig();toggleDrawer();" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;border-radius:10px;font-size:0.85rem;color:#9ca3af;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;font-weight:500;">
+      <i class="fas fa-code" style="width:1.25rem;text-align:center;"></i> Export Config
+    </button>
   </div>
 
+  <!-- ============================================================
+  FLOATING BADGE
+  ============================================================ -->
+  <div style="position:fixed;bottom:0.75rem;right:0.75rem;z-index:100;padding:0.3rem 0.75rem;background:rgba(17,17,27,0.8);backdrop-filter:blur(12px);border-radius:9999px;border:1px solid rgba(168,85,247,0.1);font-size:0.65rem;color:#6b7280;display:flex;align-items:center;gap:0.5rem;">
+    <span class="badge-dot"></span>
+    <span>Studio ready</span>
+    <span style="color:#4b5563;">·</span>
+    <span style="color:#a855f7;"><i class="fas fa-microchip"></i> 12 algos</span>
+  </div>
+
+  <!-- ============================================================
+  SCRIPTS
+  ============================================================ -->
   <script>
     // ============================================================
-    //  AI STUDIO – Full Python Agent Export with Documentation
+    // STATE
     // ============================================================
     let dataset = [];
     let columns = [];
@@ -493,11 +823,9 @@ print(f"Prediction: {prediction}")</code></pre>
       { id: 6, name: 'Deployment', description: 'Preparing agent', status: 'pending' }
     ];
 
-    // ----- modal controls -----
-    function closeAIModal() {
-      document.getElementById('aiModal').style.display = 'none';
-    }
-
+    // ============================================================
+    // TAB MANAGEMENT
+    // ============================================================
     function setTab(tab) {
       document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
       const map = { quick: 'tabQuick', data: 'tabData', config: 'tabConfig', train: 'tabTrain', results: 'tabResults', docs: 'tabDocs' };
@@ -505,16 +833,30 @@ print(f"Prediction: {prediction}")</code></pre>
       if (target) target.classList.remove('hidden');
 
       document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('bg-purple-600/20', 'text-purple-300');
-        el.classList.add('text-gray-400');
-        if (el.dataset.tab === tab) {
-          el.classList.add('bg-purple-600/20', 'text-purple-300');
-          el.classList.remove('text-gray-400');
-        }
+        el.classList.remove('active');
+        if (el.dataset.tab === tab) el.classList.add('active');
+      });
+
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.dataset.tab === tab) el.classList.add('active');
       });
     }
 
-    // ----- file upload (supports CSV, Excel, JSON) -----
+    // ============================================================
+    // DRAWER
+    // ============================================================
+    function toggleDrawer() {
+      const drawer = document.getElementById('drawer');
+      const overlay = document.getElementById('drawerOverlay');
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('open');
+      document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // ============================================================
+    // FILE UPLOAD
+    // ============================================================
     function handleFileUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -603,7 +945,7 @@ print(f"Prediction: {prediction}")</code></pre>
       container.classList.remove('hidden');
       const table = document.getElementById('tableContainer');
       if (!dataset || dataset.length === 0) {
-        table.innerHTML = '<p class="text-gray-400">No data loaded. Upload a CSV, Excel, or JSON file.</p>';
+        table.innerHTML = '<p style="color:#6b7280;font-size:0.8rem;">No data loaded.</p>';
         document.getElementById('dataSummary').textContent = '';
         return;
       }
@@ -624,19 +966,21 @@ print(f"Prediction: {prediction}")</code></pre>
       document.getElementById('dataSummary').textContent = `Total rows: ${dataset.length} · Columns: ${columns.length}`;
     }
 
-    // ----- training steps -----
+    // ============================================================
+    // TRAINING
+    // ============================================================
     function renderTrainingSteps() {
       const container = document.getElementById('trainingSteps');
       container.innerHTML = trainingSteps.map(s => `
-        <div class="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl border border-gray-700/30">
-          <div class="w-8">
-            ${s.status === 'completed' ? '<i class="fas fa-check-circle text-green-400"></i>' :
-              s.status === 'running' ? '<i class="fas fa-spinner fa-spin text-purple-400"></i>' :
-              '<i class="far fa-circle text-gray-500"></i>'}
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid rgba(255,255,255,0.03);">
+          <div style="width:1.5rem;font-size:0.85rem;">
+            ${s.status === 'completed' ? '<i class="fas fa-check-circle" style="color:#34d399;"></i>' :
+              s.status === 'running' ? '<i class="fas fa-spinner animate-spin-slow" style="color:#a855f7;"></i>' :
+              '<i class="far fa-circle" style="color:#4b5563;"></i>'}
           </div>
-          <div class="flex-1">
-            <span class="font-medium text-sm">${s.name}</span>
-            <p class="text-xs text-gray-400">${s.description}</p>
+          <div style="flex:1;">
+            <div style="font-weight:500;font-size:0.85rem;">${s.name}</div>
+            <div style="font-size:0.7rem;color:#6b7280;">${s.description}</div>
           </div>
         </div>
       `).join('');
@@ -648,7 +992,6 @@ print(f"Prediction: {prediction}")</code></pre>
       renderTrainingSteps();
     }
 
-    // ----- start training (simulated) -----
     function startTraining() {
       if (isTraining || !dataset || dataset.length === 0) {
         if (!dataset || dataset.length === 0) alert('Please upload a dataset first.');
@@ -698,10 +1041,26 @@ print(f"Prediction: {prediction}")</code></pre>
       const grid = document.getElementById('metricsGrid');
       const metrics = modelMetrics;
       grid.innerHTML = `
-        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-bullseye text-blue-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.accuracy * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Accuracy</p></div>
-        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-check-circle text-green-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.precision * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Precision</p></div>
-        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-layer-group text-purple-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.recall * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">Recall</p></div>
-        <div class="glass-card rounded-2xl p-4 text-center"><i class="fas fa-brain text-pink-400 text-xl"></i><p class="text-2xl font-bold mt-1">${(metrics.f1Score * 100).toFixed(1)}%</p><p class="text-xs text-gray-400">F1 Score</p></div>
+        <div class="glass-card" style="padding:0.75rem;text-align:center;">
+          <i class="fas fa-bullseye" style="color:#60a5fa;font-size:1.1rem;"></i>
+          <div style="font-size:1.2rem;font-weight:700;margin-top:0.15rem;">${(metrics.accuracy * 100).toFixed(1)}%</div>
+          <div style="font-size:0.65rem;color:#6b7280;">Accuracy</div>
+        </div>
+        <div class="glass-card" style="padding:0.75rem;text-align:center;">
+          <i class="fas fa-check-circle" style="color:#34d399;font-size:1.1rem;"></i>
+          <div style="font-size:1.2rem;font-weight:700;margin-top:0.15rem;">${(metrics.precision * 100).toFixed(1)}%</div>
+          <div style="font-size:0.65rem;color:#6b7280;">Precision</div>
+        </div>
+        <div class="glass-card" style="padding:0.75rem;text-align:center;">
+          <i class="fas fa-layer-group" style="color:#a855f7;font-size:1.1rem;"></i>
+          <div style="font-size:1.2rem;font-weight:700;margin-top:0.15rem;">${(metrics.recall * 100).toFixed(1)}%</div>
+          <div style="font-size:0.65rem;color:#6b7280;">Recall</div>
+        </div>
+        <div class="glass-card" style="padding:0.75rem;text-align:center;">
+          <i class="fas fa-brain" style="color:#ec4899;font-size:1.1rem;"></i>
+          <div style="font-size:1.2rem;font-weight:700;margin-top:0.15rem;">${(metrics.f1Score * 100).toFixed(1)}%</div>
+          <div style="font-size:0.65rem;color:#6b7280;">F1 Score</div>
+        </div>
       `;
 
       if (dataset && dataset.length > 0) {
@@ -714,11 +1073,11 @@ print(f"Prediction: {prediction}")</code></pre>
         container.classList.remove('hidden');
         const list = document.getElementById('predictionsList');
         list.innerHTML = preds.map((p, i) => `
-          <div class="p-3 bg-gray-800/40 rounded-xl border border-gray-700/40 text-sm">
-            <div class="flex justify-between flex-wrap gap-2">
-              <span class="text-gray-400 text-xs">Input: ${JSON.stringify(p.input).slice(0, 60)}</span>
-              <span class="font-semibold text-purple-400">${p.prediction}</span>
-              <span class="text-xs text-green-400">${(p.confidence * 100).toFixed(1)}%</span>
+          <div style="padding:0.5rem 0.75rem;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-size:0.8rem;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.25rem;">
+              <span style="color:#6b7280;font-size:0.7rem;">${JSON.stringify(p.input).slice(0, 60)}</span>
+              <span style="font-weight:600;color:#a855f7;">${p.prediction}</span>
+              <span style="font-size:0.7rem;color:#34d399;">${(p.confidence * 100).toFixed(1)}%</span>
             </div>
           </div>
         `).join('');
@@ -728,18 +1087,26 @@ print(f"Prediction: {prediction}")</code></pre>
     function updateActionButtons() {
       const container = document.getElementById('actionButtons');
       container.innerHTML = `
-        <button onclick="exportJSON()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-blue-600/70 rounded-xl hover:bg-blue-700 transition"><i class="fas fa-file-code"></i> JSON</button>
-        <button onclick="exportFullAgent()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-purple-600/70 rounded-xl hover:bg-purple-700 transition"><i class="fab fa-python"></i> Agent</button>
-        <button onclick="deployAgent()" class="text-xs flex items-center gap-1 px-3 py-1.5 bg-green-600/70 rounded-xl hover:bg-green-700 transition"><i class="fas fa-rocket"></i> Deploy</button>
+        <button onclick="exportJSON()" style="font-size:0.65rem;padding:0.25rem 0.6rem;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.1);border-radius:8px;color:#93c5fd;cursor:pointer;transition:0.2s;">
+          <i class="fas fa-file-code"></i> JSON
+        </button>
+        <button onclick="exportFullAgent()" style="font-size:0.65rem;padding:0.25rem 0.6rem;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.1);border-radius:8px;color:#c4b5d4;cursor:pointer;transition:0.2s;">
+          <i class="fab fa-python"></i> Agent
+        </button>
+        <button onclick="deployAgent()" style="font-size:0.65rem;padding:0.25rem 0.6rem;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.1);border-radius:8px;color:#6ee7b7;cursor:pointer;transition:0.2s;">
+          <i class="fas fa-rocket"></i> Deploy
+        </button>
       `;
     }
 
-    // ----- EXPORT FULL PYTHON AGENT -----
+    // ============================================================
+    // EXPORT FUNCTIONS
+    // ============================================================
     function exportFullAgent() {
       const targetCol = document.getElementById('targetColumn').value;
       const modelType = document.getElementById('modelType').value;
       const algorithm = document.getElementById('algorithm').value;
-      
+
       let agentScript = `#!/usr/bin/env python3
 """
 OpenMind AI Agent - ${trainedModelId || 'agent'}
@@ -759,49 +1126,34 @@ import sys
 import os
 
 class OpenMindAgent:
-    """
-    A complete AI agent that works directly with your data.
-    """
-    def __init__(self):
+    def __init__(self, model_type="${modelType}", algorithm="${algorithm}"):
         self.model = None
         self.scaler = StandardScaler()
         self.target_col = None
         self.feature_cols = []
-        self.model_type = "${modelType}"
-        self.algorithm = "${algorithm}"
+        self.model_type = model_type
+        self.algorithm = algorithm
         self.is_trained = False
     
     def load_data(self, file_path):
-        """
-        Load data from CSV, Excel, or JSON file.
-        """
         ext = os.path.splitext(file_path)[1].lower()
         if ext == '.csv':
-            df = pd.read_csv(file_path)
+            return pd.read_csv(file_path)
         elif ext in ['.xlsx', '.xls']:
-            df = pd.read_excel(file_path)
+            return pd.read_excel(file_path)
         elif ext == '.json':
-            df = pd.read_json(file_path)
-        else:
-            raise ValueError(f"Unsupported file format: {ext}")
-        return df
+            return pd.read_json(file_path)
+        raise ValueError(f"Unsupported file format: {ext}")
     
     def train(self, data, target_col):
-        """
-        Train the agent on the provided data.
-        """
         self.target_col = target_col
         df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
-        
-        # Separate features and target
         X = df.drop(columns=[target_col])
         y = df[target_col]
         self.feature_cols = X.columns.tolist()
-        
-        # Scale features
         X_scaled = self.scaler.fit_transform(X)
         
-        # Train model based on algorithm
+        # Model selection
         if self.algorithm == "random_forest":
             from sklearn.ensemble import RandomForestClassifier
             self.model = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -828,7 +1180,6 @@ class OpenMindAgent:
                 from xgboost import XGBClassifier
                 self.model = XGBClassifier(random_state=42)
             except ImportError:
-                print("XGBoost not installed. Using Random Forest instead.")
                 from sklearn.ensemble import RandomForestClassifier
                 self.model = RandomForestClassifier(n_estimators=100, random_state=42)
         elif self.algorithm in ["linear_regression", "ridge", "lasso"]:
@@ -838,98 +1189,35 @@ class OpenMindAgent:
             elif self.algorithm == "ridge":
                 from sklearn.linear_model import Ridge
                 self.model = Ridge()
-            elif self.algorithm == "lasso":
+            else:
                 from sklearn.linear_model import Lasso
                 self.model = Lasso()
         else:
-            # Default to Random Forest
             from sklearn.ensemble import RandomForestClassifier
             self.model = RandomForestClassifier(n_estimators=100, random_state=42)
         
-        # Train the model
         self.model.fit(X_scaled, y)
         self.is_trained = True
         return self
     
     def predict(self, features):
-        """
-        Make predictions on new data.
-        """
         if not self.is_trained:
             raise ValueError("Model not trained yet. Call train() first.")
         
-        # Convert to DataFrame if needed
         if isinstance(features, dict):
             features = pd.DataFrame([features])
         elif isinstance(features, list):
             features = pd.DataFrame(features)
         
-        # Ensure correct columns
         for col in self.feature_cols:
             if col not in features.columns:
                 features[col] = 0
         
-        # Select only feature columns
         features = features[self.feature_cols]
-        
-        # Scale and predict
         scaled = self.scaler.transform(features)
-        predictions = self.model.predict(scaled)
-        
-        # For regression, also return confidence/score
-        if self.model_type == "regression":
-            return predictions
-        else:
-            # For classification, get probabilities if available
-            try:
-                probs = self.model.predict_proba(scaled)
-                confidence = np.max(probs, axis=1)
-                return predictions, confidence
-            except:
-                return predictions
-    
-    def evaluate(self, data, target_col=None):
-        """
-        Evaluate the agent on test data.
-        """
-        if not self.is_trained:
-            raise ValueError("Model not trained yet. Call train() first.")
-        
-        target = target_col or self.target_col
-        df = pd.DataFrame(data) if not isinstance(data, pd.DataFrame) else data
-        
-        X_test = df.drop(columns=[target])
-        y_test = df[target]
-        
-        X_scaled = self.scaler.transform(X_test)
-        y_pred = self.model.predict(X_scaled)
-        
-        # Calculate metrics
-        if self.model_type == "classification":
-            accuracy = accuracy_score(y_test, y_pred)
-            precision = precision_score(y_test, y_pred, average='weighted')
-            recall = recall_score(y_test, y_pred, average='weighted')
-            f1 = f1_score(y_test, y_pred, average='weighted')
-            return {
-                'accuracy': accuracy,
-                'precision': precision,
-                'recall': recall,
-                'f1_score': f1
-            }
-        else:
-            # Simple metrics for regression
-            from sklearn.metrics import mean_squared_error, r2_score
-            mse = mean_squared_error(y_test, y_pred)
-            r2 = r2_score(y_test, y_pred)
-            return {
-                'mean_squared_error': mse,
-                'r2_score': r2
-            }
+        return self.model.predict(scaled)
     
     def save(self, filepath):
-        """
-        Save the trained agent to a file.
-        """
         import joblib
         joblib.dump({
             'model': self.model,
@@ -942,9 +1230,6 @@ class OpenMindAgent:
         print(f"✓ Agent saved to {filepath}")
     
     def load(self, filepath):
-        """
-        Load a trained agent from a file.
-        """
         import joblib
         data = joblib.load(filepath)
         self.model = data['model']
@@ -954,35 +1239,17 @@ class OpenMindAgent:
         self.model_type = data['model_type']
         self.algorithm = data['algorithm']
         self.is_trained = True
-        print(f"✓ Agent loaded from {filepath}")
         return self
 
-# Example usage with your data
 if __name__ == "__main__":
     print("🤖 OpenMind AI Agent")
     print("=" * 50)
-    
-    # Create agent
     agent = OpenMindAgent()
-    
-    # Load your data (replace with your actual file)
-    # data = agent.load_data("your_data.csv")
-    
-    # Train the agent
-    # agent.train(data, target_col="${targetCol}")
-    
-    # Make predictions
-    # predictions = agent.predict({"feature1": 10, "feature2": 20})
-    
-    # Save the trained agent
-    # agent.save("my_agent.pkl")
-    
-    print("\\n📋 Quick Start Guide:")
-    print("1. agent = OpenMindAgent()")
-    print("2. data = agent.load_data('your_data.csv')")
-    print("3. agent.train(data, target_col='${targetCol}')")
-    print("4. predictions = agent.predict({'feature1': 10, 'feature2': 20})")
-    print("5. agent.save('my_agent.pkl')")
+    print("\\n📋 Quick Start:")
+    print("1. data = agent.load_data('your_data.csv')")
+    print("2. agent.train(data, target_col='${targetCol}')")
+    print("3. predictions = agent.predict({'feature1': 10})")
+    print("4. agent.save('my_agent.pkl')")
     print("\\n✓ Agent ready for deployment!")
 `;
 
@@ -998,8 +1265,12 @@ if __name__ == "__main__":
     function exportSystemConfig() {
       const config = {
         version: '3.2',
-        modelTypes: ['classification','regression','clustering','anomaly_detection','time_series','recommendation'],
-        algorithms: ['random_forest','logistic_regression','neural_network','xgboost','svm','knn','decision_tree','naive_bayes','gradient_boosting','linear_regression','ridge','lasso'],
+        modelTypes: ['classification', 'regression', 'clustering', 'anomaly_detection', 'time_series',
+          'recommendation'
+        ],
+        algorithms: ['random_forest', 'logistic_regression', 'neural_network', 'xgboost', 'svm', 'knn',
+          'decision_tree', 'naive_bayes', 'gradient_boosting', 'linear_regression', 'ridge', 'lasso'
+        ],
         currentSelection: {
           modelType: document.getElementById('modelType').value,
           algorithm: document.getElementById('algorithm').value,
@@ -1026,10 +1297,7 @@ if __name__ == "__main__":
         metrics: modelMetrics,
         columns: columns,
         samplePredictions: predictions,
-        hyperparameters: {
-          hp1: document.getElementById('hp1').value,
-          hp2: document.getElementById('hp2').value
-        }
+        hyperparameters: { hp1: document.getElementById('hp1').value, hp2: document.getElementById('hp2').value }
       };
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -1043,9 +1311,8 @@ if __name__ == "__main__":
     function deployAgent() {
       const endpoint = `https://api.openmind.ai/v1/models/${trainedModelId || 'agent'}`;
       document.getElementById('deployUrl').textContent = endpoint;
-      document.getElementById('curlExample').textContent = `curl -X POST ${endpoint} \\
-  -H "Content-Type: application/json" \\
-  -d '{"features": {"age": 35}}'`;
+      document.getElementById('curlExample').textContent =
+        `curl -X POST ${endpoint} \\\n  -H "Content-Type: application/json" \\\n  -d '{"features": {"age": 35}}'`;
       document.getElementById('deployModal').classList.remove('hidden');
     }
 
@@ -1061,15 +1328,24 @@ if __name__ == "__main__":
       setTimeout(() => icon.className = 'fas fa-copy', 2000);
     }
 
-    // ----- slider -----
+    function closeAIModal() {
+      // For desktop close button
+    }
+
+    // ============================================================
+    // SLIDER
+    // ============================================================
     document.getElementById('testSplit').addEventListener('input', function() {
       document.getElementById('splitLabel').textContent = Math.round(this.value * 100) + '%';
     });
 
-    // ----- init -----
+    // ============================================================
+    // INIT
+    // ============================================================
     renderTrainingSteps();
     setTab('quick');
-    console.log('🧠 OpenMind AI Studio — Full Python agent export with documentation ready');
+
+    console.log('🧠 OpenMind AI Studio — Dashboard ready');
   </script>
 </body>
 </html>
