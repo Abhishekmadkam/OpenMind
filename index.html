@@ -581,7 +581,7 @@
             opacity: 1;
         }
 
-        .btn-primary > * {
+        .btn-primary>* {
             position: relative;
             z-index: 1;
         }
@@ -1598,6 +1598,13 @@
                             AI Studio
                         </a>
                     </li>
+                    <!-- Website Builder button in nav -->
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-cta" href="wb_builder.html" style="background: var(--gradient-accent);">
+                            <i class="bi bi-browser-chrome" aria-hidden="true"></i>
+                            Website Builder
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -1632,6 +1639,11 @@
                     <a href="#features" class="btn-secondary">
                         <i class="bi bi-play-circle" aria-hidden="true"></i>
                         Explore Features
+                    </a>
+                    <!-- Website Builder button in hero -->
+                    <a href="wb_builder.html" class="btn-primary" style="background: var(--gradient-accent);">
+                        <i class="bi bi-browser-chrome" aria-hidden="true"></i>
+                        Website Builder
                     </a>
                 </div>
 
@@ -1915,10 +1927,17 @@
                 </span>
                 <h2 id="cta-title">Ready to Build Your AI Agent?</h2>
                 <p>Start creating intelligent agents in minutes with our powerful platform. No coding required.</p>
-                <a href="ai-studio.html" class="btn-cta" id="createCta">
-                    <i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i>
-                    Create Your Agent
-                </a>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;">
+                    <a href="ai-studio.html" class="btn-cta" id="createCta">
+                        <i class="bi bi-rocket-takeoff-fill" aria-hidden="true"></i>
+                        Create Your Agent
+                    </a>
+                    <!-- Website Builder button in CTA -->
+                    <a href="wb_builder.html" class="btn-cta" style="background: var(--gradient-accent);">
+                        <i class="bi bi-browser-chrome" aria-hidden="true"></i>
+                        Website Builder
+                    </a>
+                </div>
             </div>
         </div>
     </section>
