@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zentoolo · AI Website Builder</title>
+    <!-- Bootstrap 5 + Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: #f0f4f9;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 10px;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #app { display: flex; flex-direction: column; height: 100%; gap: 8px; }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            background: white;
+            border-radius: 18px;
+            padding: 6px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 12px;
+            flex-shrink: 0;
+        }
+        .toolbar .btn { border-radius: 40px; padding: 3px 14px; font-weight: 500; font-size: 0.75rem; }
+        .toolbar .btn i { margin-right: 4px; }
+        .badge-step {
+            background: #eef3fc; color: #1f3b63; padding: 0.15rem 0.9rem;
+            border-radius: 40px; font-size: 0.65rem; font-weight: 500;
+        }
+        .color-picker-wrap {
+            display: flex; align-items: center; gap: 4px;
+            background: #f1f3f5; padding: 2px 10px 2px 6px; border-radius: 40px;
+        }
+        .color-picker-wrap input[type="color"] {
+            width: 24px; height: 24px; border: 2px solid #dee2e6;
+            border-radius: 40px; padding: 1px; cursor: pointer;
+        }
+        .badge-layout {
+            background: #eef2f6; border-radius: 40px; padding: 1px 12px;
+            font-size: 0.65rem; color: #1e293b;
+        }
+
+        /* ===== MAIN ===== */
+        .main-area { display: flex; flex: 1; gap: 8px; min-height: 0; }
+
+        /* ===== STEP PANELS ===== */
+        .step-panel {
+            display: none;
+            animation: fadeIn 0.25s ease;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            padding: 0 2px;
+        }
+        .step-panel.active-panel { display: block; }
+        @keyframes fadeIn { 0% { opacity: 0.3; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* ===== STEP 1: TEMPLATE GALLERY ===== */
+        .template-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            padding: 6px 0;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .template-card {
+            background: white;
+            border-radius: 16px;
+            padding: 12px;
+            border: 2px solid #e9edf4;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+        .template-card:hover { border-color: #8bb3ff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .template-card.selected { border-color: #0d6efd; background: #f0f7ff; }
+        .template-card .preview-img {
+            height: 80px;
+            background: #eef3fc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #1f3b63;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .template-card .badge-group {
+            display: flex; flex-wrap: wrap; gap: 2px; margin-top: 4px;
+        }
+        .template-card .badge-group .badge {
+            font-weight: 400; font-size: 0.5rem; padding: 1px 6px; border-radius: 30px;
+        }
+        .template-card .template-layout-preview {
+            display: flex;
+            gap: 3px;
+            margin-top: 6px;
+            padding: 4px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .template-card .layout-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            background: #dce1e8;
+            flex: 1;
+        }
+        .template-card .layout-dot.active { background: #0d6efd; }
+
+        .search-filter-bar {
+            display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0;
+        }
+        .search-filter-bar input, .search-filter-bar select {
+            border-radius: 40px; border: 1.5px solid #e2e9f2;
+            padding: 3px 12px; font-size: 0.75rem; background: white;
+        }
+
+        /* ===== STEP 2: ADVANCED BUILDER ===== */
+        .builder-layout {
+            display: flex;
+            gap: 8px;
+            height: calc(100vh - 180px);
+            overflow: hidden;
+        }
+        /* Left Panel */
+        .builder-left {
+            width: 170px;
+            background: white;
+            border-radius: 16px;
+            padding: 8px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .builder-left h6 {
+            font-weight: 600;
+            font-size: 0.65rem;
+            color: #1e293b;
+            letter-spacing: 0.5px;
+            margin: 4px 0 2px 4px;
+        }
+        .component-item {
+            background: #f1f4f9;
+            border-radius: 40px;
+            padding: 4px 10px;
+            margin: 2px 0;
+            cursor: grab;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+            transition: 0.1s;
+        }
+        .component-item:hover { background: #e6edf6; border-color: #b9c8e0; }
+        .component-item i { width: 16px; font-size: 0.8rem; }
+        .template-preset-btn {
+            border-radius: 40px;
+            padding: 2px 10px;
+            font-size: 0.65rem;
+            border: 1px solid #dce1e8;
+            background: white;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .template-preset-btn:hover { background: #e9f0fe; border-color: #8bb3ff; }
+        .template-preset-btn.active-preset { background: #0d6efd; color: white; border-color: #0d6efd; }
+
+        /* Canvas */
+        .builder-canvas {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 12px;
+            overflow-y: auto;
+            border: 2px dashed #e9edf2;
+            min-height: 200px;
+            transition: background 0.2s;
+        }
+        .canvas-element {
+            padding: 6px 12px;
+            margin: 4px 0;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.1s;
+            position: relative;
+        }
+        .canvas-element:hover { border-color: #94a3b8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .canvas-element.selected { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        .canvas-element .remove-btn {
+            margin-left: auto;
+            opacity: 0.2;
+            background: none;
+            border: none;
+            padding: 0 4px;
+            font-size: 0.8rem;
+            color: #dc3545;
+            cursor: pointer;
+        }
+        .canvas-element .remove-btn:hover { opacity: 1; }
+        .canvas-element .drag-handle {
+            cursor: grab;
+            opacity: 0.3;
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+        .canvas-element .drag-handle:hover { opacity: 0.7; }
+        .empty-msg {
+            color: #94a3b8;
+            text-align: center;
+            padding: 20px 10px;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* Right Panel: AI + Properties + Layout */
+        .builder-right {
+            width: 230px;
+            background: white;
+            border-radius: 16px;
+            padding: 10px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .builder-right .form-group { margin-bottom: 4px; }
+        .builder-right label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: #334155;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .builder-right input, .builder-right select {
+            border-radius: 30px;
+            border: 1.5px solid #e2e9f2;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            width: 100%;
+            background: white;
+        }
+        .builder-right input[type="color"] { padding: 1px; height: 28px; }
+        .builder-right .btn-sm { border-radius: 40px; padding: 2px 12px; font-size: 0.7rem; }
+
+        /* Layout Controls */
+        .layout-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .layout-controls .layout-btn {
+            border-radius: 8px;
+            padding: 6px 4px;
+            border: 1.5px solid #e2e9f2;
+            background: white;
+            cursor: pointer;
+            font-size: 0.6rem;
+            text-align: center;
+            transition: 0.1s;
+        }
+        .layout-controls .layout-btn:hover { border-color: #8bb3ff; background: #f0f7ff; }
+        .layout-controls .layout-btn.active-layout { border-color: #0d6efd; background: #e9f0fe; }
+        .layout-controls .layout-btn i { display: block; font-size: 1rem; margin-bottom: 2px; }
+
+        /* Export Bar */
+        .export-bar {
+            background: white;
+            border-radius: 14px;
+            padding: 6px 14px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            border-top: 1px solid #edf2f7;
+        }
+        .export-bar textarea {
+            flex: 1;
+            min-width: 100px;
+            border-radius: 30px;
+            border: 1.5px solid #dce1e8;
+            padding: 4px 12px;
+            font-size: 0.6rem;
+            background: #f8fafc;
+            resize: vertical;
+            min-height: 32px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .export-bar .btn { border-radius: 40px; padding: 3px 14px; font-size: 0.7rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .builder-layout { flex-direction: column; height: auto; }
+            .builder-left, .builder-right { width: 100%; max-height: 120px; }
+            .template-gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <!-- ===== TOOLBAR ===== -->
+        <div class="toolbar">
+            <div><i class="bi bi-cpu text-primary me-1"></i><strong style="font-size:0.9rem;">Zentoolo</strong></div>
+            <span class="badge-step" id="stepIndicator">Step 1 of 2</span>
+            <div class="color-picker-wrap">
+                <i class="fas fa-fill-drip" style="font-size:0.8rem;"></i>
+                <input type="color" id="accentColorPicker" value="#0d6efd">
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" id="undoBtn"><i class="fas fa-undo"></i></button>
+            <button class="btn btn-outline-secondary btn-sm" id="redoBtn"><i class="fas fa-redo"></i></button>
+            <button class="btn btn-outline-secondary btn-sm" id="toggleDarkBtn"><i class="fas fa-moon"></i></button>
+            <span class="badge-layout ms-auto"><i class="far fa-circle me-1"></i> Live</span>
+            <span class="badge-layout"><i class="fas fa-mobile-alt me-1"></i> Responsive</span>
+        </div>
+
+        <!-- ===== MAIN ===== -->
+        <div class="main-area">
+
+            <!-- ===== STEP 1: TEMPLATE GALLERY ===== -->
+            <div id="step1Panel" class="step-panel active-panel">
+                <div class="d-flex flex-wrap align-items-center justify-content-between mb-1">
+                    <h5 class="fw-bold mb-0" style="font-size:1rem;"><i class="bi bi-grid-3x3-gap-fill me-1"></i>Choose Template</h5>
+                    <div class="search-filter-bar">
+                        <input type="text" id="templateSearch" placeholder="Search..." style="padding:2px 12px; font-size:0.7rem;">
+                        <select id="categoryFilter" style="padding:2px 12px; font-size:0.7rem;">
+                            <option value="all">All</option>
+                            <option value="Business">Business</option>
+                            <option value="Portfolio">Portfolio</option>
+                            <option value="Agency">Agency</option>
+                            <option value="Restaurant">Restaurant</option>
+                            <option value="SaaS">SaaS</option>
+                            <option value="Startup">Startup</option>
+                            <option value="Blog">Blog</option>
+                            <option value="Ecommerce">Ecommerce</option>
+                        </select>
+                        <select id="sortFilter" style="padding:2px 12px; font-size:0.7rem;">
+                            <option value="newest">Newest</option>
+                            <option value="popular">Popular</option>
+                            <option value="trending">Trending</option>
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="template-gallery" id="templateGallery"></div>
+                <div class="text-end mt-1">
+                    <button class="btn btn-primary btn-sm" id="step1NextBtn" style="border-radius:40px; padding:4px 20px;">
+                        Use Template <i class="bi bi-arrow-right-short ms-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== STEP 2: ADVANCED BUILDER ===== -->
+            <div id="step2Panel" class="step-panel">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <h5 class="fw-bold mb-0" style="font-size:0.95rem;"><i class="bi bi-palette me-1"></i>Website Builder</h5>
+                    <div>
+                        <button class="btn btn-outline-secondary btn-sm" id="step2BackBtn"><i class="bi bi-arrow-left"></i> Back</button>
+                        <button class="btn btn-outline-secondary btn-sm ms-1" id="clearCanvasBtn"><i class="fas fa-trash-alt"></i> Clear</button>
+                    </div>
+                </div>
+
+                <div class="builder-layout">
+                    <!-- LEFT: Components + Presets -->
+                    <div class="builder-left">
+                        <h6><i class="fas fa-cube me-1"></i> Elements</h6>
+                        <div class="component-item" draggable="true" data-type="heading"><i class="fas fa-heading"></i> Heading</div>
+                        <div class="component-item" draggable="true" data-type="paragraph"><i class="fas fa-paragraph"></i> Paragraph</div>
+                        <div class="component-item" draggable="true" data-type="button"><i class="fas fa-square"></i> Button</div>
+                        <div class="component-item" draggable="true" data-type="card"><i class="fas fa-credit-card"></i> Card</div>
+                        <div class="component-item" draggable="true" data-type="image"><i class="fas fa-image"></i> Image</div>
+                        <div class="component-item" draggable="true" data-type="container"><i class="fas fa-vector-square"></i> Container</div>
+                        <div class="component-item" draggable="true" data-type="navbar"><i class="fas fa-bars"></i> Navbar</div>
+                        <div class="component-item" draggable="true" data-type="footer"><i class="fas fa-copyright"></i> Footer</div>
+                        <hr style="margin:4px 0;">
+                        <h6><i class="fas fa-palette me-1"></i> Presets</h6>
+                        <div style="display:flex; flex-wrap:wrap; gap:3px;">
+                            <button class="template-preset-btn" data-template="blog">Blog</button>
+                            <button class="template-preset-btn" data-template="business">Business</button>
+                            <button class="template-preset-btn" data-template="landing">Landing</button>
+                            <button class="template-preset-btn" data-template="portfolio">Portfolio</button>
+                            <button class="template-preset-btn" data-template="restaurant">Restaurant</button>
+                        </div>
+                    </div>
+
+                    <!-- CANVAS -->
+                    <div class="builder-canvas" id="builderCanvas">
+                        <div class="empty-msg" id="emptyMsg"><i class="fas fa-arrow-down me-2"></i> Drag components here</div>
+                    </div>
+
+                    <!-- RIGHT: AI + Properties + Layout -->
+                    <div class="builder-right">
+                        <h6 style="font-weight:600; font-size:0.65rem; color:#0f172a;"><i class="fas fa-robot me-1"></i> AI Customizer</h6>
+                        <div class="form-group"><label>Business Name</label><input type="text" id="bizName" value="Zentoolo"></div>
+                        <div class="form-group"><label>Tagline</label><input type="text" id="bizTagline" value="AI Website Builder"></div>
+                        <div class="form-group"><label>Primary Color</label><input type="color" id="primaryColor" value="#0d6efd"></div>
+                        <div class="form-group"><label>Accent Color</label><input type="color" id="accentColor" value="#ffb347"></div>
+                        <div class="form-group"><label>Font Style</label>
+                            <select id="fontStyle"><option value="Inter">Inter</option><option value="Roboto">Roboto</option><option value="Poppins">Poppins</option></select>
+                        </div>
+                        <div class="form-group"><label>Border Radius</label><input type="number" id="borderRadius" value="12" min="0" max="40"></div>
+                        <div class="form-group"><label>Dark Mode</label>
+                            <select id="darkMode"><option value="light">Light</option><option value="dark">Dark</option></select>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100" id="applyAIBtn" style="border-radius:40px;"><i class="bi bi-magic me-1"></i> Apply AI</button>
+                        <hr style="margin:4px 0;">
+
+                        <h6 style="font-weight:600; font-size:0.65rem; color:#0f172a;"><i class="fas fa-layer-group me-1"></i> Layout</h6>
+                        <div class="layout-controls">
+                            <div class="layout-btn active-layout" data-layout="stack"><i class="fas fa-arrows-alt-v"></i> Stack</div>
+                            <div class="layout-btn" data-layout="grid"><i class="fas fa-th"></i> Grid</div>
+                            <div class="layout-btn" data-layout="flex"><i class="fas fa-arrows-alt-h"></i> Flex</div>
+                            <div class="layout-btn" data-layout="centered"><i class="fas fa-arrows-alt"></i> Center</div>
+                        </div>
+
+                        <hr style="margin:4px 0;">
+                        <h6 style="font-weight:600; font-size:0.65rem; color:#0f172a;"><i class="fas fa-sliders-h me-1"></i> Properties</h6>
+                        <div class="form-group"><label>Selected</label><input type="text" id="selectedElId" placeholder="none" disabled style="background:#f1f5f9;"></div>
+                        <div class="form-group"><label>Content</label><input type="text" id="elContent" placeholder="Edit text..."></div>
+                        <div class="form-group"><label>Font Size</label><input type="number" id="elFontSize" value="16" min="8" max="80"></div>
+                        <div class="form-group"><label>Bg Color</label><input type="color" id="elBgColor" value="#ffffff"></div>
+                        <div class="form-group"><label>Text Color</label><input type="color" id="elTextColor" value="#0f172a"></div>
+                        <div class="form-group"><label>Padding</label><input type="number" id="elPadding" value="12" min="0" max="60"></div>
+                        <button class="btn btn-dark btn-sm w-100" id="applyPropsBtn" style="border-radius:40px;"><i class="fas fa-check me-1"></i> Apply</button>
+                        <button class="btn btn-outline-secondary btn-sm w-100 mt-1" id="resetPropsBtn" style="border-radius:40px;"><i class="fas fa-undo-alt me-1"></i> Reset</button>
+                    </div>
+                </div>
+
+                <!-- Export Bar -->
+                <div class="export-bar">
+                    <i class="fas fa-code text-secondary" style="font-size:0.8rem;"></i>
+                    <textarea id="codeOutput" placeholder="Generated HTML will appear here..." readonly></textarea>
+                    <button class="btn btn-dark" id="exportCodeBtn"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-outline-secondary" id="copyCodeBtn"><i class="far fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline-success" id="downloadFullBtn"><i class="fas fa-file-code"></i> Download</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== TEMPLATE DATA =====
+            const templateData = {
+                'blog': {
+                    name: 'Modern Blog',
+                    category: 'Blog',
+                    color: '#20c997',
+                    desc: 'Share your stories with style',
+                    layout: 'stack',
+                    elements: [
+                        { type: 'heading', content: 'My Awesome Blog', style: { 'font-size': '36px', 'display': 'block',
+                                'background-color': '#f1f5f9', 'color': '#0f172a', 'padding': '20px',
+                                'border-radius': '16px', 'text-align': 'center' } },
+                        { type: 'paragraph', content: 'Welcome to my blog. I write about technology, life, and everything in between.',
+                            style: { 'font-size': '18px', 'display': 'block', 'padding': '12px',
+                                'border-radius': '12px', 'text-align': 'center' } },
+                        { type: 'card', content: '📖 Latest Post: The Future of AI in 2026', style: { 'padding': '16px',
+                                'background-color': '#e9f0fe', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'card', content: '📚 Read my top 10 book recommendations', style: { 'padding': '16px',
+                                'background-color': '#fef3c7', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'button', content: 'Read More →', style: { 'display': 'inline-block',
+                                'background-color': '#20c997', 'color': 'white', 'padding': '10px 24px',
+                                'border-radius': '40px', 'border': 'none', 'font-size': '16px' } },
+                        { type: 'footer', content: '© 2026 My Blog. All rights reserved.', style: { 'padding': '12px',
+                                'text-align': 'center', 'color': '#64748b', 'font-size': '14px' } }
+                    ]
+                },
+                'business': {
+                    name: 'Business Pro',
+                    category: 'Business',
+                    color: '#0d6efd',
+                    desc: 'Professional corporate site',
+                    layout: 'grid',
+                    elements: [
+                        { type: 'heading', content: 'Acme Corporation', style: { 'font-size': '36px', 'display': 'block',
+                                'background-color': '#1e293b', 'color': 'white', 'padding': '24px',
+                                'border-radius': '16px', 'text-align': 'center' } },
+                        { type: 'paragraph', content: 'We provide innovative solutions for modern businesses. Trusted by 1,000+ companies worldwide.',
+                            style: { 'font-size': '18px', 'display': 'block', 'padding': '12px',
+                                'border-radius': '12px', 'text-align': 'center' } },
+                        { type: 'card', content: '🚀 Our Services: Consulting, Development, Support', style: { 'padding': '16px',
+                                'background-color': '#dbeafe', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'card', content: '⭐ 4.9/5 Rating from 500+ clients', style: { 'padding': '16px',
+                                'background-color': '#fef3c7', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'button', content: 'Contact Us', style: { 'display': 'inline-block',
+                                'background-color': '#0d6efd', 'color': 'white', 'padding': '10px 28px',
+                                'border-radius': '40px', 'border': 'none', 'font-size': '16px' } },
+                        { type: 'footer', content: '© 2026 Acme Corp. All rights reserved.', style: { 'padding': '12px',
+                                'text-align': 'center', 'color': '#64748b', 'font-size': '14px' } }
+                    ]
+                },
+                'landing': {
+                    name: 'Landing Page',
+                    category: 'Startup',
+                    color: '#2563eb',
+                    desc: 'High-converting landing page',
+                    layout: 'centered',
+                    elements: [
+                        { type: 'heading', content: '🚀 Launch Your Product', style: { 'font-size': '42px',
+                                'display': 'block', 'text-align': 'center', 'padding': '24px',
+                                'border-radius': '16px', 'background-color': '#f8fafc', 'color': '#0f172a' } },
+                        { type: 'paragraph', content: 'A high-converting landing page to grow your business. Start today!',
+                            style: { 'font-size': '20px', 'display': 'block', 'text-align': 'center',
+                                'padding': '12px', 'border-radius': '12px', 'color': '#334155' } },
+                        { type: 'card', content: '✨ Feature: Drag & Drop Builder', style: { 'padding': '16px',
+                                'background-color': '#e9f0fe', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'card', content: '⚡ Feature: AI Powered Customization', style: { 'padding': '16px',
+                                'background-color': '#fef3c7', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'button', content: 'Get Started →', style: { 'display': 'inline-block',
+                                'background-color': '#2563eb', 'color': 'white', 'padding': '12px 36px',
+                                'border-radius': '40px', 'border': 'none', 'font-size': '18px' } },
+                        { type: 'footer', content: '© 2026 Startup. All rights reserved.', style: { 'padding': '12px',
+                                'text-align': 'center', 'color': '#64748b', 'font-size': '14px' } }
+                    ]
+                },
+                'portfolio': {
+                    name: 'Portfolio Pro',
+                    category: 'Portfolio',
+                    color: '#198754',
+                    desc: 'Showcase your creative work',
+                    layout: 'flex',
+                    elements: [
+                        { type: 'heading', content: 'My Creative Portfolio', style: { 'font-size': '36px',
+                                'display': 'block', 'background-color': '#f1f5f9', 'color': '#0f172a',
+                                'padding': '20px', 'border-radius': '16px', 'text-align': 'center' } },
+                        { type: 'paragraph', content: 'I design and build beautiful digital experiences.',
+                            style: { 'font-size': '18px', 'display': 'block', 'padding': '12px',
+                                'border-radius': '12px', 'text-align': 'center' } },
+                        { type: 'card', content: '🎨 UI/UX Design • Branding • Web Development', style: { 'padding': '16px',
+                                'background-color': '#d1fae5', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'card', content: '🏆 Featured Work: 50+ Projects Completed', style: { 'padding': '16px',
+                                'background-color': '#fef3c7', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'button', content: 'View My Work', style: { 'display': 'inline-block',
+                                'background-color': '#198754', 'color': 'white', 'padding': '10px 28px',
+                                'border-radius': '40px', 'border': 'none', 'font-size': '16px' } },
+                        { type: 'footer', content: '© 2026 Portfolio. All rights reserved.', style: { 'padding': '12px',
+                                'text-align': 'center', 'color': '#64748b', 'font-size': '14px' } }
+                    ]
+                },
+                'restaurant': {
+                    name: 'Restaurant',
+                    category: 'Restaurant',
+                    color: '#dc3545',
+                    desc: 'Beautiful menu & reservations',
+                    layout: 'grid',
+                    elements: [
+                        { type: 'heading', content: '🍽️ La Maison', style: { 'font-size': '38px', 'display': 'block',
+                                'background-color': '#f8fafc', 'color': '#0f172a', 'padding': '20px',
+                                'border-radius': '16px', 'text-align': 'center' } },
+                        { type: 'paragraph', content: 'Fine dining with a modern twist. Reserve your table today.',
+                            style: { 'font-size': '18px', 'display': 'block', 'padding': '12px',
+                                'border-radius': '12px', 'text-align': 'center' } },
+                        { type: 'card', content: '🍕 Today\'s Special: Truffle Pizza', style: { 'padding': '16px',
+                                'background-color': '#fce4ec', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'card', content: '🥂 Wine Pairing Menu Available', style: { 'padding': '16px',
+                                'background-color': '#fef3c7', 'border-radius': '16px', 'font-size': '16px' } },
+                        { type: 'button', content: 'Book a Table', style: { 'display': 'inline-block',
+                                'background-color': '#dc3545', 'color': 'white', 'padding': '10px 28px',
+                                'border-radius': '40px', 'border': 'none', 'font-size': '16px' } },
+                        { type: 'footer', content: '© 2026 La Maison. All rights reserved.', style: { 'padding': '12px',
+                                'text-align': 'center', 'color': '#64748b', 'font-size': '14px' } }
+                    ]
+                }
+            };
+
+            // Gallery templates
+            const galleryTemplates = [
+                { id: 1, name: 'Modern Blog', category: 'Blog', color: '#20c997', desc: 'Share your stories', popular: true,
+                    free: true, key: 'blog', layout: 'stack' },
+                { id: 2, name: 'Business Pro', category: 'Business', color: '#0d6efd', desc: 'Corporate site', premium: true,
+                    key: 'business', layout: 'grid' },
+                { id: 3, name: 'Landing Page', category: 'Startup', color: '#2563eb', desc: 'High-converting', trending: true,
+                    key: 'landing', layout: 'centered' },
+                { id: 4, name: 'Portfolio Pro', category: 'Portfolio', color: '#198754', desc: 'Showcase work', new: true,
+                    key: 'portfolio', layout: 'flex' },
+                { id: 5, name: 'Restaurant', category: 'Restaurant', color: '#dc3545', desc: 'Beautiful menu', popular: true,
+                    key: 'restaurant', layout: 'grid' },
+                { id: 6, name: 'SaaS Startup', category: 'SaaS', color: '#6f42c1', desc: 'Software as a Service', free: true,
+                    key: 'landing', layout: 'centered' },
+                { id: 7, name: 'Agency Pro', category: 'Agency', color: '#fd7e14', desc: 'Creative agency', premium: true,
+                    key: 'business', layout: 'grid' },
+                { id: 8, name: 'Ecommerce Store', category: 'Ecommerce', color: '#0dcaf0', desc: 'Sell online', trending: true,
+                    key: 'business', layout: 'grid' },
+            ];
+
+            // ===== DOM REFS =====
+            const step1Panel = document.getElementById('step1Panel');
+            const step2Panel = document.getElementById('step2Panel');
+            const stepIndicator = document.getElementById('stepIndicator');
+            const templateGallery = document.getElementById('templateGallery');
+            const step1NextBtn = document.getElementById('step1NextBtn');
+            const step2BackBtn = document.getElementById('step2BackBtn');
+            const templateSearch = document.getElementById('templateSearch');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+            const codeOutput = document.getElementById('codeOutput');
+            const downloadFullBtn = document.getElementById('downloadFullBtn');
+            const copyCodeBtn = document.getElementById('copyCodeBtn');
+            const exportCodeBtn = document.getElementById('exportCodeBtn');
+            const builderCanvas = document.getElementById('builderCanvas');
+            const emptyMsg = document.getElementById('emptyMsg');
+            const selectedElId = document.getElementById('selectedElId');
+            const elContent = document.getElementById('elContent');
+            const elFontSize = document.getElementById('elFontSize');
+            const elBgColor = document.getElementById('elBgColor');
+            const elTextColor = document.getElementById('elTextColor');
+            const elPadding = document.getElementById('elPadding');
+            const applyPropsBtn = document.getElementById('applyPropsBtn');
+            const resetPropsBtn = document.getElementById('resetPropsBtn');
+            const applyAIBtn = document.getElementById('applyAIBtn');
+            const bizName = document.getElementById('bizName');
+            const bizTagline = document.getElementById('bizTagline');
+            const primaryColor = document.getElementById('primaryColor');
+            const accentColor = document.getElementById('accentColor');
+            const fontStyle = document.getElementById('fontStyle');
+            const borderRadius = document.getElementById('borderRadius');
+            const darkMode = document.getElementById('darkMode');
+
+            // ===== STATE =====
+            let selectedTemplateKey = null;
+            let builderElements = [];
+            let selectedIndex = -1;
+            let dark = false;
+            let undoStack = [];
+            let redoStack = [];
+            let currentLayout = 'stack';
+
+            // ===== STEP NAVIGATION =====
+            function setStep(step) {
+                [step1Panel, step2Panel].forEach(p => p.classList.remove('active-panel'));
+                if (step === 1) { step1Panel.classList.add('active-panel');
+                    stepIndicator.textContent = 'Step 1 of 2'; } else if (step === 2) { step2Panel.classList.add(
+                    'active-panel');
+                    stepIndicator.textContent = 'Step 2 of 2';
+                    renderBuilderCanvas();
+                    updateExportCode(); }
+            }
+
+            // ===== TEMPLATE GALLERY =====
+            function renderTemplates(filter = 'all', search = '') {
+                let filtered = galleryTemplates;
+                if (filter !== 'all') filtered = filtered.filter(t => t.category === filter);
+                if (search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search.toLowerCase()));
+
+                const sort = sortFilter.value;
+                if (sort === 'popular') filtered.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+                else if (sort === 'trending') filtered.sort((a, b) => (b.trending ? 1 : 0) - (a.trending ? 1 : 0));
+                else if (sort === 'free') filtered = filtered.filter(t => t.free);
+                else if (sort === 'premium') filtered = filtered.filter(t => t.premium);
+
+                templateGallery.innerHTML = filtered.map(t => `
+                <div class="template-card ${selectedTemplateKey === t.key ? 'selected' : ''}" data-key="${t.key}">
+                  <div class="preview-img" style="background:${t.color}20; color:${t.color};">
+                    <i class="bi bi-layout-three-columns"></i>
+                  </div>
+                  <h6 class="fw-bold mb-0" style="font-size:0.85rem;">${t.name}</h6>
+                  <div style="font-size:0.6rem; color:#64748b;">${t.category}</div>
+                  <div class="template-layout-preview">
+                    ${t.layout === 'stack' ? '<div class="layout-dot active"></div><div class="layout-dot"></div><div class="layout-dot"></div>' : ''}
+                    ${t.layout === 'grid' ? '<div class="layout-dot active"></div><div class="layout-dot active"></div><div class="layout-dot active"></div>' : ''}
+                    ${t.layout === 'flex' ? '<div class="layout-dot active"></div><div class="layout-dot active"></div><div class="layout-dot"></div>' : ''}
+                    ${t.layout === 'centered' ? '<div class="layout-dot active" style="width:24px;margin:0 auto;"></div>' : ''}
+                  </div>
+                  <div class="badge-group">
+                    <span class="badge bg-light text-dark border">${t.color}</span>
+                    ${t.free ? '<span class="badge bg-success">Free</span>' : ''}
+                    ${t.premium ? '<span class="badge bg-warning text-dark">Premium</span>' : ''}
+                    ${t.popular ? '<span class="badge bg-info">Popular</span>' : ''}
+                    <span class="badge bg-light text-dark border">${t.layout}</span>
+                  </div>
+                </div>
+              `).join('');
+
+                document.querySelectorAll('.template-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const key = this.dataset.key;
+                        selectedTemplateKey = key;
+                        document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+                        this.classList.add('selected');
+                    });
+                });
+            }
+
+            // ===== LOAD TEMPLATE =====
+            function loadTemplate(templateKey) {
+                const data = templateData[templateKey];
+                if (!data) return;
+                builderElements = data.elements.map(el => ({
+                    ...el,
+                    style: { ...el.style }
+                }));
+                currentLayout = data.layout || 'stack';
+                selectedIndex = -1;
+                applyLayout(currentLayout);
+                renderBuilderCanvas();
+                updateExportCode();
+
+                bizName.value = data.name;
+                primaryColor.value = data.color;
+                document.getElementById('accentColorPicker').value = data.color;
+            }
+
+            // ===== APPLY LAYOUT =====
+            function applyLayout(layout) {
+                currentLayout = layout;
+                const canvas = builderCanvas;
+                // Remove previous layout classes
+                canvas.style.display = 'block';
+                canvas.style.flexDirection = '';
+                canvas.style.justifyContent = '';
+                canvas.style.alignItems = '';
+                canvas.style.gap = '';
+                canvas.style.gridTemplateColumns = '';
+
+                switch (layout) {
+                    case 'stack':
+                        canvas.style.display = 'block';
+                        break;
+                    case 'grid':
+                        canvas.style.display = 'grid';
+                        canvas.style.gridTemplateColumns = '1fr 1fr';
+                        canvas.style.gap = '12px';
+                        break;
+                    case 'flex':
+                        canvas.style.display = 'flex';
+                        canvas.style.flexDirection = 'row';
+                        canvas.style.flexWrap = 'wrap';
+                        canvas.style.gap = '12px';
+                        canvas.style.justifyContent = 'flex-start';
+                        break;
+                    case 'centered':
+                        canvas.style.display = 'flex';
+                        canvas.style.flexDirection = 'column';
+                        canvas.style.alignItems = 'center';
+                        canvas.style.justifyContent = 'center';
+                        canvas.style.gap = '8px';
+                        break;
+                }
+
+                // Update layout buttons
+                document.querySelectorAll('.layout-btn').forEach(btn => {
+                    btn.classList.toggle('active-layout', btn.dataset.layout === layout);
+                });
+            }
+
+            // ===== APPLY AI =====
+            function applyAICustomizations() {
+                const name = bizName.value || 'Zentoolo';
+                const tagline = bizTagline.value || 'AI Website Builder';
+                const primary = primaryColor.value || '#0d6efd';
+                const accent = accentColor.value || '#ffb347';
+                const radius = borderRadius.value || '12';
+                const font = fontStyle.value || 'Inter';
+                const dark = darkMode.value === 'dark';
+
+                builderElements.forEach(el => {
+                    if (!el.style) el.style = {};
+                    if (el.type === 'heading' || el.type === 'card') {
+                        // Keep specific styles
+                    } else {
+                        el.style['background-color'] = dark ? '#1e293b' : '#ffffff';
+                        el.style['color'] = dark ? '#f1f5f9' : '#0f172a';
+                    }
+                    el.style['border-radius'] = radius + 'px';
+                    el.style['font-family'] = font;
+                });
+
+                builderCanvas.style.background = dark ? '#0f172a' : '#ffffff';
+                builderCanvas.style.color = dark ? '#f1f5f9' : '#1e293b';
+                document.getElementById('accentColorPicker').value = primary;
+
+                renderBuilderCanvas();
+                updateExportCode();
+            }
+
+            // ===== RENDER CANVAS =====
+            function renderBuilderCanvas() {
+                builderCanvas.querySelectorAll('.canvas-element').forEach(el => el.remove());
+
+                builderElements.forEach((elData, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'canvas-element';
+                    div.dataset.index = index;
+                    div.dataset.type = elData.type || 'paragraph';
+
+                    let iconHtml = '';
+                    switch (elData.type) {
+                        case 'heading':
+                            iconHtml = '<i class="fas fa-heading"></i>';
+                            break;
+                        case 'paragraph':
+                            iconHtml = '<i class="fas fa-paragraph"></i>';
+                            break;
+                        case 'button':
+                            iconHtml = '<i class="fas fa-square"></i>';
+                            break;
+                        case 'card':
+                            iconHtml = '<i class="fas fa-credit-card"></i>';
+                            break;
+                        case 'image':
+                            iconHtml = '<i class="fas fa-image"></i>';
+                            break;
+                        case 'container':
+                            iconHtml = '<i class="fas fa-vector-square"></i>';
+                            break;
+                        case 'navbar':
+                            iconHtml = '<i class="fas fa-bars"></i>';
+                            break;
+                        case 'footer':
+                            iconHtml = '<i class="fas fa-copyright"></i>';
+                            break;
+                        default:
+                            iconHtml = '<i class="fas fa-cube"></i>';
+                    }
+
+                    const style = elData.style || {};
+                    let styleStr = '';
+                    for (let [key, value] of Object.entries(style)) {
+                        styleStr += `${key}: ${value}; `;
+                    }
+                    if (styleStr) div.style.cssText = styleStr;
+
+                    const content = elData.content || 'Element';
+                    div.innerHTML = `
+                    <span class="drag-handle"><i class="fas fa-grip-vertical"></i></span>
+                    ${iconHtml} <span class="el-text">${content}</span>
+                    <button class="remove-btn" data-index="${index}"><i class="fas fa-times"></i></button>
+                  `;
+
+                    builderCanvas.insertBefore(div, emptyMsg);
+
+                    const rmBtn = div.querySelector('.remove-btn');
+                    if (rmBtn) {
+                        rmBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const idx = parseInt(this.dataset.index);
+                            if (!isNaN(idx)) {
+                                undoStack.push(JSON.stringify(builderElements));
+                                builderElements.splice(idx, 1);
+                                if (selectedIndex === idx) selectedIndex = -1;
+                                else if (selectedIndex > idx) selectedIndex--;
+                                renderBuilderCanvas();
+                                updatePropsPanel();
+                                updateExportCode();
+                            }
+                        });
+                    }
+
+                    div.addEventListener('click', function(e) {
+                        if (e.target.closest('.remove-btn') || e.target.closest('.drag-handle')) return;
+                        const idx = parseInt(this.dataset.index);
+                        if (!isNaN(idx)) {
+                            builderCanvas.querySelectorAll('.canvas-element').forEach(el => el.classList.remove(
+                            'selected'));
+                            selectedIndex = idx;
+                            this.classList.add('selected');
+                            updatePropsPanel();
+                        }
+                    });
+                });
+
+                if (selectedIndex !== -1 && selectedIndex < builderElements.length) {
+                    const all = builderCanvas.querySelectorAll('.canvas-element');
+                    if (all[selectedIndex]) all[selectedIndex].classList.add('selected');
+                } else {
+                    selectedIndex = -1;
+                }
+
+                emptyMsg.style.display = builderElements.length === 0 ? 'block' : 'none';
+                updatePropsPanel();
+                updateExportCode();
+            }
+
+            // ===== PROPS =====
+            function updatePropsPanel() {
+                if (selectedIndex === -1 || !builderElements[selectedIndex]) {
+                    selectedElId.value = 'none';
+                    elContent.value = '';
+                    elFontSize.value = 16;
+                    elBgColor.value = '#ffffff';
+                    elTextColor.value = '#0f172a';
+                    elPadding.value = 12;
+                    return;
+                }
+                const el = builderElements[selectedIndex];
+                const style = el.style || {};
+                selectedElId.value = `#${el.type}-${selectedIndex}`;
+                elContent.value = el.content || '';
+                elFontSize.value = style['font-size'] ? parseInt(style['font-size']) : 16;
+                elBgColor.value = style['background-color'] || '#ffffff';
+                elTextColor.value = style['color'] || '#0f172a';
+                elPadding.value = style['padding'] ? parseInt(style['padding']) : 12;
+            }
+
+            function applyPropsToSelected() {
+                if (selectedIndex === -1 || !builderElements[selectedIndex]) {
+                    alert('Please select an element on the canvas.');
+                    return;
+                }
+                undoStack.push(JSON.stringify(builderElements));
+                const el = builderElements[selectedIndex];
+                if (!el.style) el.style = {};
+                const style = el.style;
+                el.content = elContent.value || 'Element';
+                const fs = parseInt(elFontSize.value);
+                if (!isNaN(fs) && fs > 0) style['font-size'] = fs + 'px';
+                else delete style['font-size'];
+                style['background-color'] = elBgColor.value;
+                style['color'] = elTextColor.value;
+                const pad = parseInt(elPadding.value);
+                if (!isNaN(pad) && pad >= 0) style['padding'] = pad + 'px';
+                else delete style['padding'];
+                renderBuilderCanvas();
+            }
+
+            function resetProps() {
+                if (selectedIndex === -1 || !builderElements[selectedIndex]) return;
+                const el = builderElements[selectedIndex];
+                const defaultContent = {
+                    heading: 'Heading',
+                    paragraph: 'Paragraph text',
+                    button: 'Button',
+                    card: 'Card content',
+                    image: 'Image placeholder',
+                    container: 'Container',
+                    navbar: 'Navbar',
+                    footer: 'Footer'
+                };
+                el.style = {
+                    'display': 'block',
+                    'font-size': '16px',
+                    'background-color': '#ffffff',
+                    'color': '#0f172a',
+                    'padding': '12px',
+                    'margin': '8px',
+                    'border-radius': '12px'
+                };
+                el.content = defaultContent[el.type] || 'Element';
+                renderBuilderCanvas();
+                updatePropsPanel();
+            }
+
+            // ===== ADD ELEMENT =====
+            function addElement(type, content = null) {
+                const defaultContent = {
+                    heading: 'Heading',
+                    paragraph: 'Lorem ipsum dolor sit amet.',
+                    button: 'Click me',
+                    card: 'Card content',
+                    image: 'Image placeholder',
+                    container: 'Container',
+                    navbar: 'Navbar',
+                    footer: '© 2026 All rights reserved.'
+                };
+                const newEl = {
+                    type: type,
+                    content: content || defaultContent[type] || 'Element',
+                    style: {
+                        'display': 'block',
+                        'font-size': '16px',
+                        'background-color': '#ffffff',
+                        'color': '#0f172a',
+                        'padding': '12px',
+                        'margin': '8px',
+                        'border-radius': '12px'
+                    }
+                };
+                undoStack.push(JSON.stringify(builderElements));
+                builderElements.push(newEl);
+                selectedIndex = builderElements.length - 1;
+                renderBuilderCanvas();
+                updateExportCode();
+            }
+
+            // ===== EXPORT =====
+            function generateFullHTML() {
+                if (builderElements.length === 0) return '<!-- No elements to export -->';
+                const name = bizName.value || 'My Site';
+                const primary = primaryColor.value || '#0d6efd';
+                const font = fontStyle.value || 'Inter';
+                const radius = borderRadius.value || '12';
+
+                let html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${name}</title>
+<link href="https://fonts.googleapis.com/css2?family=${font.replace(' ', '+')}:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  body { font-family: '${font}', sans-serif; background: #f8fafc; padding: 20px; }
+  .container { max-width: 860px; margin: 0 auto; background: white; padding: 24px; border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+  .canvas-element { margin: 6px 0; padding: 8px 14px; border-radius: ${radius}px; display: flex; align-items: center; gap: 8px; border: 1px solid #e2e8f0; background: white; }
+  .canvas-element i { font-size: 1.1rem; }
+  .drag-handle, .remove-btn { display: none; }
+</style>
+</head>
+<body>
+<div class="container">\n`;
+
+                builderElements.forEach(el => {
+                    const style = el.style || {};
+                    let styleStr = '';
+                    for (let [k, v] of Object.entries(style)) { styleStr += `${k}: ${v}; `; }
+                    let tag = 'div';
+                    let inner = el.content || 'Element';
+                    if (el.type === 'heading') tag = 'h3';
+                    else if (el.type === 'paragraph') tag = 'p';
+                    else if (el.type === 'button') tag = 'button';
+                    html += `  <${tag} class="canvas-element" style="${styleStr}">${inner}</${tag}>\n`;
+                });
+
+                html += `</div>\n</body>\n</html>`;
+                return html;
+            }
+
+            function updateExportCode() {
+                codeOutput.value = generateFullHTML();
+            }
+
+            function downloadFullHTML() {
+                const html = generateFullHTML();
+                if (html === '<!-- No elements to export -->') { alert('Add elements first!'); return; }
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${bizName.value || 'website'}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            // ===== EVENT LISTENERS =====
+            step1NextBtn.addEventListener('click', () => {
+                if (!selectedTemplateKey) { alert('Select a template first.'); return; }
+                loadTemplate(selectedTemplateKey);
+                setStep(2);
+            });
+            step2BackBtn.addEventListener('click', () => setStep(1));
+
+            templateSearch.addEventListener('input', () => renderTemplates(categoryFilter.value, templateSearch.value));
+            categoryFilter.addEventListener('change', () => renderTemplates(categoryFilter.value, templateSearch.value));
+            sortFilter.addEventListener('change', () => renderTemplates(categoryFilter.value, templateSearch.value));
+
+            // Layout buttons
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const layout = this.dataset.layout;
+                    applyLayout(layout);
+                });
+            });
+
+            // AI Apply
+            applyAIBtn.addEventListener('click', applyAICustomizations);
+            [bizName, bizTagline, primaryColor, accentColor, fontStyle, borderRadius, darkMode].forEach(el => {
+                el.addEventListener('change', applyAICustomizations);
+                el.addEventListener('input', applyAICustomizations);
+            });
+
+            // Drag & Drop
+            document.querySelectorAll('.component-item').forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.type);
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+                item.addEventListener('dblclick', function() {
+                    addElement(this.dataset.type);
+                });
+            });
+
+            builderCanvas.addEventListener('dragover', function(e) { e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy'; });
+            builderCanvas.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const type = e.dataTransfer.getData('text/plain');
+                if (type) addElement(type);
+            });
+            if (emptyMsg) {
+                emptyMsg.addEventListener('dragover', function(e) { e.preventDefault(); });
+                emptyMsg.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const type = e.dataTransfer.getData('text/plain');
+                    if (type) addElement(type);
+                });
+            }
+
+            // Preset buttons
+            document.querySelectorAll('.template-preset-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.dataset.template;
+                    if (templateData[key]) {
+                        loadTemplate(key);
+                        selectedTemplateKey = key;
+                        // Update gallery selection
+                        document.querySelectorAll('.template-card').forEach(c => {
+                            c.classList.toggle('selected', c.dataset.key === key);
+                        });
+                    }
+                });
+            });
+
+            // Props
+            applyPropsBtn.addEventListener('click', applyPropsToSelected);
+            resetPropsBtn.addEventListener('click', resetProps);
+
+            // Clear
+            clearCanvasBtn.addEventListener('click', function() {
+                if (builderElements.length === 0) return;
+                if (confirm('Clear all elements?')) {
+                    undoStack.push(JSON.stringify(builderElements));
+                    builderElements = [];
+                    selectedIndex = -1;
+                    renderBuilderCanvas();
+                    updateExportCode();
+                }
+            });
+
+            // Export
+            exportCodeBtn.addEventListener('click', updateExportCode);
+            copyCodeBtn.addEventListener('click', function() {
+                const code = codeOutput.value;
+                if (!code || code === '<!-- No elements to export -->') { alert('Nothing to copy.'); return; }
+                navigator.clipboard.writeText(code).then(() => alert('Copied!'));
+            });
+            downloadFullBtn.addEventListener('click', downloadFullHTML);
+
+            // Undo/Redo
+            document.getElementById('undoBtn').addEventListener('click', function() {
+                if (undoStack.length === 0) return;
+                redoStack.push(JSON.stringify(builderElements));
+                const prev = JSON.parse(undoStack.pop());
+                builderElements = prev;
+                renderBuilderCanvas();
+                updateExportCode();
+            });
+            document.getElementById('redoBtn').addEventListener('click', function() {
+                if (redoStack.length === 0) return;
+                undoStack.push(JSON.stringify(builderElements));
+                const next = JSON.parse(redoStack.pop());
+                builderElements = next;
+                renderBuilderCanvas();
+                updateExportCode();
+            });
+
+            // Dark mode
+            document.getElementById('toggleDarkBtn').addEventListener('click', function() {
+                dark = !dark;
+                document.body.style.background = dark ? '#0f172a' : '#f0f4f9';
+                document.body.style.color = dark ? '#f1f5f9' : '#1e293b';
+                document.querySelectorAll(
+                    '.template-card, .builder-left, .builder-canvas, .builder-right, .export-bar, .toolbar'
+                    ).forEach(el => {
+                    el.style.background = dark ? '#1e293b' : 'white';
+                    el.style.color = dark ? '#f1f5f9' : '#1e293b';
+                    el.style.borderColor = dark ? '#334155' : '#e9edf4';
+                });
+                document.querySelectorAll('.component-item').forEach(el => {
+                    el.style.background = dark ? '#2d3748' : '#f1f4f9';
+                    el.style.color = dark ? '#f1f5f9' : '#1e293b';
+                });
+                builderCanvas.style.background = dark ? '#0f172a' : '#ffffff';
+                builderCanvas.style.color = dark ? '#f1f5f9' : '#1e293b';
+            });
+
+            // ===== INIT =====
+            renderTemplates();
+            setStep(1);
+            loadTemplate('landing');
+            selectedTemplateKey = 'landing';
+
+        })();
+    </script>
+</body>
+</html>
