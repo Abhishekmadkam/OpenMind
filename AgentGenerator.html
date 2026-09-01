@@ -1818,6 +1818,21 @@ pre {
 
 }
 
+
+/* ============================================================
+   DEPLOYMENT RESPONSIVE
+============================================================ */
+
+@media (max-width: 560px) {
+  #deploymentTargets {
+    grid-template-columns: 1fr !important;
+  }
+
+  #deployStepOne .card > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 </style>
 
 </head>
@@ -2588,67 +2603,122 @@ DEPLOY MODAL
 ============================================================ -->
 
 <div class="modal hidden" id="deployModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="eyebrow">DEPLOYMENT</div>
+        <h3>Deploy Intelligence</h3>
+      </div>
+      <button class="icon-button" onclick="closeDeployModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-<div class="modal-box">
+    <div class="modal-body">
 
-<div class="modal-header">
+      <div id="deployStepOne">
+        <div class="eyebrow">DEPLOYMENT TARGET</div>
 
-<div>
+        <p style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:22px;">
+          Choose how you want to export and deploy your OpenMind intelligent system.
+        </p>
 
-<div class="eyebrow">DEPLOYMENT</div>
+        <div id="deploymentTargets" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
 
-<h3>Deploy Intelligence</h3>
+          <button class="algorithm-card" data-deploy-target="javascript" type="button">
+            <i class="fa-brands fa-js" style="font-size:25px;margin-bottom:14px;display:block;"></i>
+            <strong>JavaScript</strong>
+            <small>Node.js agent and API server</small>
+          </button>
 
-</div>
+          <button class="algorithm-card" data-deploy-target="python" type="button">
+            <i class="fa-brands fa-python" style="font-size:25px;margin-bottom:14px;display:block;"></i>
+            <strong>Python</strong>
+            <small>Python intelligent agent and API</small>
+          </button>
 
-<button class="icon-button" onclick="closeDeployModal()">
-<i class="fa-solid fa-xmark"></i>
-</button>
+          <button class="algorithm-card" data-deploy-target="java" type="button">
+            <i class="fa-brands fa-java" style="font-size:25px;margin-bottom:14px;display:block;"></i>
+            <strong>Java</strong>
+            <small>Java service and REST API</small>
+          </button>
 
-</div>
+          <button class="algorithm-card" data-deploy-target="agent" type="button">
+            <i class="fa-solid fa-robot" style="font-size:25px;margin-bottom:14px;display:block;"></i>
+            <strong>AI Agent</strong>
+            <small>Complete OpenMind package</small>
+          </button>
 
-<div class="modal-body">
+        </div>
 
-<div class="eyebrow">API ENDPOINT</div>
+        <div class="card" style="margin-top:22px;padding:18px;">
+          <div class="eyebrow">CURRENT SYSTEM</div>
 
-<div class="endpoint" id="deployUrl"></div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;font-size:12px;">
+            <div>
+              <div style="color:var(--muted-2);font-size:10px;letter-spacing:.1em;">MODEL</div>
+              <div id="deployModelInfo" style="margin-top:7px;color:white;">—</div>
+            </div>
 
-<div class="copy-row">
+            <div>
+              <div style="color:var(--muted-2);font-size:10px;letter-spacing:.1em;">ALGORITHM</div>
+              <div id="deployAlgorithmInfo" style="margin-top:7px;color:white;">—</div>
+            </div>
 
-<button class="action-button" onclick="copyDeployUrl()">
-<i class="fa-solid fa-copy" id="copyIcon"></i>
-Copy Endpoint
-</button>
+            <div>
+              <div style="color:var(--muted-2);font-size:10px;letter-spacing:.1em;">DATASET</div>
+              <div id="deployDatasetInfo" style="margin-top:7px;color:white;">—</div>
+            </div>
 
-</div>
+            <div>
+              <div style="color:var(--muted-2);font-size:10px;letter-spacing:.1em;">MODEL ID</div>
+              <div id="deployModelId" style="margin-top:7px;color:white;">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="eyebrow" style="margin-top:28px;">
-QUICK START
-</div>
+      <div id="deployStepTwo" class="hidden">
+        <div class="eyebrow">DEPLOYMENT READY</div>
 
-<div class="code-block">
+        <h4 id="deploymentTitle" style="font-family:var(--font-display);font-size:26px;margin-bottom:10px;">
+          —
+        </h4>
 
-<pre id="curlExample"></pre>
+        <p id="deploymentDescription" style="color:var(--muted);font-size:13px;line-height:1.7;"></p>
 
-</div>
+        <div class="code-block" style="margin-top:22px;">
+          <pre id="deploymentPreview"></pre>
+        </div>
 
-</div>
+        <div class="eyebrow" style="margin-top:26px;">GENERATED FILES</div>
 
-<div class="modal-footer">
+        <div id="generatedFiles" style="display:grid;gap:8px;"></div>
+      </div>
 
-<button class="action-button" onclick="closeDeployModal()">
-Close
-</button>
+    </div>
 
-<button class="action-button primary">
-<i class="fa-solid fa-check"></i>
-Deployment Ready
-</button>
+    <div class="modal-footer">
 
-</div>
+      <button class="action-button" id="deployBackButton" onclick="backToDeployTargets()" style="display:none;">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+      </button>
 
-</div>
+      <button class="action-button" onclick="closeDeployModal()">Close</button>
 
+      <button class="action-button primary" id="deployGenerateButton" onclick="generateDeployment()" disabled>
+        <i class="fa-solid fa-rocket"></i>
+        Generate
+      </button>
+
+      <button class="action-button primary hidden" id="deployDownloadButton" onclick="downloadDeployment()">
+        <i class="fa-solid fa-download"></i>
+        Download Files
+      </button>
+
+    </div>
+  </div>
 </div>
 
 <script>
@@ -3767,71 +3837,550 @@ if __name__ == "__main__":
 }
 
 /* ============================================================
-DEPLOY
+DEPLOYMENT ENGINE
 ============================================================ */
 
+let selectedDeployTarget = null;
+let generatedDeploymentFiles = [];
+
 function deployAgent() {
+  selectedDeployTarget = null;
+  generatedDeploymentFiles = [];
 
-  const endpoint =
-    `https://api.openmind.ai/v1/models/${
-      trainedModelId || "agent"
-    }`;
+  document.getElementById("deployModal").classList.remove("hidden");
+  document.getElementById("deployStepOne").classList.remove("hidden");
+  document.getElementById("deployStepTwo").classList.add("hidden");
+  document.getElementById("deployBackButton").style.display = "none";
+  document.getElementById("deployGenerateButton").classList.remove("hidden");
+  document.getElementById("deployDownloadButton").classList.add("hidden");
+  document.getElementById("deployGenerateButton").disabled = true;
 
-  document
-    .getElementById("deployUrl")
-    .textContent =
-    endpoint;
+  updateDeploymentInfo();
 
-  document
-    .getElementById("curlExample")
-    .textContent =
-`curl -X POST ${endpoint} \\
-  -H "Content-Type: application/json" \\
-  -d '{"features":{"example":10}}'`;
+  document.querySelectorAll("[data-deploy-target]").forEach(button => {
+    button.classList.remove("active");
+  });
+}
 
-  document
-    .getElementById("deployModal")
-    .classList
-    .remove("hidden");
+function updateDeploymentInfo() {
+  const modelType = document.getElementById("modelType").value;
+  const algorithm = document.getElementById("algorithm").value;
 
+  document.getElementById("deployModelInfo").textContent =
+    modelType.replaceAll("_", " ");
+
+  document.getElementById("deployAlgorithmInfo").textContent =
+    algorithm.replaceAll("_", " ");
+
+  document.getElementById("deployDatasetInfo").textContent =
+    dataset.length
+      ? `${dataset.length.toLocaleString()} rows`
+      : "No dataset";
+
+  document.getElementById("deployModelId").textContent =
+    trainedModelId || "Not trained";
+}
+
+document.querySelectorAll("[data-deploy-target]").forEach(button => {
+  button.addEventListener("click", () => {
+    selectedDeployTarget = button.dataset.deployTarget;
+
+    document.querySelectorAll("[data-deploy-target]").forEach(item => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    document.getElementById("deployGenerateButton").disabled = false;
+  });
+});
+
+function generateDeployment() {
+  if (!selectedDeployTarget) {
+    alert("Please select a deployment target.");
+    return;
+  }
+
+  generatedDeploymentFiles = [];
+
+  if (selectedDeployTarget === "javascript") {
+    generateJavaScriptDeployment();
+  } else if (selectedDeployTarget === "python") {
+    generatePythonDeployment();
+  } else if (selectedDeployTarget === "java") {
+    generateJavaDeployment();
+  } else if (selectedDeployTarget === "agent") {
+    generateAgentDeployment();
+  }
+
+  showDeploymentPreview();
+}
+
+function showDeploymentPreview() {
+  document.getElementById("deployStepOne").classList.add("hidden");
+  document.getElementById("deployStepTwo").classList.remove("hidden");
+  document.getElementById("deployBackButton").style.display = "inline-flex";
+  document.getElementById("deployGenerateButton").classList.add("hidden");
+  document.getElementById("deployDownloadButton").classList.remove("hidden");
+
+  const firstFile = generatedDeploymentFiles[0];
+
+  document.getElementById("deploymentPreview").textContent =
+    firstFile ? firstFile.content : "";
+
+  const files = document.getElementById("generatedFiles");
+  files.innerHTML = "";
+
+  generatedDeploymentFiles.forEach(file => {
+    const item = document.createElement("div");
+
+    item.style.cssText = `
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      padding:13px;
+      background:#0b0b0b;
+      border:1px solid var(--border-soft);
+    `;
+
+    item.innerHTML = `
+      <div>
+        <div style="font-size:12px;color:white;">
+          ${escapeHTML(file.name)}
+        </div>
+        <div style="font-size:10px;color:var(--muted-2);margin-top:4px;">
+          ${escapeHTML(file.type)}
+        </div>
+      </div>
+
+      <button class="action-button" type="button">
+        <i class="fa-solid fa-download"></i>
+      </button>
+    `;
+
+    item.querySelector("button").addEventListener("click", () => {
+      downloadFile(file.name, file.content, file.mime);
+    });
+
+    files.appendChild(item);
+  });
+}
+
+function backToDeployTargets() {
+  document.getElementById("deployStepTwo").classList.add("hidden");
+  document.getElementById("deployStepOne").classList.remove("hidden");
+  document.getElementById("deployBackButton").style.display = "none";
+  document.getElementById("deployGenerateButton").classList.remove("hidden");
+  document.getElementById("deployDownloadButton").classList.add("hidden");
 }
 
 function closeDeployModal() {
-
-  document
-    .getElementById("deployModal")
-    .classList
-    .add("hidden");
-
+  document.getElementById("deployModal").classList.add("hidden");
 }
 
-function copyDeployUrl() {
+function downloadDeployment() {
+  generatedDeploymentFiles.forEach((file, index) => {
+    setTimeout(() => {
+      downloadFile(file.name, file.content, file.mime);
+    }, index * 250);
+  });
+}
 
-  const url =
-    document
-      .getElementById("deployUrl")
-      .textContent;
+function getDeploymentConfig() {
+  return {
+    modelId: trainedModelId || "openmind-agent",
+    modelType: document.getElementById("modelType").value,
+    algorithm: document.getElementById("algorithm").value,
+    targetColumn: document.getElementById("targetColumn").value || "target",
+    columns,
+    metrics: modelMetrics,
+    datasetRows: dataset.length,
+    hyperparameters: {
+      hp1: document.getElementById("hp1").value,
+      hp2: document.getElementById("hp2").value
+    }
+  };
+}
 
-  navigator.clipboard
-    .writeText(url)
-    .then(() => {
+function generateJavaScriptDeployment() {
+  const config = getDeploymentConfig();
 
-      const icon =
-        document
-          .getElementById("copyIcon");
+  document.getElementById("deploymentTitle").textContent =
+    "JavaScript Agent";
 
-      icon.className =
-        "fa-solid fa-check";
+  document.getElementById("deploymentDescription").textContent =
+    "A Node.js deployment package containing an OpenMind agent, Express API server and project configuration.";
 
-      setTimeout(() => {
+  const agentCode = `class OpenMindAgent {
 
-        icon.className =
-          "fa-solid fa-copy";
+  constructor() {
+    this.modelId = "${config.modelId}";
+    this.modelType = "${config.modelType}";
+    this.algorithm = "${config.algorithm}";
+    this.targetColumn = "${config.targetColumn}";
+    this.isTrained = ${trainedModelId ? "true" : "false"};
+  }
 
-      },1800);
+  predict(features) {
+    return {
+      modelId: this.modelId,
+      prediction: null,
+      confidence: null,
+      algorithm: this.algorithm,
+      features
+    };
+  }
 
-    });
+  getInfo() {
+    return {
+      modelId: this.modelId,
+      modelType: this.modelType,
+      algorithm: this.algorithm,
+      targetColumn: this.targetColumn
+    };
+  }
+}
 
+module.exports = OpenMindAgent;
+`;
+
+  const serverCode = `const express = require("express");
+const OpenMindAgent = require("./agent");
+
+const app = express();
+app.use(express.json());
+
+const agent = new OpenMindAgent();
+
+app.get("/", (req, res) => {
+  res.json({
+    service: "OpenMind AI Agent",
+    status: "running",
+    agent: agent.getInfo()
+  });
+});
+
+app.post("/predict", (req, res) => {
+  const result = agent.predict(req.body.features || {});
+  res.json(result);
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("OpenMind running on port " + PORT);
+});
+`;
+
+  const packageJSON = `{
+  "name": "openmind-agent",
+  "version": "1.0.0",
+  "description": "Generated OpenMind AI Agent",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
+`;
+
+  const readme = `# OpenMind JavaScript Agent
+
+## Install
+npm install
+
+## Run
+npm start
+
+## Prediction API
+POST /predict
+
+{
+  "features": {
+    "example": 10
+  }
+}
+`;
+
+  generatedDeploymentFiles = [
+    { name: "agent.js", content: agentCode, type: "JavaScript Agent", mime: "text/javascript" },
+    { name: "server.js", content: serverCode, type: "Node.js API", mime: "text/javascript" },
+    { name: "package.json", content: packageJSON, type: "Node.js Configuration", mime: "application/json" },
+    { name: "README.md", content: readme, type: "Documentation", mime: "text/markdown" }
+  ];
+}
+
+function generatePythonDeployment() {
+  const config = getDeploymentConfig();
+
+  document.getElementById("deploymentTitle").textContent =
+    "Python Agent";
+
+  document.getElementById("deploymentDescription").textContent =
+    "A Python deployment package containing an OpenMind agent and FastAPI prediction service.";
+
+  const agentCode = `class OpenMindAgent:
+
+    def __init__(self):
+        self.model_id = "${config.modelId}"
+        self.model_type = "${config.modelType}"
+        self.algorithm = "${config.algorithm}"
+        self.target_column = "${config.targetColumn}"
+
+    def predict(self, features):
+        return {
+            "model_id": self.model_id,
+            "prediction": None,
+            "algorithm": self.algorithm,
+            "features": features
+        }
+
+    def info(self):
+        return {
+            "model_id": self.model_id,
+            "model_type": self.model_type,
+            "algorithm": self.algorithm,
+            "target_column": self.target_column
+        }
+`;
+
+  const apiCode = `from fastapi import FastAPI
+from agent import OpenMindAgent
+
+app = FastAPI(title="OpenMind AI Agent")
+agent = OpenMindAgent()
+
+@app.get("/")
+def status():
+    return {
+        "service": "OpenMind AI Agent",
+        "status": "running",
+        "agent": agent.info()
+    }
+
+@app.post("/predict")
+def predict(payload: dict):
+    features = payload.get("features") or {}
+    return agent.predict(features)
+`;
+
+  const requirements = `fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+`;
+
+  const readme = `# OpenMind Python Agent
+
+## Install
+pip install -r requirements.txt
+
+## Run
+uvicorn main:app --reload
+
+## API
+POST /predict
+`;
+
+  generatedDeploymentFiles = [
+    { name: "agent.py", content: agentCode, type: "Python Agent", mime: "text/x-python" },
+    { name: "main.py", content: apiCode, type: "FastAPI Server", mime: "text/x-python" },
+    { name: "requirements.txt", content: requirements, type: "Dependencies", mime: "text/plain" },
+    { name: "README.md", content: readme, type: "Documentation", mime: "text/markdown" }
+  ];
+}
+
+function generateJavaDeployment() {
+  const config = getDeploymentConfig();
+
+  document.getElementById("deploymentTitle").textContent =
+    "Java Agent";
+
+  document.getElementById("deploymentDescription").textContent =
+    "A Java-based OpenMind agent service with a Spring Boot-ready project structure.";
+
+  const agentCode = `package com.openmind.agent;
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class OpenMindAgent {
+
+    private String modelId = "${config.modelId}";
+    private String modelType = "${config.modelType}";
+    private String algorithm = "${config.algorithm}";
+
+    public Map<String,Object> predict(
+        Map<String,Object> features
+    ) {
+
+        Map<String,Object> result = new HashMap<>();
+
+        result.put("modelId", modelId);
+        result.put("prediction", null);
+        result.put("algorithm", algorithm);
+        result.put("features", features);
+
+        return result;
+    }
+}
+`;
+
+  const applicationCode = `package com.openmind.agent;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(
+            Application.class,
+            args
+        );
+    }
+}
+`;
+
+  const controllerCode = `package com.openmind.agent;
+
+import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api")
+public class AgentController {
+
+    private OpenMindAgent agent =
+        new OpenMindAgent();
+
+    @PostMapping("/predict")
+    public Map<String,Object> predict(
+        @RequestBody Map<String,Object> features
+    ) {
+        return agent.predict(features);
+    }
+}
+`;
+
+  const pom = `<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.openmind</groupId>
+  <artifactId>openmind-agent</artifactId>
+  <version>1.0.0</version>
+
+  <properties>
+    <java.version>17</java.version>
+  </properties>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.0</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
+`;
+
+  generatedDeploymentFiles = [
+    { name: "OpenMindAgent.java", content: agentCode, type: "Java Agent", mime: "text/plain" },
+    { name: "Application.java", content: applicationCode, type: "Spring Boot Application", mime: "text/plain" },
+    { name: "AgentController.java", content: controllerCode, type: "REST API Controller", mime: "text/plain" },
+    { name: "pom.xml", content: pom, type: "Maven Configuration", mime: "application/xml" }
+  ];
+}
+
+function generateAgentDeployment() {
+  const config = getDeploymentConfig();
+
+  document.getElementById("deploymentTitle").textContent =
+    "OpenMind AI Agent Package";
+
+  document.getElementById("deploymentDescription").textContent =
+    "A complete portable package containing the agent manifest, model configuration, system metadata and sample predictions.";
+
+  const manifest = {
+    name: "OpenMind Agent",
+    version: "4.0",
+    modelId: config.modelId,
+    modelType: config.modelType,
+    algorithm: config.algorithm,
+    targetColumn: config.targetColumn,
+    features: config.columns.filter(
+      column => column !== config.targetColumn
+    ),
+    deployment: {
+      type: "portable-agent",
+      runtime: "OpenMind"
+    }
+  };
+
+  const systemConfig = {
+    model: config,
+    dataset: {
+      rows: dataset.length,
+      columns
+    },
+    metrics: modelMetrics,
+    predictions
+  };
+
+  const readme = `# OpenMind AI Agent Package
+
+Model ID: ${config.modelId}
+Model Type: ${config.modelType}
+Algorithm: ${config.algorithm}
+Target: ${config.targetColumn}
+
+Files:
+- agent.manifest.json
+- model.config.json
+- predictions.json
+- README.md
+`;
+
+  generatedDeploymentFiles = [
+    {
+      name: "agent.manifest.json",
+      content: JSON.stringify(manifest, null, 2),
+      type: "Agent Manifest",
+      mime: "application/json"
+    },
+    {
+      name: "model.config.json",
+      content: JSON.stringify(systemConfig, null, 2),
+      type: "Model Configuration",
+      mime: "application/json"
+    },
+    {
+      name: "predictions.json",
+      content: JSON.stringify(predictions, null, 2),
+      type: "Sample Predictions",
+      mime: "application/json"
+    },
+    {
+      name: "README.md",
+      content: readme,
+      type: "Documentation",
+      mime: "text/markdown"
+    }
+  ];
 }
 
 /* ============================================================
