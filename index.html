@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>OpenMind — Build Intelligent Systems</title>
+
   <meta
     name="description"
-    content="OpenMind is an AI platform for building intelligent agents, automation workflows and digital experiences."
+    content="OpenMind is a platform for building AI agents and powerful digital experiences."
   />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +25,7 @@
   />
 
   <style>
+
     :root {
       --bg: #050505;
       --bg-soft: #0b0b0b;
@@ -34,7 +36,6 @@
       --muted-2: #5f5f5f;
       --border: rgba(255,255,255,0.11);
       --border-soft: rgba(255,255,255,0.06);
-      --accent: #ffffff;
 
       --font-display: "Space Grotesk", sans-serif;
       --font-body: "DM Sans", sans-serif;
@@ -66,9 +67,11 @@
       pointer-events: none;
       opacity: 0.035;
       z-index: 9999;
+
       background-image:
         radial-gradient(circle at 20% 30%, white 0.5px, transparent 0.5px),
         radial-gradient(circle at 70% 60%, white 0.5px, transparent 0.5px);
+
       background-size: 8px 8px, 13px 13px;
     }
 
@@ -86,7 +89,9 @@
       margin: 0 auto;
     }
 
-    /* CURSOR */
+    /* ================================
+       CUSTOM CURSOR
+    ================================= */
 
     .cursor-dot,
     .cursor-ring {
@@ -106,7 +111,9 @@
     .cursor-ring {
       width: 34px;
       height: 34px;
+
       border: 1px solid rgba(255,255,255,0.55);
+
       transition:
         width .2s ease,
         height .2s ease,
@@ -119,14 +126,18 @@
       background: rgba(255,255,255,0.05);
     }
 
-    /* NAVIGATION */
+    /* ================================
+       NAVIGATION
+    ================================= */
 
     .navbar {
       position: fixed;
       top: 0;
       left: 0;
+
       width: 100%;
       z-index: 1000;
+
       transition: .35s ease;
       border-bottom: 1px solid transparent;
     }
@@ -139,9 +150,11 @@
 
     .nav-inner {
       height: 82px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       gap: 30px;
     }
 
@@ -149,20 +162,22 @@
       display: flex;
       align-items: center;
       gap: 12px;
+
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 22px;
       letter-spacing: -1px;
     }
 
-    /* OPENMIND LOGO */
-
     .mind-logo {
       width: 36px;
       height: 36px;
+
       position: relative;
+
       border: 1.5px solid white;
       border-radius: 10px 18px 10px 18px;
+
       transform: rotate(45deg);
     }
 
@@ -177,8 +192,10 @@
     .mind-logo::before {
       width: 6px;
       height: 6px;
+
       top: 6px;
       left: 6px;
+
       box-shadow:
         13px 0 white,
         0 13px white,
@@ -188,8 +205,10 @@
     .mind-logo::after {
       width: 1px;
       height: 22px;
+
       left: 17px;
       top: 6px;
+
       transform: rotate(90deg);
       opacity: .65;
     }
@@ -203,6 +222,7 @@
       display: flex;
       gap: 34px;
       align-items: center;
+
       color: var(--muted);
       font-size: 14px;
     }
@@ -217,11 +237,15 @@
 
     .nav-cta {
       padding: 12px 19px;
+
       border: 1px solid white;
+
       color: black;
       background: white;
+
       font-size: 13px;
       font-weight: 600;
+
       transition: .3s;
     }
 
@@ -232,35 +256,46 @@
 
     .menu-btn {
       display: none;
+
       background: transparent;
       border: 0;
+
       color: white;
       font-size: 21px;
     }
 
-    /* HERO */
+    /* ================================
+       HERO
+    ================================= */
 
     .hero {
       min-height: 100vh;
+
       display: flex;
       align-items: center;
+
       padding: 150px 0 80px;
+
       position: relative;
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: 1.05fr .95fr;
+
       gap: 80px;
       align-items: center;
     }
 
     .eyebrow {
       color: var(--muted);
+
       font-size: 12px;
       letter-spacing: 2px;
       text-transform: uppercase;
+
       margin-bottom: 26px;
+
       display: flex;
       align-items: center;
       gap: 10px;
@@ -268,16 +303,21 @@
 
     .eyebrow::before {
       content: "";
+
       width: 28px;
       height: 1px;
+
       background: white;
     }
 
     .hero h1 {
       font-family: var(--font-display);
+
       font-size: clamp(4rem, 8vw, 8.5rem);
+
       line-height: .88;
       letter-spacing: -6px;
+
       max-width: 900px;
     }
 
@@ -287,26 +327,35 @@
 
     .hero-description {
       max-width: 590px;
+
       margin-top: 36px;
+
       font-size: 18px;
       line-height: 1.75;
+
       color: var(--muted);
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
+
       gap: 14px;
+
       margin-top: 38px;
     }
 
     .btn {
       padding: 17px 24px;
+
       border: 1px solid var(--border);
+
       display: inline-flex;
       align-items: center;
       gap: 12px;
+
       font-size: 14px;
+
       transition: .3s ease;
       cursor: pointer;
     }
@@ -332,11 +381,15 @@
       color: black;
     }
 
-    /* HERO INTELLIGENCE CORE */
+    /* ================================
+       INTELLIGENCE CORE
+    ================================= */
 
     .intelligence-area {
       position: relative;
+
       min-height: 620px;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -344,37 +397,57 @@
 
     .neural-grid {
       position: absolute;
+
       width: 100%;
       height: 100%;
+
       opacity: .12;
+
       background-image:
         linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px);
+
       background-size: 55px 55px;
-      mask-image: radial-gradient(circle, black 25%, transparent 75%);
+
+      mask-image:
+        radial-gradient(circle, black 25%, transparent 75%);
     }
 
     .neural-core {
       width: 260px;
       height: 260px;
+
       border: 1px solid rgba(255,255,255,.4);
       border-radius: 50%;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       position: relative;
+
       animation: breathe 4s ease-in-out infinite;
+
       background:
-        radial-gradient(circle at center, rgba(255,255,255,.12), transparent 65%);
+        radial-gradient(
+          circle at center,
+          rgba(255,255,255,.12),
+          transparent 65%
+        );
     }
 
     .core-inner {
       width: 150px;
       height: 150px;
+
       border: 1px solid white;
+
       border-radius: 32px 60px 32px 60px;
+
       transform: rotate(45deg);
+
       position: relative;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -382,10 +455,14 @@
 
     .core-inner::before {
       content: "";
+
       width: 14px;
       height: 14px;
+
       border-radius: 50%;
+
       background: white;
+
       box-shadow:
         45px 0 white,
         -45px 0 white,
@@ -395,80 +472,80 @@
 
     .core-text {
       position: absolute;
+
       z-index: 3;
+
       transform: rotate(-45deg);
+
       text-align: center;
+
       font-family: var(--font-display);
+
       font-size: 13px;
       letter-spacing: 3px;
     }
 
-    .connection {
-      position: absolute;
-      width: 150px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, white, transparent);
-      transform-origin: left center;
-      opacity: .55;
-    }
-
-    .connection:nth-child(1) {
-      transform: rotate(0deg) translateX(120px);
-    }
-
-    .connection:nth-child(2) {
-      transform: rotate(45deg) translateX(100px);
-    }
-
-    .connection:nth-child(3) {
-      transform: rotate(90deg) translateX(120px);
-    }
-
-    .connection:nth-child(4) {
-      transform: rotate(135deg) translateX(100px);
-    }
-
-    .connection:nth-child(5) {
-      transform: rotate(180deg) translateX(120px);
-    }
-
-    .connection:nth-child(6) {
-      transform: rotate(225deg) translateX(100px);
-    }
-
-    .connection:nth-child(7) {
-      transform: rotate(270deg) translateX(120px);
-    }
-
-    .connection:nth-child(8) {
-      transform: rotate(315deg) translateX(100px);
-    }
-
     .node {
       position: absolute;
+
       width: 12px;
       height: 12px;
+
       border-radius: 50%;
+
       background: white;
+
       box-shadow: 0 0 20px rgba(255,255,255,.8);
+
       animation: nodePulse 2.5s infinite;
     }
 
     .node.n1 { top: 7%; left: 48%; }
-    .node.n2 { top: 19%; right: 7%; animation-delay: .3s; }
-    .node.n3 { bottom: 20%; right: 6%; animation-delay: .7s; }
-    .node.n4 { bottom: 5%; left: 47%; animation-delay: 1s; }
-    .node.n5 { bottom: 22%; left: 7%; animation-delay: 1.3s; }
-    .node.n6 { top: 20%; left: 8%; animation-delay: 1.7s; }
+
+    .node.n2 {
+      top: 19%;
+      right: 7%;
+      animation-delay: .3s;
+    }
+
+    .node.n3 {
+      bottom: 20%;
+      right: 6%;
+      animation-delay: .7s;
+    }
+
+    .node.n4 {
+      bottom: 5%;
+      left: 47%;
+      animation-delay: 1s;
+    }
+
+    .node.n5 {
+      bottom: 22%;
+      left: 7%;
+      animation-delay: 1.3s;
+    }
+
+    .node.n6 {
+      top: 20%;
+      left: 8%;
+      animation-delay: 1.7s;
+    }
 
     .floating-card {
       position: absolute;
+
       right: 0;
       bottom: 35px;
+
       width: 240px;
+
       padding: 20px;
+
       background: rgba(15,15,15,.82);
+
       backdrop-filter: blur(20px);
+
       border: 1px solid var(--border);
     }
 
@@ -480,37 +557,48 @@
 
     .floating-card h4 {
       margin-top: 10px;
+
       font-family: var(--font-display);
       font-size: 17px;
     }
 
     .floating-card p {
       margin-top: 12px;
+
       color: var(--muted);
+
       font-size: 12px;
       line-height: 1.7;
     }
 
-    /* MARQUEE */
+    /* ================================
+       MARQUEE
+    ================================= */
 
     .marquee {
       border-top: 1px solid var(--border-soft);
       border-bottom: 1px solid var(--border-soft);
+
       overflow: hidden;
       white-space: nowrap;
+
       padding: 20px 0;
     }
 
     .marquee-track {
       display: inline-flex;
+
       animation: marqueeMove 28s linear infinite;
+
       gap: 35px;
     }
 
     .marquee-item {
       font-family: var(--font-display);
+
       font-size: 15px;
       letter-spacing: 1px;
+
       color: var(--muted);
     }
 
@@ -519,7 +607,9 @@
       margin-left: 35px;
     }
 
-    /* SECTIONS */
+    /* ================================
+       GENERAL SECTIONS
+    ================================= */
 
     section {
       padding: 150px 0;
@@ -527,46 +617,64 @@
 
     .section-label {
       color: var(--muted);
+
       text-transform: uppercase;
+
       font-size: 11px;
       letter-spacing: 2px;
+
       margin-bottom: 22px;
     }
 
     .section-title {
       font-family: var(--font-display);
+
       font-size: clamp(3rem, 6vw, 6.5rem);
+
       letter-spacing: -4px;
       line-height: .95;
+
       max-width: 900px;
     }
 
     .section-description {
       max-width: 650px;
+
       margin-top: 28px;
+
       color: var(--muted);
+
       font-size: 17px;
       line-height: 1.8;
     }
 
-    /* PLATFORM CARDS */
+    /* ================================
+       PLATFORM CARDS
+    ================================= */
 
     .ventures {
       margin-top: 80px;
+
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+
       border-top: 1px solid var(--border);
       border-left: 1px solid var(--border);
     }
 
     .venture-card {
       min-height: 440px;
+
       padding: 38px;
+
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+
       position: relative;
       overflow: hidden;
+
       background: var(--bg);
+
       transition: .5s;
     }
 
@@ -576,73 +684,95 @@
 
     .venture-number {
       color: var(--muted-2);
+
       font-family: var(--font-display);
+
       font-size: 13px;
     }
 
     .venture-type {
       color: var(--muted);
+
       text-transform: uppercase;
+
       font-size: 10px;
       letter-spacing: 2px;
+
       margin-top: 60px;
     }
 
     .venture-card h3 {
       margin-top: 15px;
+
       font-family: var(--font-display);
+
       font-size: clamp(2rem, 4vw, 4rem);
+
       letter-spacing: -2px;
     }
 
     .venture-card p {
       color: var(--muted);
+
       max-width: 420px;
+
       line-height: 1.75;
+
       margin-top: 18px;
+
       font-size: 15px;
     }
 
     .venture-link {
       position: absolute;
+
       bottom: 38px;
       left: 38px;
+
       display: flex;
       align-items: center;
       gap: 10px;
+
       font-size: 13px;
     }
 
     .venture-visual {
       position: absolute;
+
       right: 30px;
       top: 35px;
+
       width: 150px;
       height: 150px;
+
       opacity: .12;
     }
 
-    .visual-ai {
+    .visual-agent {
       border: 1px solid white;
       border-radius: 50%;
     }
 
-    .visual-ai::before,
-    .visual-ai::after {
+    .visual-agent::before,
+    .visual-agent::after {
       content: "";
+
       position: absolute;
+
       background: white;
     }
 
-    .visual-ai::before {
+    .visual-agent::before {
       width: 100%;
       height: 1px;
+
       top: 50%;
     }
 
-    .visual-ai::after {
+    .visual-agent::after {
       width: 1px;
       height: 100%;
+
       left: 50%;
     }
 
@@ -652,35 +782,55 @@
 
     .visual-web::before {
       content: "</>";
+
       position: absolute;
       inset: 0;
+
       display: grid;
       place-items: center;
+
       font-family: var(--font-display);
+
       font-size: 35px;
+
       color: white;
     }
 
-    /* FEATURES */
+    /* ================================
+       FEATURES
+    ================================= */
 
     .features-list {
       margin-top: 75px;
+
       border-top: 1px solid var(--border);
     }
 
     .feature-row {
       display: grid;
+
       grid-template-columns: 100px 1fr 1.3fr 50px;
+
       gap: 30px;
+
       align-items: center;
+
       padding: 42px 0;
+
       border-bottom: 1px solid var(--border);
+
       transition: .3s;
     }
 
     .feature-row:hover {
       padding-left: 18px;
-      background: linear-gradient(90deg, rgba(255,255,255,.04), transparent);
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.04),
+          transparent
+        );
     }
 
     .feature-number {
@@ -690,46 +840,63 @@
 
     .feature-name {
       font-family: var(--font-display);
+
       font-size: clamp(1.8rem, 3vw, 3rem);
+
       letter-spacing: -1.5px;
     }
 
     .feature-description {
       color: var(--muted);
+
       line-height: 1.7;
+
       font-size: 14px;
     }
 
     .feature-arrow {
       font-size: 18px;
+
       text-align: right;
+
       color: var(--muted);
+
       transition: .3s;
     }
 
     .feature-row:hover .feature-arrow {
       color: white;
+
       transform: translate(6px, -4px);
     }
 
-    /* ABOUT */
+    /* ================================
+       ABOUT
+    ================================= */
 
     .about-grid {
       display: grid;
+
       grid-template-columns: .85fr 1.15fr;
+
       gap: 100px;
     }
 
     .about-sticky {
       position: sticky;
+
       top: 140px;
+
       align-self: start;
     }
 
     .about-big {
       font-family: var(--font-display);
+
       font-size: clamp(3.5rem, 7vw, 7rem);
+
       line-height: .9;
+
       letter-spacing: -5px;
     }
 
@@ -744,9 +911,13 @@
 
     .principle {
       padding: 35px 0;
+
       border-bottom: 1px solid var(--border);
+
       display: grid;
+
       grid-template-columns: 80px 1fr;
+
       gap: 30px;
     }
 
@@ -757,18 +928,25 @@
 
     .principle h4 {
       font-family: var(--font-display);
+
       font-size: 25px;
+
       letter-spacing: -1px;
     }
 
     .principle p {
       margin-top: 13px;
+
       color: var(--muted);
+
       line-height: 1.8;
+
       font-size: 15px;
     }
 
-    /* STATS */
+    /* ================================
+       STATS
+    ================================= */
 
     .stats {
       border-top: 1px solid var(--border);
@@ -791,31 +969,42 @@
 
     .stat-number {
       font-family: var(--font-display);
+
       font-size: clamp(2.8rem, 5vw, 5rem);
+
       letter-spacing: -3px;
     }
 
     .stat-label {
       margin-top: 12px;
+
       color: var(--muted);
+
       font-size: 13px;
     }
 
-    /* INTELLIGENCE SYSTEM */
+    /* ================================
+       SYSTEM
+    ================================= */
 
     .system-grid {
       margin-top: 75px;
+
       display: grid;
       grid-template-columns: repeat(4, 1fr);
+
       border-left: 1px solid var(--border);
       border-top: 1px solid var(--border);
     }
 
     .system-card {
       min-height: 300px;
+
       padding: 30px;
+
       border-right: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+
       transition: .35s;
     }
 
@@ -826,26 +1015,36 @@
     .system-icon {
       width: 45px;
       height: 45px;
+
       border: 1px solid var(--border);
+
       display: grid;
       place-items: center;
+
       font-size: 16px;
     }
 
     .system-card h4 {
       margin-top: 75px;
+
       font-family: var(--font-display);
+
       font-size: 23px;
     }
 
     .system-card p {
       color: var(--muted);
+
       margin-top: 12px;
+
       font-size: 14px;
+
       line-height: 1.7;
     }
 
-    /* CTA */
+    /* ================================
+       CTA
+    ================================= */
 
     .cta-section {
       border-top: 1px solid var(--border);
@@ -853,31 +1052,45 @@
 
     .cta-box {
       min-height: 620px;
+
       display: flex;
       flex-direction: column;
+
       justify-content: center;
       align-items: flex-start;
+
       position: relative;
+
       overflow: hidden;
     }
 
     .cta-box::before {
       content: "";
+
       position: absolute;
+
       width: 700px;
       height: 700px;
+
       border: 1px solid rgba(255,255,255,.09);
+
       border-radius: 50%;
+
       right: -220px;
       top: -150px;
     }
 
     .cta-box h2 {
       font-family: var(--font-display);
+
       font-size: clamp(4rem, 9vw, 9rem);
+
       line-height: .85;
+
       letter-spacing: -6px;
+
       max-width: 1000px;
+
       position: relative;
     }
 
@@ -887,46 +1100,67 @@
 
     .cta-box p {
       position: relative;
+
       max-width: 560px;
+
       color: var(--muted);
+
       margin-top: 35px;
+
       font-size: 17px;
+
       line-height: 1.8;
     }
 
-    /* FOOTER */
+    /* ================================
+       FOOTER
+    ================================= */
 
     footer {
       border-top: 1px solid var(--border);
+
       padding: 80px 0 35px;
     }
 
     .footer-grid {
       display: grid;
+
       grid-template-columns: 2fr repeat(3, 1fr);
+
       gap: 60px;
     }
 
     .footer-brand p {
       color: var(--muted);
+
       max-width: 320px;
+
       line-height: 1.7;
+
       margin-top: 20px;
+
       font-size: 14px;
     }
 
     .footer-column h5 {
       font-size: 12px;
+
       letter-spacing: 1px;
+
       text-transform: uppercase;
+
       margin-bottom: 22px;
     }
 
     .footer-column a {
       display: block;
+
       color: var(--muted);
+
       margin-bottom: 13px;
+
       font-size: 14px;
+
       transition: .2s;
     }
 
@@ -936,19 +1170,28 @@
 
     .footer-bottom {
       margin-top: 80px;
+
       padding-top: 25px;
+
       border-top: 1px solid var(--border);
+
       display: flex;
       justify-content: space-between;
+
       color: var(--muted-2);
+
       font-size: 12px;
     }
 
-    /* ANIMATIONS */
+    /* ================================
+       REVEAL
+    ================================= */
 
     .reveal {
       opacity: 0;
+
       transform: translateY(35px);
+
       transition: 1s cubic-bezier(.2,.65,.2,1);
     }
 
@@ -957,20 +1200,33 @@
       transform: translateY(0);
     }
 
+    /* ================================
+       ANIMATIONS
+    ================================= */
+
     @keyframes breathe {
-      0%,100% {
+
+      0%,
+      100% {
         transform: scale(1);
-        box-shadow: 0 0 50px rgba(255,255,255,.05);
+
+        box-shadow:
+          0 0 50px rgba(255,255,255,.05);
       }
 
       50% {
         transform: scale(1.08);
-        box-shadow: 0 0 100px rgba(255,255,255,.15);
+
+        box-shadow:
+          0 0 100px rgba(255,255,255,.15);
       }
+
     }
 
     @keyframes nodePulse {
-      0%,100% {
+
+      0%,
+      100% {
         transform: scale(1);
         opacity: .6;
       }
@@ -979,9 +1235,11 @@
         transform: scale(1.8);
         opacity: 1;
       }
+
     }
 
     @keyframes marqueeMove {
+
       from {
         transform: translateX(0);
       }
@@ -989,11 +1247,15 @@
       to {
         transform: translateX(-50%);
       }
+
     }
 
-    /* RESPONSIVE */
+    /* ================================
+       RESPONSIVE
+    ================================= */
 
     @media (max-width: 1100px) {
+
       .hero-grid {
         grid-template-columns: 1fr;
       }
@@ -1017,9 +1279,11 @@
       .footer-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
     }
 
     @media (max-width: 850px) {
+
       .nav-links,
       .nav-cta {
         display: none;
@@ -1031,14 +1295,21 @@
 
       .nav-links.mobile-open {
         position: absolute;
+
         top: 82px;
         left: 0;
+
         width: 100%;
+
         padding: 25px;
+
         display: flex;
+
         flex-direction: column;
         align-items: flex-start;
+
         background: #090909;
+
         border-bottom: 1px solid var(--border);
       }
 
@@ -1066,9 +1337,11 @@
       .stat:nth-child(2) {
         border-bottom: 1px solid var(--border);
       }
+
     }
 
     @media (max-width: 600px) {
+
       .container {
         width: min(calc(100% - 30px), var(--container));
       }
@@ -1147,7 +1420,9 @@
       .cursor-ring {
         display: none;
       }
+
     }
+
   </style>
 </head>
 
@@ -1187,13 +1462,18 @@
 
 
       <a href="#start" class="nav-cta magnetic">
+
         Get Started
+
         <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
       </a>
 
 
       <button class="menu-btn" id="menuBtn">
+
         <i class="fa-solid fa-bars"></i>
+
       </button>
 
     </div>
@@ -1201,47 +1481,65 @@
   </nav>
 
 
-  <!-- HERO -->
-
   <main>
+
+
+    <!-- HERO -->
 
     <section class="hero">
 
       <div class="container hero-grid">
 
+
         <div class="reveal">
 
           <div class="eyebrow">
-            AI · AGENTS · AUTOMATION
+            AI AGENTS · WEBSITE BUILDER
           </div>
 
 
           <h1>
+
             Build the future with
-            <span class="muted-line">intelligent systems.</span>
+
+            <span class="muted-line">
+              intelligent systems.
+            </span>
+
           </h1>
 
 
           <p class="hero-description">
 
-            OpenMind is an intelligent development platform for creating,
-            deploying and managing AI agents, automated workflows and
-            powerful digital systems.
+            OpenMind gives you powerful tools to create intelligent AI
+            agents and build modern digital experiences from one platform.
 
           </p>
 
 
           <div class="hero-actions">
 
-            <a href="#start" class="btn btn-primary magnetic">
-              Get Started Free
-              <i class="fa-solid fa-arrow-down"></i>
+            <a
+              href="AgentGenerator.html"
+              class="btn btn-primary magnetic"
+            >
+
+              Build AI Agents
+
+              <i class="fa-solid fa-arrow-right"></i>
+
             </a>
 
 
-            <a href="#platform" class="btn btn-secondary magnetic">
+            <a
+              href="#platform"
+              class="btn btn-secondary magnetic"
+            >
+
               Explore Platform
+
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
             </a>
 
           </div>
@@ -1259,7 +1557,10 @@
             <div class="core-inner">
 
               <div class="core-text">
-                OPEN<br>MIND
+
+                OPEN<br>
+                MIND
+
               </div>
 
             </div>
@@ -1279,10 +1580,10 @@
 
             <small>OPENMIND PLATFORM</small>
 
-            <h4>Intelligence in motion.</h4>
+            <h4>Build without limits.</h4>
 
             <p>
-              AI Agents → Knowledge → Automation → Action
+              AI Agents → Tools → Knowledge → Digital Experiences
             </p>
 
           </div>
@@ -1305,19 +1606,15 @@
         </div>
 
         <div class="marquee-item">
-          INTELLIGENT AUTOMATION <span>✦</span>
-        </div>
-
-        <div class="marquee-item">
-          AI STUDIO <span>✦</span>
-        </div>
-
-        <div class="marquee-item">
           WEBSITE BUILDER <span>✦</span>
         </div>
 
         <div class="marquee-item">
           KNOWLEDGE SYSTEMS <span>✦</span>
+        </div>
+
+        <div class="marquee-item">
+          DIGITAL EXPERIENCES <span>✦</span>
         </div>
 
         <div class="marquee-item">
@@ -1329,15 +1626,19 @@
         </div>
 
         <div class="marquee-item">
-          INTELLIGENT AUTOMATION <span>✦</span>
-        </div>
-
-        <div class="marquee-item">
-          AI STUDIO <span>✦</span>
-        </div>
-
-        <div class="marquee-item">
           WEBSITE BUILDER <span>✦</span>
+        </div>
+
+        <div class="marquee-item">
+          KNOWLEDGE SYSTEMS <span>✦</span>
+        </div>
+
+        <div class="marquee-item">
+          DIGITAL EXPERIENCES <span>✦</span>
+        </div>
+
+        <div class="marquee-item">
+          AI DEPLOYMENT <span>✦</span>
         </div>
 
       </div>
@@ -1351,124 +1652,125 @@
 
       <div class="container">
 
+
         <div class="reveal">
 
           <div class="section-label">
             The OpenMind Platform
           </div>
 
+
           <h2 class="section-title">
+
             Build intelligence.<br>
-            Turn it into action.
+            Turn ideas into reality.
+
           </h2>
+
 
           <p class="section-description">
 
-            Everything you need to explore artificial intelligence,
-            create intelligent agents, connect knowledge and automate
-            meaningful digital workflows.
+            Everything you need to create intelligent AI agents and
+            build powerful digital experiences.
 
           </p>
 
         </div>
 
 
+        <!-- ONLY TWO PRODUCTS -->
+
         <div class="ventures">
 
-          <article class="venture-card magnetic reveal">
 
-            <span class="venture-number">01</span>
-
-            <div class="venture-visual visual-ai"></div>
-
-            <div class="venture-type">
-              AI PLATFORM
-            </div>
-
-            <h3>AI Studio</h3>
-
-            <p>
-              Create, test and manage intelligent AI systems from one
-              unified workspace.
-            </p>
-
-            <a href="#" class="venture-link">
-              Open AI Studio
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-          </article>
-
+          <!-- AI AGENTS -->
 
           <article class="venture-card magnetic reveal">
 
-            <span class="venture-number">02</span>
-
-            <div class="venture-visual visual-web"></div>
-
-            <div class="venture-type">
-              CREATIVE TOOL
-            </div>
-
-            <h3>Website Builder</h3>
-
-            <p>
-              Build responsive digital experiences with intelligent
-              creation tools designed for speed and flexibility.
-            </p>
-
-            <a href="#" class="venture-link">
-              Open Website Builder
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-          </article>
+            <span class="venture-number">
+              01
+            </span>
 
 
-          <article class="venture-card magnetic reveal">
+            <div class="venture-visual visual-agent"></div>
 
-            <span class="venture-number">03</span>
 
             <div class="venture-type">
               INTELLIGENCE
             </div>
 
-            <h3>AI Agents</h3>
+
+            <h3>
+              AI Agents
+            </h3>
+
 
             <p>
+
               Build intelligent systems capable of understanding tasks,
-              processing information, connecting tools and performing actions.
+              processing information, connecting tools and performing
+              useful actions.
+
             </p>
 
-            <a href="AgentGenerator.html" class="venture-link">
+
+            <a
+              href="AgentGenerator.html"
+              class="venture-link"
+            >
+
               Explore AI Agents
+
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
             </a>
 
           </article>
 
+
+          <!-- WEBSITE BUILDER -->
 
           <article class="venture-card magnetic reveal">
 
-            <span class="venture-number">04</span>
+            <span class="venture-number">
+              02
+            </span>
+
+
+            <div class="venture-visual visual-web"></div>
+
 
             <div class="venture-type">
-              AUTOMATION
+              CREATIVE TOOL
             </div>
 
-            <h3>Intelligent Workflows</h3>
+
+            <h3>
+              Website Builder
+            </h3>
+
 
             <p>
-              Connect AI models, applications, APIs and processes into
-              automated systems that turn intelligence into action.
+
+              Build responsive digital experiences with powerful creation
+              tools designed for speed, flexibility and complete control.
+
             </p>
 
-            <a href="#" class="venture-link">
-              Explore Automation
+
+            <a
+              href="builder.html"
+              class="venture-link"
+            >
+
+              Open Website Builder
+
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
             </a>
 
           </article>
+
 
         </div>
 
@@ -1483,20 +1785,27 @@
 
       <div class="container">
 
+
         <div class="reveal">
 
           <div class="section-label">
             What OpenMind enables
           </div>
 
+
           <h2 class="section-title">
-            Intelligence without unnecessary limits.
+
+            Powerful tools.
+            <br>
+            Built for creation.
+
           </h2>
 
         </div>
 
 
         <div class="features-list">
+
 
           <div class="feature-row reveal">
 
@@ -1507,8 +1816,10 @@
             </div>
 
             <div class="feature-description">
+
               Create intelligent agents designed around specific tasks,
-              knowledge, instructions and workflows.
+              knowledge, instructions and tools.
+
             </div>
 
             <div class="feature-arrow">
@@ -1523,12 +1834,14 @@
             <div class="feature-number">02</div>
 
             <div class="feature-name">
-              AI Model Integration
+              Tool Integration
             </div>
 
             <div class="feature-description">
-              Connect powerful AI models and create intelligent systems
-              that work with modern language and machine learning technologies.
+
+              Connect your AI agents with APIs, applications and tools
+              to expand what they can do.
+
             </div>
 
             <div class="feature-arrow">
@@ -1543,12 +1856,14 @@
             <div class="feature-number">03</div>
 
             <div class="feature-name">
-              Intelligent Automation
+              Knowledge Systems
             </div>
 
             <div class="feature-description">
-              Transform repetitive work into intelligent workflows that
-              can process information and perform useful actions.
+
+              Connect documents, information and data to give your
+              AI agents meaningful context.
+
             </div>
 
             <div class="feature-arrow">
@@ -1563,12 +1878,14 @@
             <div class="feature-number">04</div>
 
             <div class="feature-name">
-              AI Deployment
+              Website Creation
             </div>
 
             <div class="feature-description">
-              Move intelligent systems beyond experimentation and prepare
-              them for real-world digital environments.
+
+              Build modern, responsive websites with flexible tools
+              designed to accelerate digital creation.
+
             </div>
 
             <div class="feature-arrow">
@@ -1583,12 +1900,14 @@
             <div class="feature-number">05</div>
 
             <div class="feature-name">
-              AI Studio
+              Responsive Design
             </div>
 
             <div class="feature-description">
-              Experiment, test and develop intelligent systems in a
-              focused workspace built for exploration.
+
+              Create digital experiences that adapt beautifully across
+              desktop, tablet and mobile devices.
+
             </div>
 
             <div class="feature-arrow">
@@ -1603,12 +1922,14 @@
             <div class="feature-number">06</div>
 
             <div class="feature-name">
-              Website Builder
+              Flexible Deployment
             </div>
 
             <div class="feature-description">
-              Build modern websites and digital experiences using
-              flexible tools designed to accelerate creation.
+
+              Move your projects from creation to real-world use with
+              flexible deployment possibilities.
+
             </div>
 
             <div class="feature-arrow">
@@ -1616,6 +1937,7 @@
             </div>
 
           </div>
+
 
         </div>
 
@@ -1630,16 +1952,24 @@
 
       <div class="container about-grid">
 
+
         <div class="about-sticky reveal">
 
           <div class="section-label">
             The OpenMind Philosophy
           </div>
 
+
           <div class="about-big">
+
             Think.
-            <span>Build.</span>
+
+            <span>
+              Build.
+            </span>
+
             Evolve.
+
           </div>
 
         </div>
@@ -1647,18 +1977,25 @@
 
         <div class="principles">
 
+
           <div class="principle reveal">
 
-            <div class="principle-number">01</div>
+            <div class="principle-number">
+              01
+            </div>
+
 
             <div>
 
-              <h4>Intelligence should be accessible.</h4>
+              <h4>
+                Intelligence should be accessible.
+              </h4>
 
               <p>
-                Powerful AI should not only belong to large technology
-                companies. OpenMind is designed to help more people explore,
-                create and build intelligent systems.
+
+                Powerful technology should help more people explore,
+                create and build meaningful digital systems.
+
               </p>
 
             </div>
@@ -1668,15 +2005,22 @@
 
           <div class="principle reveal">
 
-            <div class="principle-number">02</div>
+            <div class="principle-number">
+              02
+            </div>
+
 
             <div>
 
-              <h4>Build beyond prompts.</h4>
+              <h4>
+                Build beyond limitations.
+              </h4>
 
               <p>
-                Artificial intelligence becomes more useful when it can
-                connect knowledge, tools, workflows and meaningful actions.
+
+                Technology becomes more useful when people can connect
+                ideas, knowledge, tools and meaningful actions.
+
               </p>
 
             </div>
@@ -1686,15 +2030,22 @@
 
           <div class="principle reveal">
 
-            <div class="principle-number">03</div>
+            <div class="principle-number">
+              03
+            </div>
+
 
             <div>
 
-              <h4>Experiment continuously.</h4>
+              <h4>
+                Experiment continuously.
+              </h4>
 
               <p>
-                AI evolves rapidly. Intelligent systems should be designed
-                to grow with new models, technologies and possibilities.
+
+                Technology evolves rapidly. The systems we build should
+                be flexible enough to evolve with new possibilities.
+
               </p>
 
             </div>
@@ -1704,20 +2055,28 @@
 
           <div class="principle reveal">
 
-            <div class="principle-number">04</div>
+            <div class="principle-number">
+              04
+            </div>
+
 
             <div>
 
-              <h4>Open systems create possibilities.</h4>
+              <h4>
+                Creation creates possibilities.
+              </h4>
 
               <p>
-                Technology should help people explore, learn, create and
-                build without unnecessary complexity.
+
+                Technology should help people learn, explore, design
+                and build without unnecessary complexity.
+
               </p>
 
             </div>
 
           </div>
+
 
         </div>
 
@@ -1734,31 +2093,12 @@
 
         <div class="stats-grid">
 
+
           <div class="stat reveal">
 
-            <div class="stat-number">12+</div>
-
-            <div class="stat-label">
-              AI Technologies
+            <div class="stat-number">
+              AI
             </div>
-
-          </div>
-
-
-          <div class="stat reveal">
-
-            <div class="stat-number">500+</div>
-
-            <div class="stat-label">
-              Agent Possibilities
-            </div>
-
-          </div>
-
-
-          <div class="stat reveal">
-
-            <div class="stat-number">24/7</div>
 
             <div class="stat-label">
               Intelligent Systems
@@ -1769,13 +2109,42 @@
 
           <div class="stat reveal">
 
-            <div class="stat-number">∞</div>
+            <div class="stat-number">
+              500+
+            </div>
 
             <div class="stat-label">
-              Ideas to Explore
+              Agent Possibilities
             </div>
 
           </div>
+
+
+          <div class="stat reveal">
+
+            <div class="stat-number">
+              ∞
+            </div>
+
+            <div class="stat-label">
+              Website Possibilities
+            </div>
+
+          </div>
+
+
+          <div class="stat reveal">
+
+            <div class="stat-number">
+              24/7
+            </div>
+
+            <div class="stat-label">
+              Build Without Limits
+            </div>
+
+          </div>
+
 
         </div>
 
@@ -1790,20 +2159,27 @@
 
       <div class="container">
 
+
         <div class="reveal">
 
           <div class="section-label">
             One ecosystem
           </div>
 
+
           <h2 class="section-title">
-            One platform.<br>
-            Infinite intelligence.
+
+            Two powerful tools.<br>
+            Infinite possibilities.
+
           </h2>
 
+
           <p class="section-description">
-            Build systems where intelligence, knowledge, automation and
-            integrations work together.
+
+            Build intelligent AI agents and powerful digital experiences
+            from the OpenMind ecosystem.
+
           </p>
 
         </div>
@@ -1811,17 +2187,26 @@
 
         <div class="system-grid">
 
+
           <article class="system-card reveal">
 
             <div class="system-icon">
+
               <i class="fa-solid fa-brain"></i>
+
             </div>
 
-            <h4>AI Agents</h4>
+
+            <h4>
+              AI Agents
+            </h4>
+
 
             <p>
+
               Design intelligent digital workers capable of understanding
               tasks and performing useful actions.
+
             </p>
 
           </article>
@@ -1830,14 +2215,22 @@
           <article class="system-card reveal">
 
             <div class="system-icon">
+
               <i class="fa-solid fa-database"></i>
+
             </div>
 
-            <h4>Knowledge</h4>
+
+            <h4>
+              Knowledge
+            </h4>
+
 
             <p>
-              Connect information, documents and data to give intelligent
-              systems meaningful context.
+
+              Connect information and data to give intelligent agents
+              meaningful context.
+
             </p>
 
           </article>
@@ -1846,14 +2239,22 @@
           <article class="system-card reveal">
 
             <div class="system-icon">
-              <i class="fa-solid fa-bolt"></i>
+
+              <i class="fa-solid fa-code"></i>
+
             </div>
 
-            <h4>Automation</h4>
+
+            <h4>
+              Website Builder
+            </h4>
+
 
             <p>
-              Turn intelligence into action through automated workflows
-              and connected digital processes.
+
+              Build modern websites and digital experiences with flexible
+              creation tools.
+
             </p>
 
           </article>
@@ -1862,17 +2263,26 @@
           <article class="system-card reveal">
 
             <div class="system-icon">
+
               <i class="fa-solid fa-plug"></i>
+
             </div>
 
-            <h4>Integrations</h4>
+
+            <h4>
+              Integrations
+            </h4>
+
 
             <p>
+
               Connect APIs, applications and tools to expand what your
-              intelligent systems can do.
+              projects can do.
+
             </p>
 
           </article>
+
 
         </div>
 
@@ -1887,38 +2297,59 @@
 
       <div class="container">
 
+
         <div class="cta-box reveal">
 
           <div class="section-label">
             Start Building
           </div>
 
+
           <h2>
+
             Ready to build
-            <span>something intelligent?</span>
+
+            <span>
+              something powerful?
+            </span>
+
           </h2>
 
+
           <p>
-            Start exploring AI agents, intelligent automation and powerful
-            digital systems with OpenMind.
+
+            Start creating intelligent AI agents and modern digital
+            experiences with OpenMind.
+
           </p>
+
 
           <div class="hero-actions">
 
-            <a href="#" class="btn btn-primary magnetic">
+
+            <a
+              href="AgentGenerator.html"
+              class="btn btn-primary magnetic"
+            >
 
               Create Your Agent
+
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
 
             </a>
 
 
-            <a href="#platform" class="btn btn-secondary magnetic">
+            <a
+              href="builder.html"
+              class="btn btn-secondary magnetic"
+            >
 
-              Explore AI Studio
+              Open Website Builder
+
               <i class="fa-solid fa-arrow-right"></i>
 
             </a>
+
 
           </div>
 
@@ -1927,6 +2358,7 @@
       </div>
 
     </section>
+
 
   </main>
 
@@ -1937,7 +2369,9 @@
 
     <div class="container">
 
+
       <div class="footer-grid">
+
 
         <div class="footer-brand">
 
@@ -1951,9 +2385,12 @@
 
           </a>
 
+
           <p>
-            Create, deploy and manage powerful AI systems for the future
-            of intelligent automation.
+
+            Create intelligent AI agents and powerful digital experiences
+            for the future.
+
           </p>
 
         </div>
@@ -1961,37 +2398,66 @@
 
         <div class="footer-column">
 
-          <h5>Platform</h5>
+          <h5>
+            Platform
+          </h5>
 
-          <a href="#">AI Studio</a>
-          <a href="#">AI Agents</a>
-          <a href="#">Automation</a>
-          <a href="#">Website Builder</a>
+          <a href="AgentGenerator.html">
+            AI Agents
+          </a>
 
-        </div>
-
-
-        <div class="footer-column">
-
-          <h5>Explore</h5>
-
-          <a href="#features">Features</a>
-          <a href="#system">Solutions</a>
-          <a href="#about">About</a>
-          <a href="#">Documentation</a>
+          <a href="builder.html">
+            Website Builder
+          </a>
 
         </div>
 
 
         <div class="footer-column">
 
-          <h5>Connect</h5>
+          <h5>
+            Explore
+          </h5>
 
-          <a href="#">GitHub</a>
-          <a href="#">LinkedIn</a>
-          <a href="mailto:hello@openmind.ai">Contact</a>
+          <a href="#features">
+            Features
+          </a>
+
+          <a href="#system">
+            Solutions
+          </a>
+
+          <a href="#about">
+            About
+          </a>
+
+          <a href="#">
+            Documentation
+          </a>
 
         </div>
+
+
+        <div class="footer-column">
+
+          <h5>
+            Connect
+          </h5>
+
+          <a href="#">
+            GitHub
+          </a>
+
+          <a href="#">
+            LinkedIn
+          </a>
+
+          <a href="mailto:hello@openmind.ai">
+            Contact
+          </a>
+
+        </div>
+
 
       </div>
 
@@ -2008,6 +2474,7 @@
 
       </div>
 
+
     </div>
 
   </footer>
@@ -2015,25 +2482,39 @@
 
   <script>
 
-    /* NAVBAR */
+    /* ================================
+       NAVBAR
+    ================================= */
 
-    const navbar = document.querySelector(".navbar");
+    const navbar =
+      document.querySelector(".navbar");
+
 
     window.addEventListener("scroll", () => {
 
       if (window.scrollY > 30) {
+
         navbar.classList.add("scrolled");
+
       } else {
+
         navbar.classList.remove("scrolled");
+
       }
 
     });
 
 
-    /* MOBILE MENU */
+    /* ================================
+       MOBILE MENU
+    ================================= */
 
-    const menuBtn = document.getElementById("menuBtn");
-    const navLinks = document.getElementById("navLinks");
+    const menuBtn =
+      document.getElementById("menuBtn");
+
+    const navLinks =
+      document.getElementById("navLinks");
+
 
     menuBtn.addEventListener("click", () => {
 
@@ -2042,10 +2523,16 @@
     });
 
 
-    /* CUSTOM CURSOR */
+    /* ================================
+       CUSTOM CURSOR
+    ================================= */
 
-    const cursorDot = document.querySelector(".cursor-dot");
-    const cursorRing = document.querySelector(".cursor-ring");
+    const cursorDot =
+      document.querySelector(".cursor-dot");
+
+    const cursorRing =
+      document.querySelector(".cursor-ring");
+
 
     let mouseX = 0;
     let mouseY = 0;
@@ -2053,114 +2540,189 @@
     let ringX = 0;
     let ringY = 0;
 
-    document.addEventListener("mousemove", (event) => {
 
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+    document.addEventListener(
+      "mousemove",
+      (event) => {
 
-      cursorDot.style.left = mouseX + "px";
-      cursorDot.style.top = mouseY + "px";
+        mouseX = event.clientX;
+        mouseY = event.clientY;
 
-    });
+        cursorDot.style.left =
+          mouseX + "px";
+
+        cursorDot.style.top =
+          mouseY + "px";
+
+      }
+    );
 
 
     function animateCursor() {
 
-      ringX += (mouseX - ringX) * 0.15;
-      ringY += (mouseY - ringY) * 0.15;
+      ringX +=
+        (mouseX - ringX) * 0.15;
 
-      cursorRing.style.left = ringX + "px";
-      cursorRing.style.top = ringY + "px";
+      ringY +=
+        (mouseY - ringY) * 0.15;
 
-      requestAnimationFrame(animateCursor);
+
+      cursorRing.style.left =
+        ringX + "px";
+
+      cursorRing.style.top =
+        ringY + "px";
+
+
+      requestAnimationFrame(
+        animateCursor
+      );
 
     }
+
 
     animateCursor();
 
 
-    document.querySelectorAll("a, button, .magnetic").forEach((element) => {
+    document
+      .querySelectorAll(
+        "a, button, .magnetic"
+      )
+      .forEach((element) => {
 
-      element.addEventListener("mouseenter", () => {
-        document.body.classList.add("cursor-active");
-      });
+        element.addEventListener(
+          "mouseenter",
+          () => {
 
-      element.addEventListener("mouseleave", () => {
-        document.body.classList.remove("cursor-active");
-      });
-
-    });
-
-
-    /* MAGNETIC BUTTONS */
-
-    document.querySelectorAll(".magnetic").forEach((element) => {
-
-      element.addEventListener("mousemove", (event) => {
-
-        const rect = element.getBoundingClientRect();
-
-        const x = event.clientX - rect.left - rect.width / 2;
-        const y = event.clientY - rect.top - rect.height / 2;
-
-        element.style.transform =
-          `translate(${x * 0.12}px, ${y * 0.12}px)`;
-
-      });
-
-
-      element.addEventListener("mouseleave", () => {
-
-        element.style.transform = "translate(0, 0)";
-
-      });
-
-    });
-
-
-    /* SCROLL REVEAL */
-
-    const observer = new IntersectionObserver(
-
-      (entries) => {
-
-        entries.forEach((entry) => {
-
-          if (entry.isIntersecting) {
-
-            entry.target.classList.add("show");
+            document.body.classList.add(
+              "cursor-active"
+            );
 
           }
-
-        });
-
-      },
-
-      {
-        threshold: 0.12
-      }
-
-    );
+        );
 
 
-    document.querySelectorAll(".reveal").forEach((element) => {
+        element.addEventListener(
+          "mouseleave",
+          () => {
 
-      observer.observe(element);
+            document.body.classList.remove(
+              "cursor-active"
+            );
 
-    });
-
-
-    /* SMOOTH MOBILE NAV */
-
-    document.querySelectorAll(".nav-links a").forEach((link) => {
-
-      link.addEventListener("click", () => {
-
-        navLinks.classList.remove("mobile-open");
+          }
+        );
 
       });
 
-    });
+
+    /* ================================
+       MAGNETIC BUTTONS
+    ================================= */
+
+    document
+      .querySelectorAll(".magnetic")
+      .forEach((element) => {
+
+        element.addEventListener(
+          "mousemove",
+          (event) => {
+
+            const rect =
+              element.getBoundingClientRect();
+
+
+            const x =
+              event.clientX -
+              rect.left -
+              rect.width / 2;
+
+
+            const y =
+              event.clientY -
+              rect.top -
+              rect.height / 2;
+
+
+            element.style.transform =
+              `translate(${x * 0.12}px, ${y * 0.12}px)`;
+
+          }
+        );
+
+
+        element.addEventListener(
+          "mouseleave",
+          () => {
+
+            element.style.transform =
+              "translate(0, 0)";
+
+          }
+        );
+
+      });
+
+
+    /* ================================
+       SCROLL REVEAL
+    ================================= */
+
+    const observer =
+      new IntersectionObserver(
+
+        (entries) => {
+
+          entries.forEach((entry) => {
+
+            if (entry.isIntersecting) {
+
+              entry.target.classList.add(
+                "show"
+              );
+
+            }
+
+          });
+
+        },
+
+        {
+          threshold: 0.12
+        }
+
+      );
+
+
+    document
+      .querySelectorAll(".reveal")
+      .forEach((element) => {
+
+        observer.observe(element);
+
+      });
+
+
+    /* ================================
+       CLOSE MOBILE NAV
+    ================================= */
+
+    document
+      .querySelectorAll(".nav-links a")
+      .forEach((link) => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            navLinks.classList.remove(
+              "mobile-open"
+            );
+
+          }
+        );
+
+      });
 
   </script>
 
